@@ -1,0 +1,132 @@
+#include "Game.h"
+
+Game::Game()
+{
+	//When adding classes to EM, must be pointer to heap,IE: Name = new Class().
+
+	LogicID = EM.AddCommon(Logic = DBG_NEW GameLogic());
+	BackGroundID = EM.AddCommon(BackGround = DBG_NEW TheBackground());
+	EnemiesID = EM.AddCommon(Enemies = DBG_NEW EnemyControl());
+	PlayerID = EM.AddModel3D(Player = DBG_NEW ThePlayer());
+	CitiesID = EM.AddCommon(Cities = DBG_NEW CityManager());
+	MissileBasesID = EM.AddCommon(MissileBases = DBG_NEW MissileBaseManager());
+}
+
+Game::~Game()
+{
+}
+
+bool Game::Initialize() //Initialize
+{
+	Common::Initialize();
+
+	float multiW = 1.0f, multiH = 1.0f;
+	FieldSize = { GetScreenWidth() * multiW, (float)GetScreenHeight() * multiH };
+
+	Logic->SetPlayer(Player);
+	Logic->SetEnemies(Enemies);
+	Logic->SetCityManager(Cities);
+	Logic->SetMissileBases(MissileBases);
+
+	Enemies->SetPlayer(Player);
+
+	//Any Entities added after this point need this method fired manually.
+	DisableCursor();
+
+	return true;
+}
+
+//..
+// Model Names:
+// City = InnerCity and OuterCity, Ground = Ground, Cube = Cube, Cross = Cross,
+// Smart Bomb = SmartBomb, SmartBombEdge, Satellite = Satellite,
+// Player = PlayerCursor, Player target for player missile = PlayerTarget,
+// Missile Ammo = MissileAmmo
+//..
+bool Game::Load()
+{
+	Model cube = CM.LoadAndGetModel("Cube");
+
+	BackGround->SetGroundModel(CM.LoadAndGetModel("Ground"));
+
+	Player->SetModel(CM.LoadAndGetModel("PlayerCursor"));
+	Player->SetTargetandShotModel(CM.LoadAndGetModel("PlayerTarget"), cube);
+
+	Cities->SetCityModels(CM.LoadAndGetModel("InnerCity"),
+		CM.LoadAndGetModel("OuterCity"));
+
+	MissileBases->SetMissileModel(CM.LoadAndGetModel("MissileAmmo"));
+
+	return true;
+}
+
+bool Game::BeginRun()
+{
+	//Any Entities added after this point need this method fired manually.
+
+	return true;
+}
+
+void Game::Input()
+{
+	GameInput();
+}
+
+
+void Game::Update(float deltaTime)
+{
+	if (Logic->State == Pause)	return;
+}
+
+void Game::FixedUpdate(float deltaTime)
+{
+	if (Logic->State == Pause)	return;
+}
+
+void Game::Draw()
+{
+	BeginMode3D(TheCamera);
+
+	//3D Drawing here.
+	Draw3D();
+
+	EndMode3D();
+
+	//2D drawing, fonts go here.
+
+	Draw2D();
+}
+
+void Game::Draw3D()
+{
+
+#ifdef _DEBUG
+	int fsx = int(FieldSize.x * 0.5f);
+	int fsy = int(FieldSize.y * 0.5f);
+
+	DrawLine(-fsx, -fsy, fsx, -fsy, { DARKBLUE });
+	DrawLine(fsx, -fsy, fsx, fsy, { DARKBLUE });
+	DrawLine(fsx, fsy - 1, -fsx, fsy, { DARKBLUE });
+	DrawLine(-fsx + 0.5f, fsy - 1, -fsx + 0.5f, -fsy, { DARKBLUE });
+#endif
+}
+
+void Game::Draw2D()
+{
+}
+
+void Game::GameInput()
+{
+	Logic->Input();
+
+	if (IsKeyPressed(KEY_P))
+	{
+		if (Logic->State == Pause) Logic->State = InPlay;
+		else if (Logic->State == InPlay) Logic->State = Pause;
+	}
+
+	if (Logic->State == Ended)
+	{
+		if (IsKeyPressed(KEY_N)) Logic->NewGame();
+	}
+}
