@@ -25,6 +25,8 @@ public:
 	void SetLifeTimer(float lifetime);
 	void Destroy();
 
+	bool CheckHitTarget();
+
 private:
 	size_t LifeTimerID = 0;
 	size_t CurrentColorTimerID = 0;

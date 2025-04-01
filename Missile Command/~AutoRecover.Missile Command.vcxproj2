@@ -153,6 +153,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Colors.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyControl.cpp">
       <SubType>
@@ -161,6 +162,10 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MissileBaseManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="MissileManager.cpp">
       <SubType>
       </SubType>
@@ -174,6 +179,18 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="TheExplosion.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="TheMissile.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="TheMissileBase.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="ThePlayer.cpp">
       <SubType>
       </SubType>
@@ -184,6 +201,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyControl.h">
       <SubType>
@@ -192,6 +210,10 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="MissileBaseManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="MissileManager.h">
       <SubType>
       </SubType>
@@ -202,6 +224,18 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="TheCity.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="TheExplosion.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="TheMissile.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="TheMissileBase.h">
       <SubType>
       </SubType>
     </ClInclude>

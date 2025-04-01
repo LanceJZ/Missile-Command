@@ -123,10 +123,10 @@ void GameLogic::CheckPlayerMissiles()
 	{
 		if (missile->Enabled)
 		{
-			if (missile->CirclesIntersect(missile->TargetPosition, 5.0f))
+			if (missile->CheckHitTarget())
 			{
-				missile->Destroy();
 				Player->Targets.at(missile->TargetIndex)->Destroy();
+				Player->MakeExplosion(missile->Position);
 			}
 		}
 	}

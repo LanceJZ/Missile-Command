@@ -4,6 +4,7 @@
 #include "Model3D.h"
 #include "Shot.h"
 #include "MissileBaseManager.h"
+#include "TheExplosion.h"
 
 class ThePlayer : public Model3D
 {
@@ -21,6 +22,7 @@ public:
 
 	std::vector<Shot*> Missiles = {};
 	std::vector<Model3D*> Targets = {};
+	std::vector<TheExplosion*> Explosions = {};
 
 	void SetMissileManager(MissileBaseManager* baseManager);
 
@@ -28,11 +30,14 @@ public:
 	bool BeginRun();
 
 	void SetTargetandShotModel(Model& targetModel, Model& shotModel);
+	void SetExplosionModel(Model& model);
 
 	void Input();
 	void Update(float deltaTime);
 	void FixedUpdate(float deltaTime);
 	void Draw3D();
+
+	void MakeExplosion(Vector3 position);
 
 	void Hit();
 	void Hit(Vector3 location, Vector3 velocity);
@@ -53,6 +58,7 @@ private:
 
 	Model ShotModel = { 0 };
 	Model TargetModel = { 0 };
+	Model ExplosionModel = { 0 };
 
 	Colors GameColors;
 

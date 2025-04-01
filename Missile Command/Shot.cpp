@@ -14,7 +14,7 @@ bool Shot::Initialize()
 {
 	Model3D::Initialize();
 
-	EM.SetTimer(CurrentColorTimerID, 0.1f);
+	EM.SetTimer(CurrentColorTimerID, 0.05f);
 
 	return false;
 }
@@ -68,7 +68,17 @@ void Shot::Destroy()
 	Entity::Destroy();
 }
 
+bool Shot::CheckHitTarget()
+{
+	bool hit = CirclesIntersect(TargetPosition, 5.0f);
+
+	if (hit) Destroy();
+
+	return hit;
+}
+
 void Shot::ChangeColor()
 {
+	EM.ResetTimer(CurrentColorTimerID);
 	ModelColor = GameColors.ChangeColor();
 }

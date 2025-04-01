@@ -20,7 +20,8 @@ bool ThePlayer::Initialize()
 
 	ModelColor = Blue;
 	Cull = false;
-	EM.SetTimer(TargetColorTimerID, 0.1f);
+
+	EM.SetTimer(TargetColorTimerID, 0.05f);
 
 	return false;
 }
@@ -40,6 +41,11 @@ void ThePlayer::SetTargetandShotModel(Model& targetModel, Model& shotModel)
 	ShotModel = shotModel;
 }
 
+void ThePlayer::SetExplosionModel(Model& model)
+{
+	ExplosionModel = model;
+}
+
 void ThePlayer::Input()
 {
 	Model3D::Input();
@@ -57,17 +63,42 @@ void ThePlayer::Update(float deltaTime)
 {
 	Model3D::Update(deltaTime);
 
-	CrosshairUpdate();
 }
 
 void ThePlayer::FixedUpdate(float deltaTime)
 {
+	CrosshairUpdate();
 	TargetUpdate();
 }
 
 void ThePlayer::Draw3D()
 {
 	Model3D::Draw3D();
+
+}
+
+void ThePlayer::MakeExplosion(Vector3 position)
+{
+	bool spawnExplosion = true;
+	size_t explosionNumber = Explosions.size();
+
+	for (size_t check = 0; check < explosionNumber; check++)
+	{
+		if (!Explosions[check]->Enabled)
+		{
+			spawnExplosion = false;
+			explosionNumber = check;
+			break;
+		}
+	}
+
+	if (spawnExplosion)
+	{
+		Explosions.push_back(DBG_NEW TheExplosion());
+		EntityFactory(Explosions.at(explosionNumber), ExplosionModel,
+			WHITE, position, {0});
+	}
+	else Explosions.at(explosionNumber)->Spawn(position);
 
 }
 
@@ -280,11 +311,13 @@ void ThePlayer::CrosshairUpdate()
 
 void ThePlayer::TargetUpdate()
 {
-	for (size_t i = 0; i < Targets.size(); i++)
+	if (EM.TimerElapsed(TargetColorTimerID))
 	{
-		if (Targets.at(i)->Enabled)
+		EM.ResetTimer(TargetColorTimerID);
+
+		for (size_t i = 0; i < Targets.size(); i++)
 		{
-			if (EM.TimerElapsed(TargetColorTimerID))
+			if (Targets.at(i)->Enabled)
 			{
 				Targets.at(i)->ModelColor = GameColors.ChangeColor();
 			}
