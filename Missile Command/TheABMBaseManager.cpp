@@ -1,27 +1,20 @@
-#include "MissileBaseManager.h"
+#include "TheABMBaseManager.h"
 
-MissileBaseManager::MissileBaseManager()
+TheABMBaseManager::TheABMBaseManager()
 {
 	for (int i = 0; i < 3; i++)
 	{
-		EM.AddCommon(ABMBases[i] = DBG_NEW TheMissileBase());
+		EM.AddCommon(ABMBases[i] = DBG_NEW TheABMBase());
 	}
 }
 
-MissileBaseManager::~MissileBaseManager()
+TheABMBaseManager::~TheABMBaseManager()
 {
 }
 
-bool MissileBaseManager::Initialize()
+bool TheABMBaseManager::Initialize()
 {
 	Common::Initialize();
-
-	return false;
-}
-
-bool MissileBaseManager::BeginRun()
-{
-	Common::BeginRun();
 
 	float positionX = (21.0f - 256.0f / 2) * 5.0f;
 	float height = ((float)WindowHalfHeight -22.0f * 5);
@@ -39,7 +32,14 @@ bool MissileBaseManager::BeginRun()
 	return false;
 }
 
-void MissileBaseManager::SetMissileModel(Model& model)
+bool TheABMBaseManager::BeginRun()
+{
+	Common::BeginRun();
+
+	return false;
+}
+
+void TheABMBaseManager::SetMissileModel(Model& model)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -47,13 +47,13 @@ void MissileBaseManager::SetMissileModel(Model& model)
 	}
 }
 
-void MissileBaseManager::Update()
+void TheABMBaseManager::Update()
 {
 	Common::Update();
 
 }
 
-void MissileBaseManager::Reset()
+void TheABMBaseManager::Reset()
 {
 	for (auto base : ABMBases)
 	{
@@ -61,7 +61,7 @@ void MissileBaseManager::Reset()
 	}
 }
 
-bool MissileBaseManager::MissileFired(size_t baseNumber)
+bool TheABMBaseManager::MissileFired(size_t baseNumber)
 {
 	return (ABMBases[baseNumber]->MissileFired());
 }

@@ -2,7 +2,7 @@
 
 EnemyControl::EnemyControl()
 {
-	EM.AddCommon(ICBMControl = DBG_NEW MissileManager());
+	EM.AddCommon(ICBMControl = DBG_NEW TheICBMManager());
 }
 
 EnemyControl::~EnemyControl()

@@ -1,6 +1,6 @@
-#include "TheMissileBase.h"
+#include "TheABMBase.h"
 
-TheMissileBase::TheMissileBase()
+TheABMBase::TheABMBase()
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -8,25 +8,25 @@ TheMissileBase::TheMissileBase()
 	}
 }
 
-TheMissileBase::~TheMissileBase()
+TheABMBase::~TheABMBase()
 {
 }
 
-bool TheMissileBase::Initialize()
+bool TheABMBase::Initialize()
 {
 	Common::Initialize();
 
 	return false;
 }
 
-bool TheMissileBase::BeginRun()
+bool TheABMBase::BeginRun()
 {
 	Common::BeginRun();
 
 	return false;
 }
 
-void TheMissileBase::SetMissileModel(Model& model)
+void TheABMBase::SetMissileModel(Model& model)
 {
 	for (int i = 0; i < 10; i++)
 	{
@@ -34,7 +34,7 @@ void TheMissileBase::SetMissileModel(Model& model)
 	}
 }
 
-void TheMissileBase::SpawnMissileBase(Vector3 position)
+void TheABMBase::SpawnMissileBase(Vector3 position)
 {
 	Position = position;
 	size_t index = 0;
@@ -60,13 +60,13 @@ void TheMissileBase::SpawnMissileBase(Vector3 position)
 	}
 }
 
-void TheMissileBase::Update()
+void TheABMBase::Update()
 {
 	Common::Update();
 
 }
 
-void TheMissileBase::Reset()
+void TheABMBase::Reset()
 {
 	for (auto missile : ABMIcons)
 	{
@@ -74,7 +74,7 @@ void TheMissileBase::Reset()
 	}
 }
 
-void TheMissileBase::Clear()
+void TheABMBase::Clear()
 {
 	for (auto missile : ABMIcons)
 	{
@@ -82,7 +82,7 @@ void TheMissileBase::Clear()
 	}
 }
 
-bool TheMissileBase::MissileFired()
+bool TheABMBase::MissileFired()
 {
 	size_t lastInStack = 0;
 

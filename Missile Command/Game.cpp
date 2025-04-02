@@ -8,7 +8,7 @@ Game::Game()
 	BackGroundID = EM.AddCommon(BackGround = DBG_NEW TheBackground());
 	EnemiesID = EM.AddCommon(Enemies = DBG_NEW EnemyControl());
 	PlayerID = EM.AddModel3D(Player = DBG_NEW ThePlayer());
-	MissileBasesID = EM.AddCommon(ABMBases = DBG_NEW MissileBaseManager());
+	MissileBasesID = EM.AddCommon(ABMBases = DBG_NEW TheABMBaseManager());
 	CitiesID = EM.AddCommon(Cities = DBG_NEW CityManager());
 }
 
@@ -19,6 +19,8 @@ Game::~Game()
 bool Game::Initialize() //Initialize
 {
 	Common::Initialize();
+
+	SetWindowTitle("Missile Command Alpha 0.01");
 
 	float multiW = 1.0f, multiH = 1.0f;
 	FieldSize = { GetScreenWidth() * multiW, (float)GetScreenHeight() * multiH };

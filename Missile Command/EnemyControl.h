@@ -1,7 +1,7 @@
 #pragma once
 #include "Globals.h"
 #include "ThePlayer.h"
-#include "MissileManager.h"
+#include "TheICBMManager.h"
 #include "Colors.h"
 
 class EnemyControl : public Common
@@ -9,6 +9,8 @@ class EnemyControl : public Common
 public:
 	EnemyControl();
 	virtual ~EnemyControl();
+
+	TheICBMManager *ICBMControl = nullptr;
 
 	void SetPlayer(ThePlayer* player);
 	void SetICBMModel(Model &missileModel);
@@ -23,7 +25,6 @@ public:
 private:
 
 	ThePlayer *Player = nullptr;
-	MissileManager *ICBMControl = nullptr;
 
 	void Reset();
 };

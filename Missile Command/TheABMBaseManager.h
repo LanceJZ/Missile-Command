@@ -1,15 +1,15 @@
 #pragma once
 #include "Globals.h"
-#include "TheMissileBase.h"
+#include "TheABMBase.h"
 #include "Colors.h"
 
-class MissileBaseManager : public Common
+class TheABMBaseManager : public Common
 {
 public:
-	MissileBaseManager();
-	virtual ~MissileBaseManager();
+	TheABMBaseManager();
+	virtual ~TheABMBaseManager();
 
-	TheMissileBase* ABMBases[3];
+	TheABMBase* ABMBases[3];
 
 	bool Initialize();
 	bool BeginRun();

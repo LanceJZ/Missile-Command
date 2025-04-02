@@ -10,17 +10,17 @@ struct TargetData
 	bool Targeted;
 };
 
-class MissileManager : public Common
+class TheICBMManager : public Common
 {
 public:
-	MissileManager();
-	virtual ~MissileManager();
+	TheICBMManager();
+	virtual ~TheICBMManager();
 
 	unsigned Wave = 0;
 
-	std::vector<Shot*> ICBMs;
-	TargetData Citys[6];
-	TargetData ABMs[3];
+	std::vector<Shot*> ICBMs = {};
+	TargetData Citys[6] = {};
+	TargetData ABMBases[3] = {};
 
 	void SetMissileModels(Model& missileModel);
 

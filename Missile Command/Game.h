@@ -5,7 +5,7 @@
 #include "ThePlayer.h"
 #include "EnemyControl.h"
 #include "CityManager.h"
-#include "MissileBaseManager.h"
+#include "TheABMBaseManager.h"
 #include "TheBackground.h"
 
 class Game : Common
@@ -41,5 +41,5 @@ private:
 	ThePlayer* Player = {};
 	EnemyControl* Enemies = {};
 	CityManager* Cities = {};
-	MissileBaseManager* ABMBases = {};
+	TheABMBaseManager* ABMBases = {};
 };

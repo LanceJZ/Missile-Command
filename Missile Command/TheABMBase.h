@@ -3,11 +3,11 @@
 #include "Model3D.h"
 #include "Colors.h"
 
-class TheMissileBase : public Common
+class TheABMBase : public Common
 {
 public:
-	TheMissileBase();
-	virtual ~TheMissileBase();
+	TheABMBase();
+	virtual ~TheABMBase();
 
 	Vector3 Position = { 0, 0, 0 };
 	Model3D* ABMIcons[10];

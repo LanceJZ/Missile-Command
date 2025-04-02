@@ -24,10 +24,10 @@ void GameLogic::SetCityManager(CityManager* cityManager)
 	Cities = cityManager;
 }
 
-void GameLogic::SetMissileBases(MissileBaseManager* missileBases)
+void GameLogic::SetMissileBases(TheABMBaseManager* missileBases)
 {
 	ABMBases = missileBases;
-	Player->SetMissileBaseManager(missileBases);
+	Player->SetTheABMBaseManager(missileBases);
 }
 
 void GameLogic::SetExplosionModel(Model& model)
@@ -111,6 +111,20 @@ bool GameLogic::BeginRun()
 	Common::BeginRun();
 
 	GameEnded = true;
+
+	for (int i = 0; i < 6; i++)
+	{
+		Enemies->ICBMControl->Citys[i].Position = Cities->Cities[i]->Position;
+		Enemies->ICBMControl->Citys[i].Active = true;
+		Enemies->ICBMControl->Citys[i].Targeted = false;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		Enemies->ICBMControl->ABMBases[i].Position = ABMBases->ABMBases[i]->Position;
+		Enemies->ICBMControl->ABMBases[i].Active = true;
+		Enemies->ICBMControl->ABMBases[i].Targeted = false;
+	}
 
 	return false;
 }

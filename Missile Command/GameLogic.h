@@ -4,7 +4,7 @@
 #include "ThePlayer.h"
 #include "EnemyControl.h"
 #include "CityManager.h"
-#include "MissileBaseManager.h"
+#include "TheABMBaseManager.h"
 #include "TheExplosion.h"
 
 enum GameState
@@ -43,7 +43,7 @@ public:
 	void SetPlayer(ThePlayer* player);
 	void SetEnemies(EnemyControl* enemies);
 	void SetCityManager(CityManager* cityManager);
-	void SetMissileBases(MissileBaseManager* missileBases);
+	void SetMissileBases(TheABMBaseManager* missileBases);
 	void SetExplosionModel(Model& model);
 
 	bool Initialize();
@@ -69,7 +69,7 @@ private:
 	ThePlayer* Player = {};
 	EnemyControl* Enemies = {};
 	CityManager* Cities = {};
-	MissileBaseManager* ABMBases = {};
+	TheABMBaseManager* ABMBases = {};
 
 	std::vector<TheExplosion*> Explosions = {};
 

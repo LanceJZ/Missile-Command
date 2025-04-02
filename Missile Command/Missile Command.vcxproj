@@ -162,11 +162,11 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MissileBaseManager.cpp">
+    <ClCompile Include="TheABMBaseManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="MissileManager.cpp">
+    <ClCompile Include="TheICBMManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -183,11 +183,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="TheMissile.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="TheMissileBase.cpp">
+    <ClCompile Include="TheABMBase.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -210,11 +206,11 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="Globals.h" />
-    <ClInclude Include="MissileBaseManager.h">
+    <ClInclude Include="TheABMBaseManager.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="MissileManager.h">
+    <ClInclude Include="TheICBMManager.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -231,11 +227,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TheMissile.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="TheMissileBase.h">
+    <ClInclude Include="TheABMBase.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -36,7 +36,7 @@ int WinMain()
 	int windowHeight = 960; //height
 	int windowWidth = 1280; //width
 
-	InitWindow(windowWidth, windowHeight, "Missile Command - Alpha 0.0");
+	InitWindow(windowWidth, windowHeight, "Missile Command");
 	InitAudioDevice();
 
 	Image icon = LoadImage("icon.png");

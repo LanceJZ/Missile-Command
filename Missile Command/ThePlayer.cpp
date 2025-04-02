@@ -9,7 +9,7 @@ ThePlayer::~ThePlayer()
 {
 }
 
-void ThePlayer::SetMissileBaseManager(MissileBaseManager* baseManager)
+void ThePlayer::SetTheABMBaseManager(TheABMBaseManager* baseManager)
 {
 	ABMBaseManager = baseManager;
 }

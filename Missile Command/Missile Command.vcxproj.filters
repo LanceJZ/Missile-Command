@@ -39,10 +39,10 @@
     <ClCompile Include="CityManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MissileManager.cpp">
+    <ClCompile Include="TheICBMManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MissileBaseManager.cpp">
+    <ClCompile Include="TheABMBaseManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
@@ -54,13 +54,10 @@
     <ClCompile Include="TheCity.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="TheMissile.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="ThePlayer.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="TheMissileBase.cpp">
+    <ClCompile Include="TheABMBase.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
     <ClCompile Include="Colors.cpp">
@@ -86,10 +83,10 @@
     <ClInclude Include="CityManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MissileManager.h">
+    <ClInclude Include="TheICBMManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MissileBaseManager.h">
+    <ClInclude Include="TheABMBaseManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
@@ -101,10 +98,7 @@
     <ClInclude Include="TheCity.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="TheMissile.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="TheMissileBase.h">
+    <ClInclude Include="TheABMBase.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="ThePlayer.h">

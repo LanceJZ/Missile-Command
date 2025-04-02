@@ -3,7 +3,7 @@
 #include "Colors.h"
 #include "Model3D.h"
 #include "Shot.h"
-#include "MissileBaseManager.h"
+#include "TheABMBaseManager.h"
 
 class ThePlayer : public Model3D
 {
@@ -22,7 +22,7 @@ public:
 	std::vector<Shot*> Missiles = {};
 	std::vector<Model3D*> Targets = {};
 
-	void SetMissileBaseManager(MissileBaseManager* baseManager);
+	void SetTheABMBaseManager(TheABMBaseManager* baseManager);
 
 	bool Initialize();
 	bool BeginRun();
@@ -56,7 +56,7 @@ private:
 
 	Colors GameColors;
 
-	MissileBaseManager* ABMBaseManager = nullptr;
+	TheABMBaseManager* ABMBaseManager = nullptr;
 
 	void FireMissile();
 	void CrosshairUpdate();
