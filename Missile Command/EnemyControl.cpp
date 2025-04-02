@@ -2,7 +2,7 @@
 
 EnemyControl::EnemyControl()
 {
-	EM.AddCommon(Missiles = DBG_NEW MissileManager());
+	EM.AddCommon(ICBMControl = DBG_NEW MissileManager());
 }
 
 EnemyControl::~EnemyControl()
@@ -14,9 +14,9 @@ void EnemyControl::SetPlayer(ThePlayer* player)
 	Player = player;
 }
 
-void EnemyControl::SetMissileModels(Model& missileModel, Model& trailmodel)
+void EnemyControl::SetICBMModel(Model& missileModel)
 {
-	Missiles->SetMissileModels(missileModel, trailmodel);
+	ICBMControl->SetMissileModels(missileModel);
 }
 
 bool EnemyControl::Initialize()

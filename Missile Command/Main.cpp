@@ -19,6 +19,7 @@
 
 ContentManager CM = {};
 EntityManager EM = {};
+FactoryManager FM = {};
 KnightMath M = {};
 ParticleManager Particles = {};
 Camera TheCamera = {};
@@ -48,6 +49,7 @@ int WinMain()
 
 	Particles.Initialize();
 	Particles.SetManagers(EM);
+	FM.SetEntityManager(&EM);
 
 	// Define the camera to look into our 3D world
 	// Y positive is down, X positive is right, Z positive is away from camera.
@@ -66,9 +68,11 @@ int WinMain()
 
 	game.Initialize();
 	EM.Initialize();
+	FM.Initialize();
 	game.Load();
 	game.BeginRun();
 	EM.BeginRun();
+	FM.BeginRun();
 
 	while (!WindowShouldClose())
 	{

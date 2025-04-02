@@ -4,7 +4,7 @@ TheMissileBase::TheMissileBase()
 {
 	for (int i = 0; i < 10; i++)
 	{
-		EM.AddModel3D(MissileIcons[i] = DBG_NEW Model3D());
+		EM.AddModel3D(ABMIcons[i] = DBG_NEW Model3D());
 	}
 }
 
@@ -30,7 +30,7 @@ void TheMissileBase::SetMissileModel(Model& model)
 {
 	for (int i = 0; i < 10; i++)
 	{
-		MissileIcons[i]->SetModel(model);
+		ABMIcons[i]->SetModel(model);
 	}
 }
 
@@ -50,11 +50,11 @@ void TheMissileBase::SpawnMissileBase(Vector3 position)
 
 			float positionY = position.y + 2.0f + (8.5f * line);
 
-			MissileIcons[index]->Spawn({ positionX, positionY, 0.0f });
-			MissileIcons[index]->ModelColor = Blue;
-			MissileIcons[index]->Scale = 1.75f;
-			MissileIcons[index]->Cull = false;
-			MissileIcons[index]->Stationary = true;
+			ABMIcons[index]->Spawn({ positionX, positionY, 0.0f });
+			ABMIcons[index]->ModelColor = Blue;
+			ABMIcons[index]->Scale = 1.75f;
+			ABMIcons[index]->Cull = false;
+			ABMIcons[index]->Stationary = true;
 			index++;
 		}
 	}
@@ -68,7 +68,7 @@ void TheMissileBase::Update()
 
 void TheMissileBase::Reset()
 {
-	for (auto missile : MissileIcons)
+	for (auto missile : ABMIcons)
 	{
 		missile->Enabled = true;
 	}
@@ -76,7 +76,7 @@ void TheMissileBase::Reset()
 
 void TheMissileBase::Clear()
 {
-	for (auto missile : MissileIcons)
+	for (auto missile : ABMIcons)
 	{
 		missile->Enabled = false;
 	}
@@ -86,14 +86,14 @@ bool TheMissileBase::MissileFired()
 {
 	size_t lastInStack = 0;
 
-	for (auto missile : MissileIcons)
+	for (auto missile : ABMIcons)
 	{
 		if (missile->Enabled) lastInStack++;
 
 		if (lastInStack < 1) return false;
 	}
 
-	MissileIcons[lastInStack - 1]->Enabled = false;
+	ABMIcons[lastInStack - 1]->Enabled = false;
 
 	return true;
 }

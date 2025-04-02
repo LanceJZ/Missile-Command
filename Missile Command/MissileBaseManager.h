@@ -9,7 +9,7 @@ public:
 	MissileBaseManager();
 	virtual ~MissileBaseManager();
 
-	TheMissileBase* MissileBases[3];
+	TheMissileBase* ABMBases[3];
 
 	bool Initialize();
 	bool BeginRun();

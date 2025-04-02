@@ -9,10 +9,9 @@ MissileManager::~MissileManager()
 {
 }
 
-void MissileManager::SetMissileModels(Model& missileModel, Model& trailmodel)
+void MissileManager::SetMissileModels(Model& missileModel)
 {
-	MissileModel = missileModel;
-	MissileTrailModel = trailmodel;
+	ICBMModel = missileModel;
 }
 
 bool MissileManager::Initialize()

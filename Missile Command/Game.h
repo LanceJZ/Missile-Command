@@ -41,5 +41,5 @@ private:
 	ThePlayer* Player = {};
 	EnemyControl* Enemies = {};
 	CityManager* Cities = {};
-	MissileBaseManager* MissileBases = {};
+	MissileBaseManager* ABMBases = {};
 };

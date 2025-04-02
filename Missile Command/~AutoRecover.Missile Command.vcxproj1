@@ -209,7 +209,6 @@
     </ClInclude>
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameLogic.h" />
-    <ClInclude Include="Globals.h" />
     <ClInclude Include="MissileBaseManager.h">
       <SubType>
       </SubType>

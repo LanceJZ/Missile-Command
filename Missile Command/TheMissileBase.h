@@ -10,7 +10,7 @@ public:
 	virtual ~TheMissileBase();
 
 	Vector3 Position = { 0, 0, 0 };
-	Model3D* MissileIcons[10];
+	Model3D* ABMIcons[10];
 
 	bool Initialize();
 	bool BeginRun();

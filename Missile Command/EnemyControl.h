@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "ThePlayer.h"
 #include "MissileManager.h"
+#include "Colors.h"
 
 class EnemyControl : public Common
 {
@@ -10,7 +11,7 @@ public:
 	virtual ~EnemyControl();
 
 	void SetPlayer(ThePlayer* player);
-	void SetMissileModels(Model &missileModel, Model &trailmodel);
+	void SetICBMModel(Model &missileModel);
 
 	bool Initialize();
 	bool BeginRun();
@@ -22,7 +23,7 @@ public:
 private:
 
 	ThePlayer *Player = nullptr;
-	MissileManager *Missiles = nullptr;
+	MissileManager *ICBMControl = nullptr;
 
 	void Reset();
 };

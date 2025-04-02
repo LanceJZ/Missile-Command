@@ -9,9 +9,9 @@ ThePlayer::~ThePlayer()
 {
 }
 
-void ThePlayer::SetMissileManager(MissileBaseManager* baseManager)
+void ThePlayer::SetMissileBaseManager(MissileBaseManager* baseManager)
 {
-	BaseManager = baseManager;
+	ABMBaseManager = baseManager;
 }
 
 bool ThePlayer::Initialize()
@@ -39,11 +39,6 @@ void ThePlayer::SetTargetandShotModel(Model& targetModel, Model& shotModel)
 {
 	TargetModel = targetModel;
 	ShotModel = shotModel;
-}
-
-void ThePlayer::SetExplosionModel(Model& model)
-{
-	ExplosionModel = model;
 }
 
 void ThePlayer::Input()
@@ -77,31 +72,6 @@ void ThePlayer::Draw3D()
 
 }
 
-void ThePlayer::MakeExplosion(Vector3 position)
-{
-	bool spawnExplosion = true;
-	size_t explosionNumber = Explosions.size();
-
-	for (size_t check = 0; check < explosionNumber; check++)
-	{
-		if (!Explosions[check]->Enabled)
-		{
-			spawnExplosion = false;
-			explosionNumber = check;
-			break;
-		}
-	}
-
-	if (spawnExplosion)
-	{
-		Explosions.push_back(DBG_NEW TheExplosion());
-		EntityFactory(Explosions.at(explosionNumber), ExplosionModel,
-			WHITE, position, {0});
-	}
-	else Explosions.at(explosionNumber)->Spawn(position);
-
-}
-
 void ThePlayer::Hit()
 {
 	Acceleration = { 0 };
@@ -125,9 +95,9 @@ void ThePlayer::ScoreUpdate(int addToScore)
 		HighScore = Score;
 	}
 
-	if (Score > NextNewLifeScore)
+	if (Score > NextNewCityScore)
 	{
-		NextNewLifeScore += 10000;
+		NextNewCityScore += 10000;
 		Lives++;
 		NewLife = true;
 	}
@@ -148,7 +118,7 @@ void ThePlayer::Spawn(Vector3 position)
 void ThePlayer::NewGame()
 {
 	Lives = 4;
-	NextNewLifeScore = 10000;
+	NextNewCityScore = 10000;
 	Score = 0;
 	GameOver = false;
 	Reset();
@@ -167,11 +137,11 @@ int ThePlayer::GetScore()
 void ThePlayer::FireMissile()
 {
 	float distanceAlpha =
-		Vector3Distance(Position, BaseManager->MissileBases[0]->Position);
+		Vector3Distance(Position, ABMBaseManager->ABMBases[0]->Position);
 	float distanceDelta =
-		Vector3Distance(Position, BaseManager->MissileBases[1]->Position);
+		Vector3Distance(Position, ABMBaseManager->ABMBases[1]->Position);
 	float distanceOmega =
-		Vector3Distance(Position, BaseManager->MissileBases[2]->Position);
+		Vector3Distance(Position, ABMBaseManager->ABMBases[2]->Position);
 
 	Entity target = {};
 
@@ -186,17 +156,17 @@ void ThePlayer::FireMissile()
 		closest = 2;
 	}
 
-	if (!BaseManager->MissileFired(closest))
+	if (!ABMBaseManager->MissileFired(closest))
 	{
 		if (closest == 0)
 		{
 			closest = 1;
 
-			if (!BaseManager->MissileFired(closest))
+			if (!ABMBaseManager->MissileFired(closest))
 			{
 				closest = 2;
 
-				if (!BaseManager->MissileFired(closest))
+				if (!ABMBaseManager->MissileFired(closest))
 				{
 					return;
 				}
@@ -213,13 +183,13 @@ void ThePlayer::FireMissile()
 				closest = 2;
 			}
 
-			if (!BaseManager->MissileFired(closest))
+			if (!ABMBaseManager->MissileFired(closest))
 			{
 				if (closest == 2)
 				{
 					closest = 0;
 
-					if (!BaseManager->MissileFired(closest))
+					if (!ABMBaseManager->MissileFired(closest))
 					{
 						return;
 					}
@@ -228,7 +198,7 @@ void ThePlayer::FireMissile()
 				{
 					closest = 2;
 
-					if (!BaseManager->MissileFired(closest))
+					if (!ABMBaseManager->MissileFired(closest))
 					{
 						return;
 					}
@@ -239,11 +209,11 @@ void ThePlayer::FireMissile()
 		{
 			closest = 1;
 
-			if (!BaseManager->MissileFired(closest))
+			if (!ABMBaseManager->MissileFired(closest))
 			{
 				closest = 0;
 
-				if (!BaseManager->MissileFired(closest))
+				if (!ABMBaseManager->MissileFired(closest))
 				{
 					return;
 				}
@@ -251,7 +221,7 @@ void ThePlayer::FireMissile()
 		}
 	}
 
-	Vector3 missileBasePosition = BaseManager->MissileBases[closest]->Position;
+	Vector3 missileBasePosition = ABMBaseManager->ABMBases[closest]->Position;
 	Vector3 missileVelocity =
 		Vector3Multiply(GetVelocityFromVectorZ(missileBasePosition,
 		ShotSpeed), {-1.0f, -1.0f, 0});
@@ -272,7 +242,7 @@ void ThePlayer::FireMissile()
 	if (spawnShot)
 	{
 		Missiles.push_back(DBG_NEW Shot());
-		EntityFactory(Missiles.back(), ShotModel, Aqua, missileBasePosition,
+		FM.Model3DFactory(Missiles.back(), ShotModel, Aqua, missileBasePosition,
 			missileVelocity);
 	}
 	else Missiles[shotNumber]->Spawn(missileBasePosition, missileVelocity);
@@ -343,25 +313,12 @@ size_t ThePlayer::SetTarget()
 	if (spawnTarget)
 	{
 		Targets.push_back(new Model3D());
-		EntityFactory(Targets.at (targetNumber), TargetModel, TargetColor, Position,
+		FM.Model3DFactory(Targets.at (targetNumber), TargetModel, TargetColor, Position,
 			{ 0, 0, 0 });
 	}
 	else Targets.at(targetNumber)->Spawn(Position);
 
 	return targetNumber;
-}
-
-void ThePlayer::EntityFactory(Model3D* entity, Model& model, Color color,
-	Vector3 position, Vector3 velocity)
-{
-	EM.AddModel3D(entity, model);
-	entity->ModelColor = color;
-	entity->Cull = false;
-	entity->Initialize();
-	entity->BeginRun();
-	entity->Spawn(position);
-
-	if (velocity.x != 0.0f && velocity.y != 0.0f) entity->Velocity = velocity;
 }
 
 void ThePlayer::Gamepad()

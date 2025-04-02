@@ -15,7 +15,7 @@ bool TheCity::Initialize()
 
 	InnerModel->SetParent(*this);
 
-	ModelColor = Blue; //Blue
+	ModelColor = Blue;
 	InnerModel->ModelColor = Aqua;
 	Scale = 1.2f;
 	Cull = false;

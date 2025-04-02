@@ -1,7 +1,14 @@
 #pragma once
 #include "Globals.h"
-#include "TheMissile.h"
+#include "Shot.h"
 #include "Colors.h"
+
+struct TargetData
+{
+	Vector3 Position;
+	bool Active;
+	bool Targeted;
+};
 
 class MissileManager : public Common
 {
@@ -9,9 +16,13 @@ public:
 	MissileManager();
 	virtual ~MissileManager();
 
-	std::vector<TheMissile*> Missiles;
+	unsigned Wave = 0;
 
-	void SetMissileModels(Model& missileModel, Model& trailmodel);
+	std::vector<Shot*> ICBMs;
+	TargetData Citys[6];
+	TargetData ABMs[3];
+
+	void SetMissileModels(Model& missileModel);
 
 	bool Initialize();
 	bool BeginRun();
@@ -20,8 +31,11 @@ public:
 
 private:
 
-	Model MissileModel = { 0 };
-	Model MissileTrailModel = { 0 };
+	float NewSalvoHieght = 0.0f;
+
+	Color CurrentColor = Red;
+	Model ICBMModel = { 0 };
+
+	Colors GameColors;
 
 };
-
