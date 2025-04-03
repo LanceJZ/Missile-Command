@@ -23,6 +23,15 @@ bool TheABMBase::BeginRun()
 {
 	Common::BeginRun();
 
+	for (int i = 0; i < 10; i++)
+	{
+		ABMIcons[i]->HideCollision = true;
+		ABMIcons[i]->Scale = 1.75f;
+		ABMIcons[i]->Cull = false;
+		ABMIcons[i]->Stationary = true;
+		ABMIcons[i]->ModelColor = Blue;
+	}
+
 	return false;
 }
 
@@ -51,10 +60,6 @@ void TheABMBase::SpawnMissileBase(Vector3 position)
 			float positionY = position.y + 2.0f + (8.5f * line);
 
 			ABMIcons[index]->Spawn({ positionX, positionY, 0.0f });
-			ABMIcons[index]->ModelColor = Blue;
-			ABMIcons[index]->Scale = 1.75f;
-			ABMIcons[index]->Cull = false;
-			ABMIcons[index]->Stationary = true;
 			index++;
 		}
 	}

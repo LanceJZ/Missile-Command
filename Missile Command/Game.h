@@ -4,7 +4,7 @@
 #include "GameLogic.h"
 #include "ThePlayer.h"
 #include "EnemyControl.h"
-#include "CityManager.h"
+#include "TheCityManager.h"
 #include "TheABMBaseManager.h"
 #include "TheBackground.h"
 
@@ -40,6 +40,6 @@ private:
 	TheBackground* BackGround = {};
 	ThePlayer* Player = {};
 	EnemyControl* Enemies = {};
-	CityManager* Cities = {};
+	TheCityManager* Cities = {};
 	TheABMBaseManager* ABMBases = {};
 };

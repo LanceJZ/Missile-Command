@@ -3,11 +3,11 @@
 #include "TheCity.h"
 #include "Colors.h"
 
-class CityManager : public Common
+class TheCityManager : public Common
 {
 public:
-	CityManager();
-	virtual ~CityManager();
+	TheCityManager();
+	virtual ~TheCityManager();
 
 	TheCity* Cities[6];
 

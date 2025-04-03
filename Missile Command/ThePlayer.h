@@ -19,7 +19,7 @@ public:
 	int HighScore { 0 };
 	int Lives { 0 };
 
-	std::vector<Shot*> Missiles = {};
+	std::vector<Shot*> ABMs = {};
 	std::vector<Model3D*> Targets = {};
 
 	void SetTheABMBaseManager(TheABMBaseManager* baseManager);
@@ -49,7 +49,7 @@ private:
 	unsigned NextNewCityScore = 10000;
 	float ShotSpeed = 200.0f;
 
-	Color TargetColor = Blue;
+	Color CurrentColor = Blue;
 
 	Model ShotModel = { 0 };
 	Model TargetModel = { 0 };
@@ -58,7 +58,7 @@ private:
 
 	TheABMBaseManager* ABMBaseManager = nullptr;
 
-	void FireMissile();
+	void FireABM();
 	void CrosshairUpdate();
 	void TargetUpdate();
 	size_t SetTarget();

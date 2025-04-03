@@ -3,7 +3,7 @@
 #include "Colors.h"
 #include "ThePlayer.h"
 #include "EnemyControl.h"
-#include "CityManager.h"
+#include "TheCityManager.h"
 #include "TheABMBaseManager.h"
 #include "TheExplosion.h"
 
@@ -38,11 +38,11 @@ public:
 
 	bool PlayBackgroundMusic = true;
 
-	GameState State = MainMenu;
+	GameState State = InPlay;
 
 	void SetPlayer(ThePlayer* player);
 	void SetEnemies(EnemyControl* enemies);
-	void SetCityManager(CityManager* cityManager);
+	void SetTheCityManager(TheCityManager* cityManager);
 	void SetMissileBases(TheABMBaseManager* missileBases);
 	void SetExplosionModel(Model& model);
 
@@ -68,13 +68,14 @@ private:
 
 	ThePlayer* Player = {};
 	EnemyControl* Enemies = {};
-	CityManager* Cities = {};
+	TheCityManager* CityManager = {};
 	TheABMBaseManager* ABMBases = {};
 
 	std::vector<TheExplosion*> Explosions = {};
 
 	void MakeExplosion(Vector3 position);
 	void GamePlay();
-	void CheckPlayerMissiles();
+	void CheckABMs();
+	void CheckICBMs();
 	void IsOver();
 };

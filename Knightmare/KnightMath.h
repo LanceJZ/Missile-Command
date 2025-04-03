@@ -22,13 +22,14 @@ public:
 	float GetRandomScreenX();
 	float GetRandomFloat(float min, float max);
 	float GetRandomRadian();
-	float GetRotationTowardsTargetZ(Vector3& origin, Vector3& target, float facingAngle,
-		float magnitude);
+	float GetRotationTowardsTargetZ(Vector3& origin, Vector3& target,
+		float facingAngle, float magnitude);
 	float GetAngleFromVectorsZ(Vector3& origin, Vector3& target);
 	Vector3 GetRandomVelocity(float speed);
 	Vector3 GetRandomVelocity(float speed, float radianDirection);
 	Vector3 GetVelocityFromAngleZ(float rotation, float magnitude);
 	Vector3 GetVelocityFromAngleZ(float magnitude);
+	Vector3 GetVelocityFromVectorsZ(Vector3& origin, Vector3& target, float magnitude);
 	Color GetRandomColor();
 	Quaternion EulerToQuaternion(float yaw, float pitch, float roll);
 

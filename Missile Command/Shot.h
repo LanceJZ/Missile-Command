@@ -19,17 +19,17 @@ public:
 	void Update(float deltaTime);
 	void Draw3D();
 
-	void Spawn(Vector3 position);
-	void Spawn(Vector3 position, Vector3 velocity);
-	void Spawn(Vector3 position, Vector3 velocity, float lifetime);
-	void SetLifeTimer(float lifetime);
+	void Spawn(Vector3& position);
+	void Spawn(Vector3& position, Vector3& velocity);
+	void Spawn(Vector3& position, Vector3& velocity, Color color);
 	void Destroy();
 
 	bool CheckHitTarget();
 
 private:
-	size_t LifeTimerID = 0;
 	size_t CurrentColorTimerID = 0;
+
+	Color TrailColor = {};
 
 	Colors GameColors;
 

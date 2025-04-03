@@ -19,9 +19,9 @@ void GameLogic::SetEnemies(EnemyControl* enemies)
 	Enemies = enemies;
 }
 
-void GameLogic::SetCityManager(CityManager* cityManager)
+void GameLogic::SetTheCityManager(TheCityManager* cityManager)
 {
-	Cities = cityManager;
+	CityManager = cityManager;
 }
 
 void GameLogic::SetMissileBases(TheABMBaseManager* missileBases)
@@ -41,7 +41,7 @@ bool GameLogic::Initialize()
 
 	AdjustedFieldSize = Vector2Multiply(FieldSize, { 0.5f, 0.5f });
 
-	State = MainMenu;
+	//State = MainMenu;
 
 	WaveColors[0].Background = BLACK;
 	WaveColors[0].Ground = YELLOW;
@@ -114,7 +114,7 @@ bool GameLogic::BeginRun()
 
 	for (int i = 0; i < 6; i++)
 	{
-		Enemies->ICBMControl->Citys[i].Position = Cities->Cities[i]->Position;
+		Enemies->ICBMControl->Citys[i].Position = CityManager->Cities[i]->Position;
 		Enemies->ICBMControl->Citys[i].Active = true;
 		Enemies->ICBMControl->Citys[i].Targeted = false;
 	}
@@ -145,9 +145,8 @@ void GameLogic::FixedUpdate()
 		{
 			State = InPlay;
 			Player->Paused = false;
+			return;
 		}
-
-		return;
 	}
 	if (State == MainMenu)
 	{
@@ -175,11 +174,16 @@ void GameLogic::FixedUpdate()
 	}
 	else if (State == InPlay)
 	{
+		if (IsKeyPressed(KEY_P) || (IsGamepadAvailable(0)
+			&& IsGamepadButtonPressed(0, 13)))
+		{
+			State = Pause;
+			Player->Paused = true;
+			return;
+		}
+
 		GamePlay();
 	}
-
-
-	CheckPlayerMissiles();
 }
 
 void GameLogic::Input()
@@ -218,11 +222,13 @@ void GameLogic::MakeExplosion(Vector3 position)
 
 void GameLogic::GamePlay()
 {
+	CheckABMs();
+	CheckICBMs();
 }
 
-void GameLogic::CheckPlayerMissiles()
+void GameLogic::CheckABMs()
 {
-	for (auto missile : Player->Missiles)
+	for (auto missile : Player->ABMs)
 	{
 		if (missile->Enabled)
 		{
@@ -230,6 +236,27 @@ void GameLogic::CheckPlayerMissiles()
 			{
 				Player->Targets.at(missile->TargetIndex)->Destroy();
 				MakeExplosion(missile->Position);
+			}
+		}
+	}
+}
+
+void GameLogic::CheckICBMs()
+{
+	for (auto missile : Enemies->ICBMControl->ICBMs)
+	{
+		if (missile->Enabled)
+		{
+			for (int i = 0; i < Explosions.size(); i++)
+			{
+				if (Explosions[i]->Enabled)
+				{
+					if (missile->CirclesIntersect(*Explosions[i]))
+					{
+						missile->Destroy();
+						MakeExplosion(missile->Position);
+					}
+				}
 			}
 		}
 	}

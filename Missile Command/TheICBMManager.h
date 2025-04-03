@@ -18,7 +18,7 @@ public:
 
 	unsigned Wave = 0;
 
-	std::vector<Shot*> ICBMs = {};
+	Shot* ICBMs[8];
 	TargetData Citys[6] = {};
 	TargetData ABMBases[3] = {};
 
@@ -29,13 +29,30 @@ public:
 
 	void Update();
 
-private:
+	void FireIICBM(Vector3& position, Vector3& target);
+	void NewWave();
+	void EndWave();
+	void Reset();
 
-	float NewSalvoHieght = 0.0f;
+private:
+	bool WaveEnded = false;
+
+	size_t LaunchCheckTimerID = 0;
+
+	unsigned ICBMsFiredMax = 12;
+	unsigned ICBMsFiredThisWave = 0;
+
+	float MissileSpeed = 20.15f;
+	float LaunchCealing = 0.0f;
+	float CealingPercent = 0.87f;
+	const float MinimumCleaingPercent = 0.68f;
+
+	unsigned NumberOfICBMsEachWave[19] = {};
 
 	Color CurrentColor = Red;
-	Model ICBMModel = { 0 };
 
 	Colors GameColors;
 
+	bool IsItTimeForAnotherSalvo();
+	void FireSalvo();
 };

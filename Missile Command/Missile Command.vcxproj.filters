@@ -36,7 +36,7 @@
     <ClCompile Include="TheBackground.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CityManager.cpp">
+    <ClCompile Include="TheCityManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TheICBMManager.cpp">
@@ -80,9 +80,6 @@
     <ClInclude Include="TheBackground.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CityManager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="TheICBMManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -111,6 +108,9 @@
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TheCityManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

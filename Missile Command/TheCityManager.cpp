@@ -1,6 +1,6 @@
-#include "CityManager.h"
+#include "TheCityManager.h"
 
-CityManager::CityManager()
+TheCityManager::TheCityManager()
 {
 	for (int i = 0; i < 6; i++)
 	{
@@ -8,15 +8,16 @@ CityManager::CityManager()
 	}
 }
 
-CityManager::~CityManager()
+TheCityManager::~TheCityManager()
 {
 }
 
-bool CityManager::Initialize()
+bool TheCityManager::Initialize()
 {
 	Common::Initialize();
 
-	//256 is the width of the ground model. 5 is the scale of the ground model.
+	// 256 is the X axis width of the ground model.
+	// 5 is the scale of the ground model.
 
 	Cities[0]->Position = { (45.0f - 256.0f / 2) * 5.0f,
 		(float)WindowHalfHeight - 14.15f * 5.0f, 0 };
@@ -34,13 +35,13 @@ bool CityManager::Initialize()
 	return false;
 }
 
-bool CityManager::BeginRun()
+bool TheCityManager::BeginRun()
 {
 
 	return false;
 }
 
-void CityManager::SetCityModels(Model& innerModel, Model& outerModel)
+void TheCityManager::SetCityModels(Model& innerModel, Model& outerModel)
 {
 	for (int i = 0; i < 6; i++)
 	{
@@ -48,7 +49,7 @@ void CityManager::SetCityModels(Model& innerModel, Model& outerModel)
 	}
 }
 
-void CityManager::Update()
+void TheCityManager::Update()
 {
 	Common::Update();
 

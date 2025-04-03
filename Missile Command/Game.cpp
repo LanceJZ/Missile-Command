@@ -6,10 +6,10 @@ Game::Game()
 
 	LogicID = EM.AddCommon(Logic = DBG_NEW GameLogic());
 	BackGroundID = EM.AddCommon(BackGround = DBG_NEW TheBackground());
-	EnemiesID = EM.AddCommon(Enemies = DBG_NEW EnemyControl());
 	PlayerID = EM.AddModel3D(Player = DBG_NEW ThePlayer());
 	MissileBasesID = EM.AddCommon(ABMBases = DBG_NEW TheABMBaseManager());
-	CitiesID = EM.AddCommon(Cities = DBG_NEW CityManager());
+	EnemiesID = EM.AddCommon(Enemies = DBG_NEW EnemyControl());
+	CitiesID = EM.AddCommon(Cities = DBG_NEW TheCityManager());
 }
 
 Game::~Game()
@@ -26,9 +26,9 @@ bool Game::Initialize() //Initialize
 	FieldSize = { GetScreenWidth() * multiW, (float)GetScreenHeight() * multiH };
 
 	Logic->SetPlayer(Player);
-	Logic->SetEnemies(Enemies);
 	Logic->SetMissileBases(ABMBases);
-	Logic->SetCityManager(Cities);
+	Logic->SetEnemies(Enemies);
+	Logic->SetTheCityManager(Cities);
 
 	Enemies->SetPlayer(Player);
 
@@ -51,15 +51,15 @@ bool Game::Load()
 {
 	Model cube = CM.LoadAndGetModel("Cube");
 
+	Logic->SetExplosionModel(CM.LoadAndGetModel("Explosion"));
 	BackGround->SetGroundModel(CM.LoadAndGetModel("Ground"));
+
 
 	Player->SetModel(CM.LoadAndGetModel("PlayerCursor"));
 	Player->SetTargetandShotModel(CM.LoadAndGetModel("PlayerTarget"), cube);
 
 	ABMBases->SetMissileModel(CM.LoadAndGetModel("MissileAmmo"));
 	Enemies->SetICBMModel(cube);
-
-	Logic->SetExplosionModel(CM.LoadAndGetModel("Explosion"));
 
 	Cities->SetCityModels(CM.LoadAndGetModel("InnerCity"),
 		CM.LoadAndGetModel("OuterCity"));

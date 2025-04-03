@@ -2,7 +2,6 @@
 
 Shot::Shot()
 {
-	LifeTimerID = EM.AddTimer();
 	CurrentColorTimerID = EM.AddTimer();
 }
 
@@ -14,6 +13,9 @@ bool Shot::Initialize()
 {
 	Model3D::Initialize();
 
+	Enabled = false;
+	Cull = false;
+
 	EM.SetTimer(CurrentColorTimerID, 0.05f);
 
 	return false;
@@ -21,7 +23,9 @@ bool Shot::Initialize()
 
 bool Shot::BeginRun()
 {
-	Enabled = false;
+	Model3D::BeginRun();
+
+	Radius = 2;
 
 	return false;
 }
@@ -29,8 +33,6 @@ bool Shot::BeginRun()
 void Shot::Update(float deltaTime)
 {
 	Model3D::Update(deltaTime);
-
-	//if (EM.TimerElapsed(LifeTimerID)) Destroy();
 
 	if (EM.TimerElapsed(CurrentColorTimerID)) ChangeColor();
 }
@@ -40,27 +42,23 @@ void Shot::Draw3D()
 	Model3D::Draw3D();
 }
 
-void Shot::Spawn(Vector3 position)
+void Shot::Spawn(Vector3& position)
 {
 	Model3D::Spawn(position);
+
 	EM.ResetTimer(CurrentColorTimerID);
 }
 
-void Shot::Spawn(Vector3 position, Vector3 velocity)
+void Shot::Spawn(Vector3& position, Vector3& velocity)
 {
 	Spawn(position);
 	Velocity = velocity;
 }
 
-void Shot::Spawn(Vector3 position, Vector3 velocity, float lifetime)
+void Shot::Spawn(Vector3& position, Vector3& velocity, Color color)
 {
-	SetLifeTimer(lifetime);
 	Spawn(position, velocity);
-}
-
-void Shot::SetLifeTimer(float lifetime)
-{
-	EM.ResetTimer(LifeTimerID, lifetime);
+	TrailColor = color;
 }
 
 void Shot::Destroy()

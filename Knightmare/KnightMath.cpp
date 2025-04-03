@@ -133,6 +133,14 @@ Vector3 KnightMath::GetVelocityFromAngleZ(float magnitude)
 	return GetVelocityFromAngleZ(ang, magnitude);
 }
 
+Vector3 KnightMath::GetVelocityFromVectorsZ(Vector3& origin, Vector3& target,
+	float magnitude)
+{
+	float angle = (atan2f(target.y - origin.y, target.x - origin.x));
+
+	return { cosf(angle) * magnitude, sinf(angle) * magnitude, 0 };;
+}
+
 Color KnightMath::GetRandomColor()
 {
 	return {(unsigned char)GetRandomValue(0, 255),

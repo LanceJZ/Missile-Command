@@ -149,7 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CityManager.cpp">
+    <ClCompile Include="TheCityManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -193,7 +193,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CityManager.h">
+    <ClInclude Include="TheCityManager.h">
       <SubType>
       </SubType>
     </ClInclude>

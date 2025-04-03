@@ -134,7 +134,7 @@ int ThePlayer::GetScore()
 	return Score;
 }
 
-void ThePlayer::FireMissile()
+void ThePlayer::FireABM()
 {
 	float distanceAlpha =
 		Vector3Distance(Position, ABMBaseManager->ABMBases[0]->Position);
@@ -221,17 +221,16 @@ void ThePlayer::FireMissile()
 		}
 	}
 
-	Vector3 missileBasePosition = ABMBaseManager->ABMBases[closest]->Position;
-	Vector3 missileVelocity =
-		Vector3Multiply(GetVelocityFromVectorZ(missileBasePosition,
-		ShotSpeed), {-1.0f, -1.0f, 0});
+	Vector3 abmBasePosition = ABMBaseManager->ABMBases[closest]->Position;
+	Vector3 abmVelocity =
+		M.GetVelocityFromVectorsZ(abmBasePosition, Position, ShotSpeed);
 
 	bool spawnShot = true;
-	size_t shotNumber = Missiles.size();
+	size_t shotNumber = ABMs.size();
 
 	for (size_t i = 0; i < shotNumber; i++)
 	{
-		if (!Missiles.at(i)->Enabled)
+		if (!ABMs.at(i)->Enabled)
 		{
 			spawnShot = false;
 			shotNumber = i;
@@ -241,14 +240,14 @@ void ThePlayer::FireMissile()
 
 	if (spawnShot)
 	{
-		Missiles.push_back(DBG_NEW Shot());
-		FM.Model3DFactory(Missiles.back(), ShotModel, Aqua, missileBasePosition,
-			missileVelocity);
+		ABMs.push_back(DBG_NEW Shot());
+		FM.Model3DFactory(ABMs.back(), ShotModel, Aqua, abmBasePosition,
+			abmVelocity);
 	}
-	else Missiles[shotNumber]->Spawn(missileBasePosition, missileVelocity);
+	else ABMs[shotNumber]->Spawn(abmBasePosition, abmVelocity, CurrentColor);
 
-	Missiles[shotNumber]->TargetIndex = SetTarget();
-	Missiles[shotNumber]->TargetPosition = Position;
+	ABMs[shotNumber]->TargetIndex = SetTarget();
+	ABMs[shotNumber]->TargetPosition = Position;
 }
 
 void ThePlayer::CrosshairUpdate()
@@ -313,7 +312,7 @@ size_t ThePlayer::SetTarget()
 	if (spawnTarget)
 	{
 		Targets.push_back(new Model3D());
-		FM.Model3DFactory(Targets.at (targetNumber), TargetModel, TargetColor, Position,
+		FM.Model3DFactory(Targets.at (targetNumber), TargetModel, CurrentColor, Position,
 			{ 0, 0, 0 });
 	}
 	else Targets.at(targetNumber)->Spawn(Position);
@@ -407,6 +406,6 @@ void ThePlayer::Mouse()
 {
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
-		FireMissile();
+		FireABM();
 	}
 }

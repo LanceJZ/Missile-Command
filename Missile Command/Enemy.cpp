@@ -169,7 +169,6 @@ void Enemy::Shoot(Vector3 velocity)
 		Shots[spawnNumber]->BeginRun();
 	}
 
-	Shots[spawnNumber]->Spawn(Position, velocity, ShotLifeTime);
 }
 
 void Enemy::ChasePlayer()
@@ -202,7 +201,7 @@ void Enemy::Explode()
 
 bool Enemy::CheckCollisions()
 {
-	for (const auto& shot : Player->Missiles)
+	for (const auto& shot : Player->ABMs)
 	{
 		if (shot->CirclesIntersect(*this))
 		{
