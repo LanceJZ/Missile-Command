@@ -19,7 +19,7 @@ public:
 	unsigned Wave = 0;
 
 	Shot* ICBMs[8];
-	TargetData Citys[6] = {};
+	TargetData Cities[6] = {};
 	TargetData ABMBases[3] = {};
 
 	void SetMissileModels(Model& missileModel);
@@ -41,6 +41,8 @@ private:
 
 	unsigned ICBMsFiredMax = 12;
 	unsigned ICBMsFiredThisWave = 0;
+	unsigned CitiesTargeted = 0;
+	const unsigned CitiesTargetedMax = 3;
 
 	float MissileSpeed = 20.15f;
 	float LaunchCealing = 0.0f;
@@ -55,4 +57,5 @@ private:
 
 	bool IsItTimeForAnotherSalvo();
 	void FireSalvo();
+	void CitiesToTarget();
 };

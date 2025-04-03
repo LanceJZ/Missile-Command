@@ -82,6 +82,7 @@ int WinMain()
 #if _DEBUG
 		if (deltaTime > 0.05f) deltaTime = 0.05f;
 #endif
+		EM.AlwaysUpdate(deltaTime);
 
 		if (game.Logic->State != GameState::Pause &&
 			game.Logic->State != GameState::Ended)
@@ -92,6 +93,20 @@ int WinMain()
 			game.Update(deltaTime);
 			EM.FixedUpdate(deltaTime);
 			game.FixedUpdate(deltaTime);
+
+			if (IsKeyPressed(KEY_P) || (IsGamepadAvailable(0)
+				&& IsGamepadButtonPressed(0, 13)))
+			{
+				game.Logic->State = Pause;
+			}
+		}
+		else
+		{
+			if (IsKeyPressed(KEY_P) || (IsGamepadAvailable(0)
+				&& IsGamepadButtonPressed(0, 13)))
+			{
+				game.Logic->State = InPlay;
+			}
 		}
 
 		BeginDrawing();

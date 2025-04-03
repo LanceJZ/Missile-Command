@@ -76,7 +76,12 @@ bool Game::BeginRun()
 
 void Game::Input()
 {
-	GameInput();
+	Logic->Input();
+
+	if (Logic->State == Ended)
+	{
+		if (IsKeyPressed(KEY_N)) Logic->NewGame();
+	}
 }
 
 
@@ -124,16 +129,4 @@ void Game::Draw2D()
 
 void Game::GameInput()
 {
-	Logic->Input();
-
-	if (IsKeyPressed(KEY_P))
-	{
-		if (Logic->State == Pause) Logic->State = InPlay;
-		else if (Logic->State == InPlay) Logic->State = Pause;
-	}
-
-	if (Logic->State == Ended)
-	{
-		if (IsKeyPressed(KEY_N)) Logic->NewGame();
-	}
 }

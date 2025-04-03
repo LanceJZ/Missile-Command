@@ -28,6 +28,8 @@ bool TheCity::BeginRun()
 {
 	Model3D::BeginRun();
 
+	Radius *= 0.5f;
+
 	return false;
 }
 
@@ -52,10 +54,12 @@ void TheCity::Spawn(Vector3 position)
 {
 	Entity::Spawn(position);
 
+	InnerModel->Spawn(position);
 }
 
 void TheCity::Destroy()
 {
 	Entity::Destroy();
 
+	InnerModel->Destroy();
 }

@@ -10,6 +10,7 @@ public:
 	virtual ~TheABMBase();
 
 	Vector3 Position = { 0, 0, 0 };
+	float Radius = 10.0f;
 	Model3D* ABMIcons[10];
 
 	bool Initialize();

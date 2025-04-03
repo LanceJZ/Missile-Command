@@ -56,6 +56,8 @@ public:
 
 private:
 	bool GameEnded = false;
+	bool Paused = false;
+	bool ReadyForNextWave = false;
 	unsigned Wave = 0;
 
 	Vector2 AdjustedFieldSize = {};
@@ -69,13 +71,16 @@ private:
 	ThePlayer* Player = {};
 	EnemyControl* Enemies = {};
 	TheCityManager* CityManager = {};
-	TheABMBaseManager* ABMBases = {};
+	TheABMBaseManager* ABMBaseManager = {};
 
 	std::vector<TheExplosion*> Explosions = {};
 
 	void MakeExplosion(Vector3 position);
-	void GamePlay();
+	void InGame();
+	void InMainMenu();
 	void CheckABMs();
 	void CheckICBMs();
+	void CheckExplosionsActive();
+	void NextWave();
 	void IsOver();
 };

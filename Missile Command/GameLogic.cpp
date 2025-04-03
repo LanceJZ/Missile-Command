@@ -26,7 +26,7 @@ void GameLogic::SetTheCityManager(TheCityManager* cityManager)
 
 void GameLogic::SetMissileBases(TheABMBaseManager* missileBases)
 {
-	ABMBases = missileBases;
+	ABMBaseManager = missileBases;
 	Player->SetTheABMBaseManager(missileBases);
 }
 
@@ -40,8 +40,6 @@ bool GameLogic::Initialize()
 	Common::Initialize();
 
 	AdjustedFieldSize = Vector2Multiply(FieldSize, { 0.5f, 0.5f });
-
-	//State = MainMenu;
 
 	WaveColors[0].Background = BLACK;
 	WaveColors[0].Ground = YELLOW;
@@ -110,18 +108,19 @@ bool GameLogic::BeginRun()
 {
 	Common::BeginRun();
 
-	GameEnded = true;
+	//State = MainMenu;
+	//GameEnded = true;
 
 	for (int i = 0; i < 6; i++)
 	{
-		Enemies->ICBMControl->Citys[i].Position = CityManager->Cities[i]->Position;
-		Enemies->ICBMControl->Citys[i].Active = true;
-		Enemies->ICBMControl->Citys[i].Targeted = false;
+		Enemies->ICBMControl->Cities[i].Position = CityManager->Cities[i]->Position;
+		Enemies->ICBMControl->Cities[i].Active = true;
+		Enemies->ICBMControl->Cities[i].Targeted = false;
 	}
 
 	for (int i = 0; i < 3; i++)
 	{
-		Enemies->ICBMControl->ABMBases[i].Position = ABMBases->ABMBases[i]->Position;
+		Enemies->ICBMControl->ABMBases[i].Position = ABMBaseManager->ABMBases[i]->Position;
 		Enemies->ICBMControl->ABMBases[i].Active = true;
 		Enemies->ICBMControl->ABMBases[i].Targeted = false;
 	}
@@ -138,16 +137,22 @@ void GameLogic::FixedUpdate()
 {
 	Common::FixedUpdate();
 
-	if (State == Pause)
+	if (State == MainMenu)
 	{
-		if (IsKeyPressed(KEY_P) || (IsGamepadAvailable(0)
-			&& IsGamepadButtonPressed(0, 13)))
-		{
-			State = InPlay;
-			Player->Paused = false;
-			return;
-		}
+		InMainMenu();
 	}
+	else if (State == Player->GameOver)
+	{
+		IsOver();
+	}
+	else if (State == InPlay)
+	{
+		InGame();
+	}
+}
+
+void GameLogic::Input()
+{
 	if (State == MainMenu)
 	{
 		if (!GameEnded)
@@ -168,26 +173,6 @@ void GameLogic::FixedUpdate()
 			}
 		}
 	}
-	else if (State == Player->GameOver)
-	{
-		IsOver();
-	}
-	else if (State == InPlay)
-	{
-		if (IsKeyPressed(KEY_P) || (IsGamepadAvailable(0)
-			&& IsGamepadButtonPressed(0, 13)))
-		{
-			State = Pause;
-			Player->Paused = true;
-			return;
-		}
-
-		GamePlay();
-	}
-}
-
-void GameLogic::Input()
-{
 }
 
 void GameLogic::NewGame()
@@ -220,10 +205,22 @@ void GameLogic::MakeExplosion(Vector3 position)
 	else Explosions.at(explosionNumber)->Spawn(position);
 }
 
-void GameLogic::GamePlay()
+void GameLogic::InGame()
 {
 	CheckABMs();
 	CheckICBMs();
+
+	if (ReadyForNextWave) CheckExplosionsActive();
+}
+
+void GameLogic::InMainMenu()
+{
+	if (!GameEnded)
+	{
+	}
+	else
+	{
+	}
 }
 
 void GameLogic::CheckABMs()
@@ -243,10 +240,14 @@ void GameLogic::CheckABMs()
 
 void GameLogic::CheckICBMs()
 {
+	int missileCount = 0;
+
 	for (auto missile : Enemies->ICBMControl->ICBMs)
 	{
 		if (missile->Enabled)
 		{
+			missileCount++;
+
 			for (int i = 0; i < Explosions.size(); i++)
 			{
 				if (Explosions[i]->Enabled)
@@ -258,8 +259,68 @@ void GameLogic::CheckICBMs()
 					}
 				}
 			}
+
+			for (auto base : ABMBaseManager->ABMBases)
+			{
+				if (missile->CirclesIntersect(base->Position, base->Radius))
+				{
+					missile->Destroy();
+					MakeExplosion(missile->Position);
+					base->Clear();
+				}
+			}
+
+			for (auto city : CityManager->Cities)
+			{
+				if (missile->CirclesIntersect(*city))
+				{
+					missile->Destroy();
+					MakeExplosion(city->Position);
+					city->Destroy();
+				}
+			}
 		}
 	}
+
+	if (missileCount == 0) ReadyForNextWave = true;
+}
+
+void GameLogic::CheckExplosionsActive()
+{
+	bool done = true;
+
+	for (auto explosion : Explosions)
+	{
+		if (explosion->Enabled)
+		{
+			done = false;
+		}
+	}
+
+	if (done) NextWave();
+}
+
+void GameLogic::NextWave()
+{
+	ReadyForNextWave = false;
+	int cityCount = 0;
+
+	for (int i = 0; i < 6; i++)
+	{
+		Enemies->ICBMControl->Cities[i].Active = CityManager->Cities[i]->Enabled;
+		Enemies->ICBMControl->Cities[i].Targeted = false;
+
+		if (CityManager->Cities[i]->Enabled) cityCount++;
+	}
+
+	if (cityCount < 1)
+	{
+		State = Ended;
+		return;
+	}
+
+	Enemies->ICBMControl->NewWave();
+	ABMBaseManager->Reset();
 }
 
 void GameLogic::IsOver()
