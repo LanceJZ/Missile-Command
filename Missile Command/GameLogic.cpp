@@ -137,46 +137,41 @@ void GameLogic::FixedUpdate()
 {
 	Common::FixedUpdate();
 
-	if (State == MainMenu)
-	{
-		InMainMenu();
-	}
-	else if (State == Player->GameOver)
-	{
-		IsOver();
-	}
-	else if (State == InPlay)
-	{
-		InGame();
-	}
+	GameStateSwitch();
 }
 
 void GameLogic::Input()
 {
 	if (State == MainMenu)
 	{
-		if (!GameEnded)
+		if (GameEnded)
 		{
 		}
 		else
 		{
-			if (IsGamepadAvailable(0))
-			{
-				if (IsGamepadButtonPressed(0, 15))//Start button
-				{
-					NewGame();
-				}
-			}
-			else if (IsKeyPressed(KEY_N))
+		}
+	}
+	else if (State == Ended)
+	{
+		if (IsGamepadAvailable(0))
+		{
+			if (IsGamepadButtonPressed(0, 15))//Start button
 			{
 				NewGame();
 			}
+		}
+		else if (IsKeyPressed(KEY_N))
+		{
+			NewGame();
 		}
 	}
 }
 
 void GameLogic::NewGame()
 {
+	NextNewCityScore = 10000;
+	Score.ClearScore();
+
 	Player->NewGame();
 	Enemies->NewGame();
 }
@@ -215,7 +210,7 @@ void GameLogic::InGame()
 
 void GameLogic::InMainMenu()
 {
-	if (!GameEnded)
+	if (GameEnded)
 	{
 	}
 	else
@@ -225,7 +220,7 @@ void GameLogic::InMainMenu()
 
 void GameLogic::CheckABMs()
 {
-	for (auto missile : Player->ABMs)
+	for (const auto &missile : Player->ABMs)
 	{
 		if (missile->Enabled)
 		{
@@ -254,13 +249,13 @@ void GameLogic::CheckICBMs()
 				{
 					if (missile->CirclesIntersect(*Explosions[i]))
 					{
-						missile->Destroy();
 						MakeExplosion(missile->Position);
+						missile->PlayerHit();
 					}
 				}
 			}
 
-			for (auto base : ABMBaseManager->ABMBases)
+			for (const auto &base : ABMBaseManager->ABMBases)
 			{
 				if (missile->CirclesIntersect(base->Position, base->Radius))
 				{
@@ -270,7 +265,7 @@ void GameLogic::CheckICBMs()
 				}
 			}
 
-			for (auto city : CityManager->Cities)
+			for (const auto &city : CityManager->Cities)
 			{
 				if (missile->CirclesIntersect(*city))
 				{
@@ -289,7 +284,7 @@ void GameLogic::CheckExplosionsActive()
 {
 	bool done = true;
 
-	for (auto explosion : Explosions)
+	for (const auto &explosion : Explosions)
 	{
 		if (explosion->Enabled)
 		{
@@ -297,7 +292,7 @@ void GameLogic::CheckExplosionsActive()
 		}
 	}
 
-	if (done) NextWave();
+	if (done) State = StartNewWave;
 }
 
 void GameLogic::NextWave()
@@ -313,6 +308,17 @@ void GameLogic::NextWave()
 		if (CityManager->Cities[i]->Enabled) cityCount++;
 	}
 
+	Score.AddToScore(cityCount * 100);
+
+	int missileBonus = 0;
+
+	for (const auto &abmBase : ABMBaseManager->ABMBases)
+	{
+		missileBonus += abmBase->GetMissileCount();
+	}
+
+	Score.AddToScore(missileBonus * 5);
+
 	if (cityCount < 1)
 	{
 		State = Ended;
@@ -321,8 +327,44 @@ void GameLogic::NextWave()
 
 	Enemies->ICBMControl->NewWave();
 	ABMBaseManager->Reset();
+
+	State = InPlay;
 }
 
 void GameLogic::IsOver()
 {
+	GameEnded = true;
+	Player->GameOver = true;
+	Player->Destroy();
+}
+
+void GameLogic::GameStateSwitch()
+{
+	switch (State)
+	{
+	case MainMenu:
+		InMainMenu();
+		break;
+	case InPlay:
+		InGame();
+		break;
+	case Ended:
+		IsOver();
+		break;
+	case Bonus:
+		break;
+	case BonusCity:
+		break;
+	case BonusCityAwarded:
+		break;
+	case Attract:
+		break;
+	case HighScores:
+		break;
+	case StartNewWave:
+		NextWave();
+		break;
+	default:
+		break;
+	}
 }

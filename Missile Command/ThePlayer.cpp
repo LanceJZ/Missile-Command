@@ -45,6 +45,8 @@ void ThePlayer::Input()
 {
 	Model3D::Input();
 
+	if (GameOver) return;
+
 	Keyboard();
 	Mouse();
 
@@ -62,6 +64,8 @@ void ThePlayer::Update(float deltaTime)
 
 void ThePlayer::FixedUpdate(float deltaTime)
 {
+	if (GameOver) return;
+
 	CrosshairUpdate();
 	TargetUpdate();
 }
@@ -70,37 +74,6 @@ void ThePlayer::Draw3D()
 {
 	Model3D::Draw3D();
 
-}
-
-void ThePlayer::Hit()
-{
-	Acceleration = { 0 };
-	Velocity = { 0 };
-	Lives--;
-	Enabled = false;
-}
-
-void ThePlayer::Hit(Vector3 location, Vector3 velocity)
-{
-	Entity::Hit();
-
-}
-
-void ThePlayer::ScoreUpdate(int addToScore)
-{
-	Score += addToScore;
-
-	if (Score > HighScore)
-	{
-		HighScore = Score;
-	}
-
-	if (Score > NextNewCityScore)
-	{
-		NextNewCityScore += 10000;
-		Lives++;
-		NewLife = true;
-	}
 }
 
 void ThePlayer::Reset()
@@ -117,21 +90,8 @@ void ThePlayer::Spawn(Vector3 position)
 
 void ThePlayer::NewGame()
 {
-	Lives = 4;
-	NextNewCityScore = 10000;
-	Score = 0;
 	GameOver = false;
 	Reset();
-}
-
-void ThePlayer::SetHighScore(int highScore)
-{
-	HighScore = highScore;
-}
-
-int ThePlayer::GetScore()
-{
-	return Score;
 }
 
 void ThePlayer::FireABM()

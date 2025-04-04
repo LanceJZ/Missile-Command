@@ -64,8 +64,6 @@ void Enemy::CheckShotsHitPlayer()
 
 		if (shot->CirclesIntersect(*Player))
 		{
-			Player->Hit(shot->Position, shot->Velocity);
-			shot->Destroy();
 			break;
 		}
 	}

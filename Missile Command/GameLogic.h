@@ -18,7 +18,8 @@ enum GameState
 	Pause,
 	HighScores,
 	MainMenu,
-	Attract
+	Attract,
+	StartNewWave
 };
 
 struct WaveColorData
@@ -58,7 +59,9 @@ private:
 	bool GameEnded = false;
 	bool Paused = false;
 	bool ReadyForNextWave = false;
+
 	unsigned Wave = 0;
+	unsigned NextNewCityScore = 10000;
 
 	Vector2 AdjustedFieldSize = {};
 
@@ -83,4 +86,5 @@ private:
 	void CheckExplosionsActive();
 	void NextWave();
 	void IsOver();
+	void GameStateSwitch();
 };

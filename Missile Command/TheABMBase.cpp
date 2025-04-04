@@ -4,7 +4,7 @@ TheABMBase::TheABMBase()
 {
 	for (int i = 0; i < 10; i++)
 	{
-		EM.AddModel3D(ABMIcons[i] = DBG_NEW Model3D());
+		EM.AddModel3D(ABMAmmo[i] = DBG_NEW Model3D());
 	}
 }
 
@@ -25,11 +25,11 @@ bool TheABMBase::BeginRun()
 
 	for (int i = 0; i < 10; i++)
 	{
-		ABMIcons[i]->HideCollision = true;
-		ABMIcons[i]->Scale = 1.75f;
-		ABMIcons[i]->Cull = false;
-		ABMIcons[i]->Stationary = true;
-		ABMIcons[i]->ModelColor = Blue;
+		ABMAmmo[i]->HideCollision = true;
+		ABMAmmo[i]->Scale = 1.75f;
+		ABMAmmo[i]->Cull = false;
+		ABMAmmo[i]->Stationary = true;
+		ABMAmmo[i]->ModelColor = Blue;
 	}
 
 	return false;
@@ -39,7 +39,7 @@ void TheABMBase::SetMissileModel(Model& model)
 {
 	for (int i = 0; i < 10; i++)
 	{
-		ABMIcons[i]->SetModel(model);
+		ABMAmmo[i]->SetModel(model);
 	}
 }
 
@@ -59,7 +59,7 @@ void TheABMBase::SpawnMissileBase(Vector3 position)
 
 			float positionY = position.y + 2.0f + (8.5f * line);
 
-			ABMIcons[index]->Spawn({ positionX, positionY, 0.0f });
+			ABMAmmo[index]->Spawn({ positionX, positionY, 0.0f });
 			index++;
 		}
 	}
@@ -73,7 +73,7 @@ void TheABMBase::Update()
 
 void TheABMBase::Reset()
 {
-	for (auto missile : ABMIcons)
+	for (auto missile : ABMAmmo)
 	{
 		missile->Enabled = true;
 	}
@@ -81,24 +81,36 @@ void TheABMBase::Reset()
 
 void TheABMBase::Clear()
 {
-	for (auto missile : ABMIcons)
+	for (auto missile : ABMAmmo)
 	{
 		missile->Enabled = false;
 	}
 }
 
-bool TheABMBase::MissileFired()
+int TheABMBase::GetMissileCount()
 {
-	size_t lastInStack = 0;
+	int count = 0;
 
-	for (auto missile : ABMIcons)
+	for (const auto &missile : ABMAmmo)
 	{
-		if (missile->Enabled) lastInStack++;
-
-		if (lastInStack < 1) return false;
+		if (missile->Enabled) count++;
 	}
 
-	ABMIcons[lastInStack - 1]->Enabled = false;
+	return count;
+}
+
+bool TheABMBase::MissileFired()
+{
+	int lastInStack = -1;
+
+	for (auto missile : ABMAmmo)
+	{
+		if (missile->Enabled) lastInStack++;
+	}
+
+	if (lastInStack < 0) return false;
+
+	ABMAmmo[lastInStack]->Enabled = false;
 
 	return true;
 }

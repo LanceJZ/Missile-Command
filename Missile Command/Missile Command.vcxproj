@@ -154,7 +154,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="Colors.cpp" />
-    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyControl.cpp">
       <SubType>
       </SubType>
@@ -198,7 +197,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Colors.h" />
-    <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyControl.h">
       <SubType>
       </SubType>

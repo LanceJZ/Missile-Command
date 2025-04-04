@@ -201,6 +201,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="TheScore.cpp" />
     <ClCompile Include="ThrustControl.cpp">
       <SubType>
       </SubType>
@@ -246,6 +247,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="TheScore.h" />
     <ClInclude Include="ThrustControl.h">
       <SubType>
       </SubType>

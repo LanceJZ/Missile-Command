@@ -9,6 +9,7 @@ public:
 	TheCityManager();
 	virtual ~TheCityManager();
 
+	unsigned BonusCities = 0;
 	TheCity* Cities[6];
 
 	bool Initialize();
@@ -17,6 +18,9 @@ public:
 	void SetCityModels(Model& InnerModel, Model& OuterModel);
 
 	void Update();
+
+	void NewWave();
+	void NewGame();
 
 private:
 

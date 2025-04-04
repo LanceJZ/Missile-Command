@@ -75,7 +75,7 @@ void TheICBMManager::Update()
 		if (IsItTimeForAnotherSalvo() && !WaveEnded) FireSalvo();
 	}
 
-	for (auto missile : ICBMs)
+	for (const auto &missile : ICBMs)
 	{
 		if (missile->Enabled)
 		{
@@ -122,11 +122,6 @@ void TheICBMManager::NewWave()
 void TheICBMManager::EndWave()
 {
 	WaveEnded = true;
-
-	for (auto missile : ICBMs)
-	{
-		//missile->Reset();
-	}
 }
 
 void TheICBMManager::Reset()
@@ -142,7 +137,7 @@ void TheICBMManager::Reset()
 
 bool TheICBMManager::IsItTimeForAnotherSalvo()
 {
-	for (auto missile : ICBMs)
+	for (const auto &missile : ICBMs)
 	{
 		if (missile->Enabled)
 		{

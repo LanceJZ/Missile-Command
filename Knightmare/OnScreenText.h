@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "Common.h"
 
 class OnScreenText : public Common

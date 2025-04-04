@@ -32,6 +32,9 @@ bool Game::Initialize() //Initialize
 
 	Enemies->SetPlayer(Player);
 
+	Score.SetScorePosition(WindowHalfWidth, 2);
+	Score.SetColor(Red);
+
 	//Any Entities added after this point need this method fired manually.
 	DisableCursor();
 

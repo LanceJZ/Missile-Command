@@ -11,13 +11,8 @@ public:
 	ThePlayer();
 	virtual ~ThePlayer();
 
-	bool NewLife = false;
 	bool GameOver = false;
 	bool Paused = false;
-
-	int Score { 0 };
-	int HighScore { 0 };
-	int Lives { 0 };
 
 	std::vector<Shot*> ABMs = {};
 	std::vector<Model3D*> Targets = {};
@@ -34,20 +29,13 @@ public:
 	void FixedUpdate(float deltaTime);
 	void Draw3D();
 
-	void Hit();
-	void Hit(Vector3 location, Vector3 velocity);
-	void ScoreUpdate(int addToScore);
 	void Reset();
 	void Spawn(Vector3 position);
 	void NewGame();
-	void SetHighScore(int highScore);
-
-	int GetScore();
 
 private:
 	size_t TargetColorTimerID = 0;
-	unsigned NextNewCityScore = 10000;
-	float ShotSpeed = 200.0f;
+	float ShotSpeed = 300.0f;
 
 	Color CurrentColor = Blue;
 

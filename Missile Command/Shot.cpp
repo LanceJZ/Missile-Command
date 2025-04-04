@@ -66,6 +66,12 @@ void Shot::Destroy()
 	Entity::Destroy();
 }
 
+void Shot::PlayerHit()
+{
+	Score.AddToScore(25);
+	Destroy();
+}
+
 bool Shot::CheckHitTarget()
 {
 	bool hit = CirclesIntersect(TargetPosition, 5.0f);

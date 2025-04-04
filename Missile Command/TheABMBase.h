@@ -11,7 +11,6 @@ public:
 
 	Vector3 Position = { 0, 0, 0 };
 	float Radius = 10.0f;
-	Model3D* ABMIcons[10];
 
 	bool Initialize();
 	bool BeginRun();
@@ -24,9 +23,11 @@ public:
 	void Reset();
 	void Clear();
 
+	int GetMissileCount();
 	bool MissileFired();
 
 private:
 
+	Model3D* ABMAmmo[10];
 
 };

@@ -54,3 +54,23 @@ void TheCityManager::Update()
 	Common::Update();
 
 }
+
+void TheCityManager::NewWave()
+{
+	for (const auto &city : Cities)
+	{
+		if (BonusCities > 0 && !city->Enabled)
+		{
+			city->Enabled = true;
+			BonusCities--;
+		}
+	}
+}
+
+void TheCityManager::NewGame()
+{
+	for (const auto &city : Cities)
+	{
+		city->Reset();
+	}
+}

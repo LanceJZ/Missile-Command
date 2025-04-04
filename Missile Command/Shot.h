@@ -23,6 +23,7 @@ public:
 	void Spawn(Vector3& position, Vector3& velocity);
 	void Spawn(Vector3& position, Vector3& velocity, Color color);
 	void Destroy();
+	void PlayerHit();
 
 	bool CheckHitTarget();
 
