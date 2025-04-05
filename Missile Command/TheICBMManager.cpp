@@ -110,7 +110,7 @@ void TheICBMManager::NewWave()
 	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
 	ICBMsFiredThisWave = 0;
 
-	if (CealingPercent > MinimumCleaingPercent) CealingPercent -= 0.75f;
+	if (CealingPercent > MinimumCleaingPercent) CealingPercent -= 0.025f;
 
 	LaunchCealing = WindowHalfHeight -
 		(WindowHalfHeight - (WindowFullHeight * CealingPercent) * 0.5f);
@@ -137,13 +137,19 @@ void TheICBMManager::Reset()
 
 bool TheICBMManager::IsItTimeForAnotherSalvo()
 {
+	int activeICBMs = 0;
+
 	for (const auto &missile : ICBMs)
 	{
 		if (missile->Enabled)
 		{
 			if (missile->Position.y > LaunchCealing) return true;
+
+			activeICBMs++;
 		}
 	}
+
+	if (activeICBMs < 2) return true;
 
 	return false;
 }
