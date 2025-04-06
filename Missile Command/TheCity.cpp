@@ -18,7 +18,6 @@ bool TheCity::Initialize()
 	ModelColor = Blue;
 	InnerModel->ModelColor = Aqua;
 	Scale = 1.2f;
-	Cull = false;
 	Stationary = true;
 
 	return false;

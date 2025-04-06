@@ -63,6 +63,9 @@
     <ClCompile Include="TheExplosion.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="TheFlier.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -106,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="TheCityManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TheFlier.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

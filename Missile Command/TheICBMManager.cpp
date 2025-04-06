@@ -22,6 +22,11 @@ void TheICBMManager::SetMissileModels(Model& missileModel)
 	}
 }
 
+void TheICBMManager::SetBomberReference(TheFlier* bomber)
+{
+	Flier = bomber;
+}
+
 bool TheICBMManager::Initialize()
 {
 	Common::Initialize();
@@ -48,6 +53,14 @@ bool TheICBMManager::Initialize()
 	NumberOfICBMsEachWave[17] = 18;
 	NumberOfICBMsEachWave[18] = 20;
 
+	FlierFireRate[0] = 128.0f/60.0f;
+	FlierFireRate[1] = 96.0f/60.0f;
+	FlierFireRate[2] = 64.0f/60.0f;
+	FlierFireRate[3] = 48.0f/60.0f;
+	FlierFireRate[4] = 32.0f/60.0f;
+	FlierFireRate[5] = FlierFireRate[4];
+	FlierFireRate[6] = 16.0f/60.0f;
+
 	return false;
 }
 
@@ -68,13 +81,6 @@ void TheICBMManager::Update()
 {
 	Common::Update();
 
-	if (EM.TimerElapsed(LaunchCheckTimerID))
-	{
-		EM.ResetTimer(LaunchCheckTimerID);
-
-		if (IsItTimeForAnotherSalvo() && !WaveEnded) FireSalvo();
-	}
-
 	for (const auto &missile : ICBMs)
 	{
 		if (missile->Enabled)
@@ -83,6 +89,23 @@ void TheICBMManager::Update()
 			{
 				missile->Destroy();
 			}
+		}
+	}
+
+	if (ICBMsFiredThisWave > ICBMsFiredMax) return;
+
+	if (EM.TimerElapsed(LaunchCheckTimerID))
+	{
+		EM.ResetTimer(LaunchCheckTimerID);
+
+		if (IsItTimeForAnotherSalvo() && !WaveEnded) FireSalvo();
+	}
+
+	if (Flier->Enabled)
+	{
+		if (EM.TimerElapsed(FlierFireTimerID))//Not firing.
+		{
+			if (BomberFires()) EM.ResetTimer(FlierFireTimerID);
 		}
 	}
 }
@@ -114,6 +137,11 @@ void TheICBMManager::NewWave()
 
 	LaunchCealing = WindowHalfHeight -
 		(WindowHalfHeight - (WindowFullHeight * CealingPercent) * 0.5f);
+
+	if (Wave > 0 &&	Wave < 8)
+	{
+		EM.SetTimer(FlierFireTimerID, FlierFireRate[Wave - 1]);
+	}
 
 	CitiesToTarget();
 	FireSalvo();
@@ -160,69 +188,91 @@ void TheICBMManager::FireSalvo()
 	{
 		for (auto missile : ICBMs)
 		{
-			if (ICBMsFiredThisWave > ICBMsFiredMax) break;
-
 			if (!missile->Enabled)
 			{
-				ICBMsFiredThisWave++;
-
-				Vector3 startPosiotion = {M.GetRandomFloat((float)-WindowHalfWidth,
-					(float)WindowHalfWidth), (float)-WindowHalfHeight + 33.0f, 0.0f};
-
-
-				int cityIndex = GetRandomValue(0, 5);
-				Vector3 target = {0.0f, 0.0f, 0.0f};
-
-				if (Cities[cityIndex].Targeted)
-				{
-					target = Cities[cityIndex].Position;
-				}
-				else
-				{
-					if (GetRandomValue(0, 1) == 0)
-						target = ABMBases[GetRandomValue(0, 2)].Position;
-					else
-					{
-						target.y = (float)WindowHalfHeight - 10.0f * 5.0f;
-
-						if (cityIndex == 0) target.x =
-							Cities[0].Position.x +
-							(Cities[1].Position.x / 2.0f -
-							Cities[0].Position.x / 2.0f);
-
-						if (cityIndex == 1) target.x =
-							Cities[1].Position.x +
-							(Cities[2].Position.x / 2.0f -
-							Cities[1].Position.x / 2.0f);
-
-						if (cityIndex == 2) target.x =
-							Cities[2].Position.x + 100.0f;
-
-						if (cityIndex == 3) target.x =
-							Cities[3].Position.x +
-							(Cities[4].Position.x / 2.0f -
-							Cities[3].Position.x / 2.0f);
-
-						if (cityIndex == 4 || cityIndex == 5) target.x =
-							Cities[5].Position.x +
-							(Cities[5].Position.x / 2.0f -
-							Cities[4].Position.x / 2.0f);
-
-						if (cityIndex == 5) target.x =
-							Cities[5].Position.x + 100.0f;
-
-						target.z = 0.0f;
-					}
-				}
-
-				Vector3 velocity = M.GetVelocityFromVectorsZ(startPosiotion,
-					target, MissileSpeed);
-
-				missile->Spawn(startPosiotion, velocity, CurrentColor);
+				Vector3 zero = {0.0f, 0.0f, 0.0f};
+				FireICBM(missile, zero);
 				break;
 			}
 		}
 	}
+}
+
+bool TheICBMManager::BomberFires()
+{
+	for (const auto& missile : ICBMs)
+	{
+		if (!missile->Enabled)
+		{
+			FireICBM(missile, Flier->Position);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void TheICBMManager::FireICBM(Shot* missile, Vector3& position)
+{
+	ICBMsFiredThisWave++;
+
+	Vector3 startPosiotion = {M.GetRandomFloat((float)-WindowHalfWidth,
+		(float)WindowHalfWidth), (float)-WindowHalfHeight + 33.0f, 0.0f};
+
+	if (position.x != 0.0f && position.y != 0.0f)
+	{
+		startPosiotion = position;
+	}
+
+	int cityIndex = GetRandomValue(0, 5);
+	Vector3 target = {0.0f, 0.0f, 0.0f};
+
+	if (Cities[cityIndex].Targeted)
+	{
+		target = Cities[cityIndex].Position;
+	}
+	else
+	{
+		if (GetRandomValue(0, 1) == 0)
+			target = ABMBases[GetRandomValue(0, 2)].Position;
+		else
+		{
+			target.y = (float)WindowHalfHeight - 10.0f * 5.0f;
+
+			if (cityIndex == 0) target.x =
+				Cities[0].Position.x +
+				(Cities[1].Position.x / 2.0f -
+				Cities[0].Position.x / 2.0f);
+
+			if (cityIndex == 1) target.x =
+				Cities[1].Position.x +
+				(Cities[2].Position.x / 2.0f -
+				Cities[1].Position.x / 2.0f);
+
+			if (cityIndex == 2) target.x =
+				Cities[2].Position.x + 100.0f;
+
+			if (cityIndex == 3) target.x =
+				Cities[3].Position.x +
+				(Cities[4].Position.x / 2.0f -
+				Cities[3].Position.x / 2.0f);
+
+			if (cityIndex == 4 || cityIndex == 5) target.x =
+				Cities[5].Position.x +
+				(Cities[5].Position.x / 2.0f -
+				Cities[4].Position.x / 2.0f);
+
+			if (cityIndex == 5) target.x =
+				Cities[5].Position.x + 100.0f;
+
+			target.z = 0.0f;
+		}
+	}
+
+	Vector3 velocity = M.GetVelocityFromVectorsZ(startPosiotion,
+		target, MissileSpeed);
+
+	missile->Spawn(startPosiotion, velocity, CurrentColor);
 }
 
 void TheICBMManager::CitiesToTarget()

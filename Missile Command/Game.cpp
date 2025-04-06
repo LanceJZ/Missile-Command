@@ -3,6 +3,7 @@
 Game::Game()
 {
 	//When adding classes to EM, must be pointer to heap,IE: Name = new Class().
+	EM.AllInView = true;
 
 	LogicID = EM.AddCommon(Logic = DBG_NEW GameLogic());
 	BackGroundID = EM.AddCommon(BackGround = DBG_NEW TheBackground());
@@ -16,11 +17,11 @@ Game::~Game()
 {
 }
 
-bool Game::Initialize() //Initialize
+bool Game::Initialize()
 {
 	Common::Initialize();
 
-	SetWindowTitle("Missile Command Alpha 0.01");
+	SetWindowTitle("Missile Command Alpha 0.02");
 
 	float multiW = 1.0f, multiH = 1.0f;
 	FieldSize = { GetScreenWidth() * multiW, (float)GetScreenHeight() * multiH };
@@ -45,10 +46,9 @@ bool Game::Initialize() //Initialize
 // Model Names:
 // City = InnerCity and OuterCity, Ground = Ground, Cube = Cube, Cross = Cross,
 // Smart Bomb = SmartBomb, SmartBombEdge,
-// Satellite = MC_SatelliteMain-1, MC_SataliteInside,
+// Satellite = MC_SatelliteMain-1, MC_SataliteInside, Bomber = MC_Bomber,
 // Player = PlayerCursor, Player target for player missile = PlayerTarget,
 // Missile Ammo = MissileAmmo, Explosion = Explosion
-// Bomber = MC_Bomber
 //..
 bool Game::Load()
 {
@@ -63,6 +63,9 @@ bool Game::Load()
 
 	ABMBases->SetMissileModel(CM.LoadAndGetModel("MissileAmmo"));
 	Enemies->SetICBMModel(cube);
+	Enemies->SetBomberModel(CM.LoadAndGetModel("MC_Bomber"));
+	Enemies->SetSateliteModel(CM.LoadAndGetModel("MC_SatelliteMain-1"),
+		CM.LoadAndGetModel("MC_SateliteInside"));
 
 	Cities->SetCityModels(CM.LoadAndGetModel("InnerCity"),
 		CM.LoadAndGetModel("OuterCity"));

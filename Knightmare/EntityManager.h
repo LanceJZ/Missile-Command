@@ -20,6 +20,8 @@ public:
 	EntityManager();
 	virtual ~EntityManager();
 
+	bool AllInView = false;
+
 	bool Initialize();
 	bool BeginRun();
 	void SetCamera(Camera& camera);

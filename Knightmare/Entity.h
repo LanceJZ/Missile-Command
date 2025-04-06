@@ -7,6 +7,7 @@
 class Entity : public Common
 {
 public:
+	bool Cull = true;
 	bool EntityOnly = false;
 	bool ShowCollision = false;
 	bool HideCollision = false;
@@ -67,6 +68,7 @@ public:
 	void Z(float z);
 	void SetScale(float scale);
 
+	virtual void Spawn();
 	virtual void Spawn(Vector3 position);
 	virtual void Hit();
 	virtual void Destroy();

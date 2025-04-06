@@ -113,7 +113,7 @@ void EntityManager::Update(float deltaTime)
 		common->Update();
 	}
 }
-// Movment and Collision Updates you need done even when Entity is Disabled.
+// Movement and Collision Updates you need done even when Entity is Disabled.
 void EntityManager::AlwaysUpdate(float deltaTime)
 {
 	float halfDeltaTime = deltaTime * 0.5f;
@@ -211,14 +211,14 @@ size_t EntityManager::AddEntity(Entity* entity)
 //TODO: Change to use CreateEntity(* entity) private function for shared code.
 size_t EntityManager::AddEntity()
 {
-	size_t entityNumber = Entities.size();
+	size_t number = Entities.size();
 	Entity* newEntity = DBG_NEW Entity();
 	Entities.push_back(newEntity);
-	Entities[entityNumber]->Initialize();
-	Entities[entityNumber]->EntityOnly = true;
-	Entities[entityNumber]->BeginRun();
+	Entities[number]->Initialize();
+	Entities[number]->EntityOnly = true;
+	Entities[number]->BeginRun();
 
-	return entityNumber;
+	return number;
 }
 
 size_t EntityManager::AddLineModel(Entity* model)
@@ -227,6 +227,7 @@ size_t EntityManager::AddLineModel(Entity* model)
 
 	Entities.push_back(model);
 	Entities[number]->Initialize();
+	Entities[number]->Cull = !AllInView;
 
 	return number;
 }
@@ -238,6 +239,7 @@ size_t EntityManager::AddLineModel(LineModelPoints model)
 	Entities.push_back(DBG_NEW Entity());
 	Entities[number]->SetModel(model);
 	Entities[number]->Initialize();
+	Entities[number]->Cull = !AllInView;
 
 	return number;
 }
@@ -273,6 +275,7 @@ size_t EntityManager::AddModel3D(Entity* model3D)
 	Entities.push_back(model3D);
 	Entities.at(modelNumber)->Initialize();
 	Entities.at(modelNumber)->SetCamera(TheCamera);
+	Entities.at(modelNumber)->Cull = !AllInView;
 
 	return modelNumber;
 }
@@ -308,6 +311,7 @@ size_t EntityManager::AddModel3D(Model &model)
 	size_t modelNumber = Entities.size();
 	Entities.push_back(DBG_NEW Entity());
 	Entities[modelNumber]->SetModel(model, 1.0f);
+	Entities.at(modelNumber)->Cull = !AllInView;
 
 	return modelNumber;
 }

@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Shot.h"
 #include "Colors.h"
+#include "TheFlier.h"
 
 struct TargetData
 {
@@ -23,6 +24,7 @@ public:
 	TargetData ABMBases[3] = {};
 
 	void SetMissileModels(Model& missileModel);
+	void SetBomberReference(TheFlier* bomber);
 
 	bool Initialize();
 	bool BeginRun();
@@ -38,6 +40,7 @@ private:
 	bool WaveEnded = false;
 
 	size_t LaunchCheckTimerID = 0;
+	size_t FlierFireTimerID = 0;
 
 	unsigned ICBMsFiredMax = 12;
 	unsigned ICBMsFiredThisWave = 0;
@@ -49,13 +52,19 @@ private:
 	float CealingPercent = 0.87f;
 	const float MinimumCleaingPercent = 0.68f;
 
+	float FlierFireRate[7] = {};
+
 	unsigned NumberOfICBMsEachWave[19] = {};
 
 	Color CurrentColor = Red;
 
 	Colors GameColors;
 
+	TheFlier* Flier = nullptr;
+
 	bool IsItTimeForAnotherSalvo();
 	void FireSalvo();
+	bool BomberFires();
+	void FireICBM(Shot* missile, Vector3& position);
 	void CitiesToTarget();
 };

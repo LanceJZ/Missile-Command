@@ -2,7 +2,6 @@
 
 GameLogic::GameLogic()
 {
-
 }
 
 GameLogic::~GameLogic()
@@ -237,6 +236,17 @@ void GameLogic::CheckICBMs()
 {
 	int missileCount = 0;
 
+	for (int i = 0; i < Explosions.size(); i++)
+	{
+		if (Enemies->Flier->CirclesIntersect(*Explosions[i]))
+		{
+			MakeExplosion(Enemies->Flier->Position);
+			Enemies->Flier->PlayerHit();
+			EM.ResetTimer(Enemies->FlierLaunchTimerID);
+			break;
+		}
+	}
+
 	for (auto missile : Enemies->ICBMControl->ICBMs)
 	{
 		if (missile->Enabled)
@@ -299,6 +309,7 @@ void GameLogic::NextWave()
 {
 	ReadyForNextWave = false;
 	int cityCount = 0;
+	Enemies->NextWave();
 
 	for (int i = 0; i < 6; i++)
 	{

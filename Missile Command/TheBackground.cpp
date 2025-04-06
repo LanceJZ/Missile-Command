@@ -18,7 +18,6 @@ bool TheBackground::Initialize()
 	Ground->ModelColor = YELLOW;
 	Ground->Z(100.0f);
 	Ground->Scale = 5.0f;
-	Ground->Cull = false;
 	Ground->Stationary = true;
 
 	return false;

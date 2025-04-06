@@ -19,7 +19,7 @@ bool ThePlayer::Initialize()
 	Model3D::Initialize();
 
 	ModelColor = Blue;
-	Cull = false;
+	//Cull = false;
 
 	EM.SetTimer(TargetColorTimerID, 0.05f);
 
@@ -238,7 +238,7 @@ void ThePlayer::CrosshairUpdate()
 	}
 }
 
-void ThePlayer::TargetUpdate()
+void ThePlayer::TargetUpdate() //TODO: Not changing color after first wave.
 {
 	if (EM.TimerElapsed(TargetColorTimerID))
 	{
@@ -272,8 +272,8 @@ size_t ThePlayer::SetTarget()
 	if (spawnTarget)
 	{
 		Targets.push_back(new Model3D());
-		FM.Model3DFactory(Targets.at (targetNumber), TargetModel, CurrentColor, Position,
-			{ 0, 0, 0 });
+		FM.Model3DFactory(Targets.at (targetNumber), TargetModel, CurrentColor,
+			Position, { 0.0f, 0.0f, 0.0f });
 	}
 	else Targets.at(targetNumber)->Spawn(Position);
 

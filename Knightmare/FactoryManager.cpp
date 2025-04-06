@@ -38,7 +38,6 @@ void FactoryManager::Model3DFactory(Model3D* entity, Model& model, Color color, 
 
 	EM->AddModel3D(entity, model);
 	entity->ModelColor = color;
-	entity->Cull = false;
 	entity->Initialize();
 	entity->BeginRun();
 	entity->Spawn(position);

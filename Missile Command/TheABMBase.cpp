@@ -27,7 +27,6 @@ bool TheABMBase::BeginRun()
 	{
 		ABMAmmo[i]->HideCollision = true;
 		ABMAmmo[i]->Scale = 1.75f;
-		ABMAmmo[i]->Cull = false;
 		ABMAmmo[i]->Stationary = true;
 		ABMAmmo[i]->ModelColor = Blue;
 	}

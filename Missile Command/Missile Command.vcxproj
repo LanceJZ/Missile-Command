@@ -149,6 +149,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="TheFlier.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="TheCityManager.cpp">
       <SubType>
       </SubType>
@@ -192,6 +196,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TheFlier.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="TheCityManager.h">
       <SubType>
       </SubType>

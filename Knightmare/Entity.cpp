@@ -93,11 +93,17 @@ void Entity::SetScale(float scale)
 	Scale = scale;
 }
 
+void Entity::Spawn()
+{
+	Enabled = true;
+	BeenHit = false;
+}
+
 void Entity::Spawn(Vector3 position)
 {
 	Position = position;
-	Enabled = true;
-	BeenHit = false;
+
+	Spawn();
 }
 
 void Entity::Hit()
