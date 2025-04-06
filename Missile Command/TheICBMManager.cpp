@@ -8,6 +8,7 @@ TheICBMManager::TheICBMManager()
 	}
 
 	LaunchCheckTimerID = EM.AddTimer();
+	FlierFireTimerID = EM.AddTimer();
 }
 
 TheICBMManager::~TheICBMManager()
@@ -92,7 +93,13 @@ void TheICBMManager::Update()
 		}
 	}
 
-	if (ICBMsFiredThisWave > ICBMsFiredMax) return;
+	if (OutOfMissiles) return;
+
+	if (ICBMsFiredThisWave > ICBMsFiredMax)
+	{
+		OutOfMissiles = true;
+		return;
+	}
 
 	if (EM.TimerElapsed(LaunchCheckTimerID))
 	{
@@ -103,9 +110,9 @@ void TheICBMManager::Update()
 
 	if (Flier->Enabled)
 	{
-		if (EM.TimerElapsed(FlierFireTimerID))//Not firing.
+		if (EM.TimerElapsed(FlierFireTimerID))
 		{
-			if (BomberFires()) EM.ResetTimer(FlierFireTimerID);
+			if (FlierFires()) EM.ResetTimer(FlierFireTimerID);
 		}
 	}
 }
@@ -125,8 +132,14 @@ void TheICBMManager::FireIICBM(Vector3& position, Vector3& target)
 	}
 }
 
+void TheICBMManager::ResetFlierFireTimer()
+{
+	EM.ResetTimer(FlierFireTimerID);
+}
+
 void TheICBMManager::NewWave()
 {
+	OutOfMissiles = false;
 	WaveEnded = false;
 	Wave++;
 	MissileSpeed *= 1.25f;
@@ -135,8 +148,7 @@ void TheICBMManager::NewWave()
 
 	if (CealingPercent > MinimumCleaingPercent) CealingPercent -= 0.025f;
 
-	LaunchCealing = WindowHalfHeight -
-		(WindowHalfHeight - (WindowFullHeight * CealingPercent) * 0.5f);
+	GetLaunchCealing();
 
 	if (Wave > 0 &&	Wave < 8)
 	{
@@ -155,27 +167,30 @@ void TheICBMManager::EndWave()
 void TheICBMManager::Reset()
 {
 	Wave = 0;
+	OutOfMissiles = false;
 	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
 	ICBMsFiredThisWave = 0;
 	MissileSpeed = 20.15f;
 	CealingPercent = 0.78f;
-	LaunchCealing = -WindowHalfHeight +
-		(WindowHalfHeight - (WindowHalfHeight * CealingPercent));
+	GetLaunchCealing();
 }
 
 bool TheICBMManager::IsItTimeForAnotherSalvo()
 {
 	int activeICBMs = 0;
+	bool belowCealing = false;
 
 	for (const auto &missile : ICBMs)
 	{
 		if (missile->Enabled)
 		{
-			if (missile->Position.y > LaunchCealing) return true;
+			if (missile->Position.y > LaunchCealing) belowCealing = true;
 
 			activeICBMs++;
 		}
 	}
+
+	if (belowCealing) return true;
 
 	if (activeICBMs < 2) return true;
 
@@ -186,21 +201,22 @@ void TheICBMManager::FireSalvo()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		for (auto missile : ICBMs)
+		for (const auto &missile : ICBMs)
 		{
 			if (!missile->Enabled)
 			{
 				Vector3 zero = {0.0f, 0.0f, 0.0f};
 				FireICBM(missile, zero);
+				if (ICBMsFiredThisWave > ICBMsFiredMax) return;
 				break;
 			}
 		}
 	}
 }
 
-bool TheICBMManager::BomberFires()
+bool TheICBMManager::FlierFires()
 {
-	for (const auto& missile : ICBMs)
+	for (const auto &missile : ICBMs)
 	{
 		if (!missile->Enabled)
 		{
@@ -307,4 +323,12 @@ void TheICBMManager::CitiesToTarget()
 			citiesTargeted++;
 		}
 	}
+}
+
+float TheICBMManager::GetLaunchCealing()
+{
+	LaunchCealing = -WindowHalfHeight +
+		(WindowHalfHeight - (WindowHalfHeight * CealingPercent));
+
+	return LaunchCealing;
 }

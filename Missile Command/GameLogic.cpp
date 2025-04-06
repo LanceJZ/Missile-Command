@@ -242,7 +242,7 @@ void GameLogic::CheckICBMs()
 		{
 			MakeExplosion(Enemies->Flier->Position);
 			Enemies->Flier->PlayerHit();
-			EM.ResetTimer(Enemies->FlierLaunchTimerID);
+			Enemies->ResetLaunchTimer();
 			break;
 		}
 	}

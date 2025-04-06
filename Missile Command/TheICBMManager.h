@@ -17,6 +17,7 @@ public:
 	TheICBMManager();
 	virtual ~TheICBMManager();
 
+	bool OutOfMissiles = false;
 	unsigned Wave = 0;
 
 	Shot* ICBMs[8];
@@ -32,6 +33,7 @@ public:
 	void Update();
 
 	void FireIICBM(Vector3& position, Vector3& target);
+	void ResetFlierFireTimer();
 	void NewWave();
 	void EndWave();
 	void Reset();
@@ -64,7 +66,8 @@ private:
 
 	bool IsItTimeForAnotherSalvo();
 	void FireSalvo();
-	bool BomberFires();
+	bool FlierFires();
 	void FireICBM(Shot* missile, Vector3& position);
 	void CitiesToTarget();
+	float GetLaunchCealing();
 };

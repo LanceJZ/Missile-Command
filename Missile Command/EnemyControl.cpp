@@ -69,12 +69,18 @@ void EnemyControl::Update()
 	if (Wave > 0)
 	{
 		if (Flier->Enabled) EM.ResetTimer(FlierLaunchTimerID);
-		else if (EM.TimerElapsed(FlierLaunchTimerID))
+		else if (EM.TimerElapsed(FlierLaunchTimerID) && !ICBMControl->OutOfMissiles)
 		{
 			EM.ResetTimer(FlierLaunchTimerID);
+			ICBMControl->ResetFlierFireTimer();
 			SpawnFlier();
 		}
 	}
+}
+
+void EnemyControl::ResetLaunchTimer()
+{
+	EM.ResetTimer(FlierLaunchTimerID);
 }
 
 void EnemyControl::NextWave()

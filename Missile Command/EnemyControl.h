@@ -10,7 +10,6 @@ public:
 	EnemyControl();
 	virtual ~EnemyControl();
 
-	size_t FlierLaunchTimerID = 0;
 	unsigned Wave = 0;
 	float FlierCooldown[7] = {};
 
@@ -27,10 +26,13 @@ public:
 
 	void Update();
 
+	void ResetLaunchTimer();
 	void NextWave();
 	void NewGame();
 
 private:
+
+	size_t FlierLaunchTimerID = 0;
 
 	ThePlayer *Player = nullptr;
 
