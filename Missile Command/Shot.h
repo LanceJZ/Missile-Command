@@ -9,7 +9,7 @@ public:
 	Shot();
 	virtual ~Shot();
 
-	int HitPoints = 0;
+	bool ByFlier = false;
 	Vector3 TargetPosition = {};
 	size_t TargetIndex = 0;
 

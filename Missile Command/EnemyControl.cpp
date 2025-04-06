@@ -38,6 +38,7 @@ bool EnemyControl::Initialize()
 	Common::Initialize();
 
 	Flier->ModelColor = Red;
+
 	ICBMControl->SetBomberReference(Flier);
 
 	FlierCooldown[0] = 240.0f/60.0f;

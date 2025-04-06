@@ -52,7 +52,7 @@ private:
 	float MissileSpeed = 20.15f;
 	float LaunchCealing = 0.0f;
 	float CealingPercent = 0.87f;
-	const float MinimumCleaingPercent = 0.68f;
+	const float MinimumCleaingPercent = 0.58f;
 
 	float FlierFireRate[7] = {};
 

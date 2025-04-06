@@ -55,6 +55,7 @@ void TheFlier::Spawn(float speed)
 	Entity::Spawn();
 
 	SateliteInside->Enabled = Satelite;
+	SateliteInside->ModelColor = InnerColor;
 
 	if (GetRandomValue(0, 1) == 0)
 	{

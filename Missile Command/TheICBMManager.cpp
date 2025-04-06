@@ -146,9 +146,9 @@ void TheICBMManager::NewWave()
 	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
 	ICBMsFiredThisWave = 0;
 
-	if (CealingPercent > MinimumCleaingPercent) CealingPercent -= 0.025f;
+	if (CealingPercent > MinimumCleaingPercent) CealingPercent -= 0.018f;
 
-	GetLaunchCealing();
+	LaunchCealing = GetLaunchCealing();
 
 	if (Wave > 0 &&	Wave < 8)
 	{
@@ -171,8 +171,8 @@ void TheICBMManager::Reset()
 	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
 	ICBMsFiredThisWave = 0;
 	MissileSpeed = 20.15f;
-	CealingPercent = 0.78f;
-	GetLaunchCealing();
+	CealingPercent = 0.68f;
+	LaunchCealing = GetLaunchCealing();
 }
 
 bool TheICBMManager::IsItTimeForAnotherSalvo()
@@ -182,7 +182,7 @@ bool TheICBMManager::IsItTimeForAnotherSalvo()
 
 	for (const auto &missile : ICBMs)
 	{
-		if (missile->Enabled)
+		if (missile->Enabled && !missile->ByFlier)
 		{
 			if (missile->Position.y > LaunchCealing) belowCealing = true;
 
@@ -190,9 +190,7 @@ bool TheICBMManager::IsItTimeForAnotherSalvo()
 		}
 	}
 
-	if (belowCealing) return true;
-
-	if (activeICBMs < 2) return true;
+	if (belowCealing || activeICBMs < 2) return true;
 
 	return false;
 }
@@ -207,6 +205,7 @@ void TheICBMManager::FireSalvo()
 			{
 				Vector3 zero = {0.0f, 0.0f, 0.0f};
 				FireICBM(missile, zero);
+				missile->ByFlier = false;
 				if (ICBMsFiredThisWave > ICBMsFiredMax) return;
 				break;
 			}
@@ -221,6 +220,7 @@ bool TheICBMManager::FlierFires()
 		if (!missile->Enabled)
 		{
 			FireICBM(missile, Flier->Position);
+			missile->ByFlier = true;
 			return true;
 		}
 	}
@@ -233,7 +233,7 @@ void TheICBMManager::FireICBM(Shot* missile, Vector3& position)
 	ICBMsFiredThisWave++;
 
 	Vector3 startPosiotion = {M.GetRandomFloat((float)-WindowHalfWidth,
-		(float)WindowHalfWidth), (float)-WindowHalfHeight + 33.0f, 0.0f};
+		(float)WindowHalfWidth), (float)-WindowHalfHeight + 45.0f, 0.0f};
 
 	if (position.x != 0.0f && position.y != 0.0f)
 	{
@@ -327,8 +327,5 @@ void TheICBMManager::CitiesToTarget()
 
 float TheICBMManager::GetLaunchCealing()
 {
-	LaunchCealing = -WindowHalfHeight +
-		(WindowHalfHeight - (WindowHalfHeight * CealingPercent));
-
-	return LaunchCealing;
+	return -(WindowHalfHeight * (CealingPercent));
 }

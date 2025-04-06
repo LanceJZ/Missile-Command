@@ -26,6 +26,7 @@ bool Shot::BeginRun()
 	Model3D::BeginRun();
 
 	Radius = 2;
+	Scale = 2.0f;
 
 	return false;
 }

@@ -10,6 +10,7 @@ public:
 	virtual ~TheFlier();
 
 	bool Satelite = false;
+	Color InnerColor = Blue;
 
 	void SetSateliteInnnerModel(Model model);
 
