@@ -62,6 +62,7 @@ private:
 
 	unsigned Wave = 0;
 	unsigned NextNewCityScore = 10000;
+	int ScoreMultiplier = 1;
 
 	Vector2 AdjustedFieldSize = {};
 

@@ -92,12 +92,6 @@ void TheFlier::NextWave(unsigned wave)
 	Destroy();
 }
 
-void TheFlier::PlayerHit()
-{
-	Score.AddToScore(100);
-	Destroy();
-}
-
 void TheFlier::Destroy()
 {
 	Entity::Destroy();

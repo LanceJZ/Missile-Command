@@ -124,6 +124,8 @@ bool GameLogic::BeginRun()
 		Enemies->ICBMControl->ABMBases[i].Targeted = false;
 	}
 
+	NewGame();
+
 	return false;
 }
 
@@ -173,6 +175,9 @@ void GameLogic::NewGame()
 
 	Player->NewGame();
 	Enemies->NewGame();
+	CityManager->InnerColor = Aqua;
+	CityManager->MainColor = Blue;
+	CityManager->NewGame();
 }
 
 void GameLogic::MakeExplosion(Vector3 position)
@@ -241,7 +246,8 @@ void GameLogic::CheckICBMs()
 		if (Enemies->Flier->CirclesIntersect(*Explosions[i]))
 		{
 			MakeExplosion(Enemies->Flier->Position);
-			Enemies->Flier->PlayerHit();
+			Score.AddToScore(100 * ScoreMultiplier);
+			Enemies->Flier->Destroy();
 			Enemies->ResetLaunchTimer();
 			break;
 		}
@@ -260,7 +266,8 @@ void GameLogic::CheckICBMs()
 					if (missile->CirclesIntersect(*Explosions[i]))
 					{
 						MakeExplosion(missile->Position);
-						missile->PlayerHit();
+						missile->Destroy();
+						Score.AddToScore(25 * ScoreMultiplier);
 					}
 				}
 			}
@@ -311,15 +318,14 @@ void GameLogic::NextWave()
 	int cityCount = 0;
 	Enemies->NextWave();
 
+	if (Enemies->Wave < 11)	ScoreMultiplier = (int)(Enemies->Wave / 2) + 1;
+
 	for (int i = 0; i < 6; i++)
 	{
-		Enemies->ICBMControl->Cities[i].Active = CityManager->Cities[i]->Enabled;
-		Enemies->ICBMControl->Cities[i].Targeted = false;
-
 		if (CityManager->Cities[i]->Enabled) cityCount++;
 	}
 
-	Score.AddToScore(cityCount * 100);
+	Score.AddToScore((cityCount * 100) * ScoreMultiplier);
 
 	int missileBonus = 0;
 
@@ -328,12 +334,29 @@ void GameLogic::NextWave()
 		missileBonus += abmBase->GetMissileCount();
 	}
 
-	Score.AddToScore(missileBonus * 5);
+	Score.AddToScore((missileBonus * 5) * ScoreMultiplier);
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (Score.GetScore() > CityManager->NextBonusCityAmount)
+		{
+			CityManager->BonusCities++;
+			CityManager->NextBonusCityAmount += 8000;
+		}
+	}
+
+	CityManager->NewWave();
 
 	if (cityCount < 1)
 	{
 		State = Ended;
 		return;
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		Enemies->ICBMControl->Cities[i].Active = CityManager->Cities[i]->Enabled;
+		Enemies->ICBMControl->Cities[i].Targeted = false;
 	}
 
 	Enemies->ICBMControl->NewWave();

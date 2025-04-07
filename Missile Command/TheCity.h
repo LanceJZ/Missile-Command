@@ -27,7 +27,9 @@ public:
 	void Draw3D();
 
 	void Spawn(Vector3 position);
+	void Return();
 	void Destroy();
+	void SetColor(Color main, Color inner);
 
 private:
 	Model3D* InnerModel = nullptr;

@@ -22,7 +22,6 @@ public:
 
 	void Spawn(float speed);
 	void NextWave(unsigned wave);
-	void PlayerHit();
 	void Destroy();
 
 private:

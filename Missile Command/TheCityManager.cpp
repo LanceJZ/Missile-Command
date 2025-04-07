@@ -5,6 +5,7 @@ TheCityManager::TheCityManager()
 	for (int i = 0; i < 6; i++)
 	{
 		EM.AddModel3D(Cities[i] = DBG_NEW TheCity());
+		Cities[i]->Destroy();
 	}
 }
 
@@ -59,9 +60,11 @@ void TheCityManager::NewWave()
 {
 	for (const auto &city : Cities)
 	{
+		city->SetColor(MainColor, InnerColor);
+
 		if (BonusCities > 0 && !city->Enabled)
 		{
-			city->Enabled = true;
+			city->Return();
 			BonusCities--;
 		}
 	}
@@ -69,8 +72,13 @@ void TheCityManager::NewWave()
 
 void TheCityManager::NewGame()
 {
+	BonusCities = 0;
+	NextBonusCityAmount = 8000;
+
 	for (const auto &city : Cities)
 	{
-		city->Reset();
+		city->Return();
 	}
+
+	NewWave();
 }

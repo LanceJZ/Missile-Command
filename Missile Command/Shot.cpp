@@ -43,34 +43,17 @@ void Shot::Draw3D()
 	Model3D::Draw3D();
 }
 
-void Shot::Spawn(Vector3& position)
-{
-	Model3D::Spawn(position);
-
-	EM.ResetTimer(CurrentColorTimerID);
-}
-
-void Shot::Spawn(Vector3& position, Vector3& velocity)
-{
-	Spawn(position);
-	Velocity = velocity;
-}
-
 void Shot::Spawn(Vector3& position, Vector3& velocity, Color color)
 {
-	Spawn(position, velocity);
+	Model3D::Spawn(position, velocity);
+
 	TrailColor = color;
+	EM.ResetTimer(CurrentColorTimerID);
 }
 
 void Shot::Destroy()
 {
 	Entity::Destroy();
-}
-
-void Shot::PlayerHit()
-{
-	Score.AddToScore(25);
-	Destroy();
 }
 
 bool Shot::CheckHitTarget()

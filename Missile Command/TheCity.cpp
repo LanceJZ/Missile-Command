@@ -15,8 +15,6 @@ bool TheCity::Initialize()
 
 	InnerModel->SetParent(*this);
 
-	ModelColor = Blue;
-	InnerModel->ModelColor = Aqua;
 	Scale = 1.2f;
 	Stationary = true;
 
@@ -56,9 +54,21 @@ void TheCity::Spawn(Vector3 position)
 	InnerModel->Spawn(position);
 }
 
+void TheCity::Return()
+{
+	Enabled = true;
+	InnerModel->Enabled = true;
+}
+
 void TheCity::Destroy()
 {
 	Entity::Destroy();
 
 	InnerModel->Destroy();
+}
+
+void TheCity::SetColor(Color main, Color inner)
+{
+	ModelColor = main;
+	InnerModel->ModelColor = inner;
 }

@@ -10,6 +10,11 @@ public:
 	virtual ~TheCityManager();
 
 	unsigned BonusCities = 0;
+	unsigned NextBonusCityAmount = 8000;
+
+	Color MainColor = Blue;
+	Color InnerColor = Aqua;
+
 	TheCity* Cities[6];
 
 	bool Initialize();
