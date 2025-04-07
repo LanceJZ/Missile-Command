@@ -201,13 +201,13 @@ void ThePlayer::FireABM()
 	if (spawnShot)
 	{
 		ABMs.push_back(DBG_NEW Shot());
-		FM.Model3DFactory(ABMs.back(), ShotModel, Aqua, abmBasePosition,
+		FM.Model3DFactory(ABMs.back(), ShotModel, CurrentColor, abmBasePosition,
 			abmVelocity);
 	}
-	else ABMs[shotNumber]->Spawn(abmBasePosition, abmVelocity, CurrentColor);
-
+	
+	ABMs[shotNumber]->Spawn(abmBasePosition, Position,
+		abmVelocity, CurrentColor);
 	ABMs[shotNumber]->TargetIndex = SetTarget();
-	ABMs[shotNumber]->TargetPosition = Position;
 }
 
 void ThePlayer::CrosshairUpdate()
@@ -238,7 +238,7 @@ void ThePlayer::CrosshairUpdate()
 	}
 }
 
-void ThePlayer::TargetUpdate() //TODO: Not changing color after first wave.
+void ThePlayer::TargetUpdate()
 {
 	if (EM.TimerElapsed(TargetColorTimerID))
 	{

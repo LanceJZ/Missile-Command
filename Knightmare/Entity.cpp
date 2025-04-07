@@ -63,8 +63,11 @@ void Entity::FixedUpdate(float deltaTime)
 void Entity::Draw3D()
 {
 #ifdef _DEBUG
-	if((Enabled && !IsChild && !HideCollision) || EntityOnly || ShowCollision)
-		DrawCircle3D(GetWorldPosition(), Radius * Scale, {0}, 0, {150, 50, 200, 200});
+	if((Enabled || EntityOnly && !IsChild) && (!NoCollision && !HideCollision))
+	{
+		DrawCircle3D(GetWorldPosition(), Radius * Scale,
+			{0}, 0, {150, 50, 200, 200});
+	}
 #endif
 }
 
@@ -447,8 +450,12 @@ void Entity::SetModel(Model& model, float scale)
 
 	TheModel = model;
 	ModelScale = scale;
-	VerticesSize = (*model.meshes->vertices * -1.0f) * scale;
-	Radius = VerticesSize;
+
+	if (!NoCollision)
+	{
+		VerticesSize = (*model.meshes->vertices * -1.0f) * scale;
+		Radius = VerticesSize;
+	}
 }
 
 void Entity::SetModel(Model& model)
@@ -490,21 +497,21 @@ std::vector<Vector3> Entity::GetModel()
 	return std::vector<Vector3>();
 }
 
-void Entity::SetModel(std::vector<Vector3> lines)
+void Entity::SetModel(std::vector<Vector3> &lines)
 {
 	LinePoints = lines;
 	Lines.linePoints = lines;
-	CalculateRadius();
+	if (!NoCollision) CalculateRadius();
 }
 
-void Entity::SetModel(LineModelPoints lines)
+void Entity::SetModel(LineModelPoints &lines)
 {
 	Lines = lines;
 	LinePoints = lines.linePoints;
-	CalculateRadius();
+	if (!NoCollision) CalculateRadius();
 }
 
-void Entity::SetModel(LineModelPoints lines, float scale)
+void Entity::SetModel(LineModelPoints &lines, float scale)
 {
 	Scale = scale;
 	SetModel(lines);

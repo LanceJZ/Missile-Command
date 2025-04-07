@@ -32,7 +32,6 @@ public:
 
 	void Update();
 
-	void FireIICBM(Vector3& position, Vector3& target);
 	void ResetFlierFireTimer();
 	void NewWave();
 	void EndWave();

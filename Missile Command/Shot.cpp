@@ -1,4 +1,5 @@
 #include "Shot.h"
+#include "rlgl.h"
 
 Shot::Shot()
 {
@@ -13,10 +14,11 @@ bool Shot::Initialize()
 {
 	Model3D::Initialize();
 
-	Enabled = false;
-	Cull = false;
+	Destroy();
 
 	EM.SetTimer(CurrentColorTimerID, 0.05f);
+
+	Scale = 2.0f;
 
 	return false;
 }
@@ -26,7 +28,6 @@ bool Shot::BeginRun()
 	Model3D::BeginRun();
 
 	Radius = 2;
-	Scale = 2.0f;
 
 	return false;
 }
@@ -41,13 +42,23 @@ void Shot::Update(float deltaTime)
 void Shot::Draw3D()
 {
 	Model3D::Draw3D();
+
+	rlBegin(RL_LINES);
+	rlColor4ub(TrailColor.r, TrailColor.g, TrailColor.b, TrailColor.a);
+	rlVertex3f(StartPosition.x, StartPosition.y, StartPosition.z);
+	rlVertex3f(Position.x, Position.y, Position.z);
+	rlEnd();
 }
 
-void Shot::Spawn(Vector3& position, Vector3& velocity, Color color)
+void Shot::Spawn(Vector3& position, Vector3& target, Vector3& velocity, Color color)
 {
 	Model3D::Spawn(position, velocity);
 
+	TargetPosition = target;
+	StartPosition = position;
+	
 	TrailColor = color;
+
 	EM.ResetTimer(CurrentColorTimerID);
 }
 

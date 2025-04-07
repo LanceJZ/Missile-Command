@@ -9,8 +9,8 @@ class Entity : public Common
 public:
 	bool Cull = true;
 	bool EntityOnly = false;
-	bool ShowCollision = false;
 	bool HideCollision = false;
+	bool NoCollision = false;
 	bool IsChild = false;
 	bool IsParent = false;
 	bool IsConnectedChild = true;
@@ -103,9 +103,9 @@ public:
 	virtual void SetModelWithTexture(Model &model, Texture2D &texture);
 	virtual LineModelPoints GetLineModel();
 	virtual std::vector<Vector3> GetModel();
-	virtual void SetModel(std::vector<Vector3> lines);
-	virtual void SetModel(LineModelPoints lines);
-	virtual void SetModel(LineModelPoints lines, float scale);
+	virtual void SetModel(std::vector<Vector3> &lines);
+	virtual void SetModel(LineModelPoints& lines);
+	virtual void SetModel(LineModelPoints& lines, float scale);
 	virtual Model& Get3DModel();
 	virtual void Reset();
 	void SetParent(Entity& parent);

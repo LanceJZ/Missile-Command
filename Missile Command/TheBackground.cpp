@@ -27,7 +27,7 @@ bool TheBackground::BeginRun()
 {
 	Common::BeginRun();
 
-	Ground->Radius = 0;
+	Ground->NoCollision = true;
 	return false;
 }
 

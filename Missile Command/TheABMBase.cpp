@@ -16,20 +16,20 @@ bool TheABMBase::Initialize()
 {
 	Common::Initialize();
 
+	for (int i = 0; i < 10; i++)
+	{
+		ABMAmmo[i]->Scale = 1.75f;
+		ABMAmmo[i]->Stationary = true;
+		ABMAmmo[i]->NoCollision = true;
+		ABMAmmo[i]->ModelColor = Blue;
+	}
+
 	return false;
 }
 
 bool TheABMBase::BeginRun()
 {
 	Common::BeginRun();
-
-	for (int i = 0; i < 10; i++)
-	{
-		ABMAmmo[i]->HideCollision = true;
-		ABMAmmo[i]->Scale = 1.75f;
-		ABMAmmo[i]->Stationary = true;
-		ABMAmmo[i]->ModelColor = Blue;
-	}
 
 	return false;
 }

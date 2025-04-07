@@ -10,7 +10,6 @@ public:
 	virtual ~Shot();
 
 	bool ByFlier = false;
-	Vector3 TargetPosition = {};
 	size_t TargetIndex = 0;
 
 	bool Initialize();
@@ -19,7 +18,7 @@ public:
 	void Update(float deltaTime);
 	void Draw3D();
 
-	void Spawn(Vector3& position, Vector3& velocity, Color color);
+	void Spawn(Vector3& position, Vector3& target, Vector3& velocity, Color color);
 	void Destroy();
 
 	bool CheckHitTarget();
@@ -27,9 +26,11 @@ public:
 private:
 	size_t CurrentColorTimerID = 0;
 
-	Color TrailColor = {};
+	Vector3 StartPosition = {};
+	Vector3 TargetPosition = {};
 
 	Colors GameColors;
+	Color TrailColor = {};
 
 	void ChangeColor();
 };

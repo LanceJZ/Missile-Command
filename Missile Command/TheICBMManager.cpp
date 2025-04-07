@@ -117,21 +117,6 @@ void TheICBMManager::Update()
 	}
 }
 
-void TheICBMManager::FireIICBM(Vector3& position, Vector3& target)
-{
-	Vector3 velocity = M.GetVelocityFromVectorsZ(position, target, MissileSpeed);
-
-	for (int i = 0; i < 8; i++)
-	{
-		if (!ICBMs[i]->Enabled)
-		{
-			ICBMs[i]->Spawn(position, velocity, CurrentColor);
-			ICBMs[i]->ModelColor = Aqua;
-			break;
-		}
-	}
-}
-
 void TheICBMManager::ResetFlierFireTimer()
 {
 	EM.ResetTimer(FlierFireTimerID);
@@ -197,14 +182,19 @@ bool TheICBMManager::IsItTimeForAnotherSalvo()
 
 void TheICBMManager::FireSalvo()
 {
+	// TODO: Change X so it adds a random value to the next one, starting
+	// TODO: from -WindowWidth +45, make sure they all don't add up to more than
+	// TODO: WindowWidth - 45.
+
 	for (int i = 0; i < 4; i++)
 	{
 		for (const auto &missile : ICBMs)
 		{
 			if (!missile->Enabled)
 			{
-				Vector3 zero = {0.0f, 0.0f, 0.0f};
-				FireICBM(missile, zero);
+				Vector3 position = {M.GetRandomFloat((float)-WindowHalfWidth,
+					(float)WindowHalfWidth), (float)-WindowHalfHeight + 45.0f, 0.0f};
+				FireICBM(missile, position);
 				missile->ByFlier = false;
 				if (ICBMsFiredThisWave > ICBMsFiredMax) return;
 				break;
@@ -231,14 +221,6 @@ bool TheICBMManager::FlierFires()
 void TheICBMManager::FireICBM(Shot* missile, Vector3& position)
 {
 	ICBMsFiredThisWave++;
-
-	Vector3 startPosiotion = {M.GetRandomFloat((float)-WindowHalfWidth,
-		(float)WindowHalfWidth), (float)-WindowHalfHeight + 45.0f, 0.0f};
-
-	if (position.x != 0.0f && position.y != 0.0f)
-	{
-		startPosiotion = position;
-	}
 
 	int cityIndex = GetRandomValue(0, 5);
 	Vector3 target = {0.0f, 0.0f, 0.0f};
@@ -285,10 +267,10 @@ void TheICBMManager::FireICBM(Shot* missile, Vector3& position)
 		}
 	}
 
-	Vector3 velocity = M.GetVelocityFromVectorsZ(startPosiotion,
+	Vector3 velocity = M.GetVelocityFromVectorsZ(position,
 		target, MissileSpeed);
 
-	missile->Spawn(startPosiotion, velocity, CurrentColor);
+	missile->Spawn(position, target, velocity, CurrentColor);
 }
 
 void TheICBMManager::CitiesToTarget()
