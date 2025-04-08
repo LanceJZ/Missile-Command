@@ -27,7 +27,7 @@ public:
 	void Update();
 
 	void ResetLaunchTimer();
-	void NextWave();
+	void NextWave(unsigned wave, Color mainColor, Color innerColor);
 	void NewGame();
 
 private:

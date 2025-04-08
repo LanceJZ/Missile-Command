@@ -84,10 +84,10 @@ void EnemyControl::ResetLaunchTimer()
 	EM.ResetTimer(FlierLaunchTimerID);
 }
 
-void EnemyControl::NextWave()
+void EnemyControl::NextWave(unsigned wave, Color mainColor, Color innerColor)
 {
-	Wave++;
-	Flier->NextWave(Wave);
+	Wave = wave;
+	Flier->NextWave(Wave, mainColor, innerColor);
 
 	if (Wave < 8) EM.SetTimer(FlierLaunchTimerID, FlierCooldown[Wave - 1]);
 }

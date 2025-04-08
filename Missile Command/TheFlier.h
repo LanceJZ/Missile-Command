@@ -10,7 +10,6 @@ public:
 	virtual ~TheFlier();
 
 	bool Satelite = false;
-	Color InnerColor = Blue;
 
 	void SetSateliteInnnerModel(Model model);
 
@@ -21,7 +20,7 @@ public:
 	void Draw3D();
 
 	void Spawn(float speed);
-	void NextWave(unsigned wave);
+	void NextWave(unsigned wave, Color mainColor, Color innerColor);
 	void Destroy();
 
 private:

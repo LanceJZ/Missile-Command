@@ -15,7 +15,6 @@ bool TheBackground::Initialize()
 	Common::Initialize();
 
 	Ground->Y(WindowHalfHeight);
-	Ground->ModelColor = YELLOW;
 	Ground->Z(100.0f);
 	Ground->Scale = 5.0f;
 	Ground->Stationary = true;
@@ -40,4 +39,9 @@ void TheBackground::Update()
 {
 	Common::Update();
 
+}
+
+void TheBackground::WaveColor(Color waveColor)
+{
+	Ground->ModelColor = waveColor;
 }

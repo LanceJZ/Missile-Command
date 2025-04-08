@@ -122,8 +122,9 @@ void TheICBMManager::ResetFlierFireTimer()
 	EM.ResetTimer(FlierFireTimerID);
 }
 
-void TheICBMManager::NewWave()
+void TheICBMManager::NewWave(Color waveColor)
 {
+	CurrentColor = waveColor;
 	OutOfMissiles = false;
 	WaveEnded = false;
 	Wave++;

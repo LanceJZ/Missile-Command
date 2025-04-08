@@ -55,7 +55,6 @@ void TheFlier::Spawn(float speed)
 	Entity::Spawn();
 
 	SateliteInside->Enabled = Satelite;
-	SateliteInside->ModelColor = InnerColor;
 
 	if (GetRandomValue(0, 1) == 0)
 	{
@@ -79,9 +78,11 @@ void TheFlier::Spawn(float speed)
 
 }
 
-void TheFlier::NextWave(unsigned wave)
+void TheFlier::NextWave(unsigned wave, Color mainColor, Color innerColor)
 {
 	Wave = wave;
+	ModelColor = mainColor;
+	SateliteInside->ModelColor = innerColor;
 
 	if (wave < 6)
 	{

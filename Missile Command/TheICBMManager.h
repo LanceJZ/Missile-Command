@@ -33,7 +33,7 @@ public:
 	void Update();
 
 	void ResetFlierFireTimer();
-	void NewWave();
+	void NewWave(Color waveColor);
 	void EndWave();
 	void Reset();
 

@@ -8,6 +8,11 @@ GameLogic::~GameLogic()
 {
 }
 
+void GameLogic::SetBackground(TheBackground* background)
+{
+	Background = background;
+}
+
 void GameLogic::SetPlayer(ThePlayer* player)
 {
 	Player = player;
@@ -42,61 +47,61 @@ bool GameLogic::Initialize()
 
 	WaveColors[0].Background = BLACK;
 	WaveColors[0].Ground = YELLOW;
-	WaveColors[0].CityandABM = Blue;
+	WaveColors[0].CityMainABM = Blue;
 	WaveColors[0].CityInner = Aqua;
 	WaveColors[0].ICBM = RED;
 
 	WaveColors[1].Background = BLACK;
 	WaveColors[1].Ground = YELLOW;
-	WaveColors[1].CityandABM = Blue;
+	WaveColors[1].CityMainABM = Blue;
 	WaveColors[1].CityInner = Aqua;
 	WaveColors[1].ICBM = LightGreen;
 
 	WaveColors[2].Background = BLACK;
 	WaveColors[2].Ground = Blue;
-	WaveColors[2].CityandABM = LightGreen;
+	WaveColors[2].CityMainABM = LightGreen;
 	WaveColors[2].CityInner = Yellow;
 	WaveColors[2].ICBM = Red;
 
 	WaveColors[3].Background = BLACK;
 	WaveColors[3].Ground = Red;
-	WaveColors[3].CityandABM = Blue;
+	WaveColors[3].CityMainABM = Blue;
 	WaveColors[3].CityInner = Yellow;
 	WaveColors[3].ICBM = Yellow;
 
 	WaveColors[4].Background = Blue;
 	WaveColors[4].Ground = Yellow;
-	WaveColors[4].CityandABM = BLACK;
+	WaveColors[4].CityMainABM = BLACK;
 	WaveColors[4].CityInner = Magenta;
 	WaveColors[4].ICBM = Red;
 
 	WaveColors[5].Background = Aqua;
 	WaveColors[5].Ground = Yellow;
-	WaveColors[5].CityandABM = Blue;
+	WaveColors[5].CityMainABM = Blue;
 	WaveColors[5].CityInner = BLACK;
 	WaveColors[5].ICBM = Red;
 
 	WaveColors[6].Background = Magenta;
 	WaveColors[6].Ground = LightGreen;
-	WaveColors[6].CityandABM = Yellow;
+	WaveColors[6].CityMainABM = Yellow;
 	WaveColors[6].CityInner = BLACK;
 	WaveColors[6].ICBM = BLACK;
 
 	WaveColors[7].Background = Yellow;
 	WaveColors[7].Ground = LightGreen;
-	WaveColors[7].CityandABM = Red;
+	WaveColors[7].CityMainABM = Red;
 	WaveColors[7].CityInner = WHITE;
 	WaveColors[7].ICBM = BLACK;
 
 	WaveColors[8].Background = WHITE;
 	WaveColors[8].Ground = Red;
-	WaveColors[8].CityandABM = LightGreen;
+	WaveColors[8].CityMainABM = LightGreen;
 	WaveColors[8].CityInner = Yellow;
 	WaveColors[8].ICBM = Magenta;
 
 	WaveColors[9].Background = Red;
 	WaveColors[9].Ground = Yellow;
-	WaveColors[9].CityandABM = Blue;
+	WaveColors[9].CityMainABM = Blue;
 	WaveColors[9].CityInner = LightGreen;
 	WaveColors[9].ICBM = BLACK;
 
@@ -173,11 +178,11 @@ void GameLogic::NewGame()
 	NextNewCityScore = 10000;
 	Score.ClearScore();
 
+	Background->WaveColor(Yellow);
 	Player->NewGame();
 	Enemies->NewGame();
-	CityManager->InnerColor = Aqua;
-	CityManager->MainColor = Blue;
 	CityManager->NewGame();
+	ABMBaseManager->Reset(Blue);
 }
 
 void GameLogic::MakeExplosion(Vector3 position)
@@ -314,11 +319,21 @@ void GameLogic::CheckExplosionsActive()
 
 void GameLogic::NextWave()
 {
+	Wave++;
 	ReadyForNextWave = false;
 	int cityCount = 0;
-	Enemies->NextWave();
 
-	if (Enemies->Wave < 11)	ScoreMultiplier = (int)(Enemies->Wave / 2) + 1;
+	size_t waveColor = (Wave / 2);
+
+	if (waveColor > 9) waveColor = 0;
+
+	const Color backgroundColor = WaveColors[waveColor].Background;
+	const Color groundColor = WaveColors[waveColor].Ground;
+	const Color cityMainABMColor = WaveColors[waveColor].CityMainABM;
+	const Color cityInnerColor = WaveColors[waveColor].CityInner;
+	const Color icmbColor = WaveColors[waveColor].ICBM;
+
+	if (Wave < 11)	ScoreMultiplier = (int)(Wave / 2) + 1;
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -345,7 +360,7 @@ void GameLogic::NextWave()
 		}
 	}
 
-	CityManager->NewWave();
+	CityManager->NewWave(cityMainABMColor, cityInnerColor);
 
 	if (cityCount < 1)
 	{
@@ -359,8 +374,11 @@ void GameLogic::NextWave()
 		Enemies->ICBMControl->Cities[i].Targeted = false;
 	}
 
-	Enemies->ICBMControl->NewWave();
-	ABMBaseManager->Reset();
+	Background->WaveColor(groundColor);
+	Player->Reset(cityMainABMColor);
+	ABMBaseManager->Reset(cityMainABMColor);
+	Enemies->ICBMControl->NewWave(icmbColor);
+	Enemies->NextWave(Wave, icmbColor, cityMainABMColor);
 
 	State = InPlay;
 }

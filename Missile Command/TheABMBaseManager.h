@@ -18,7 +18,7 @@ public:
 
 	void Update();
 
-	void Reset();
+	void Reset(Color color);
 	bool MissileFired(size_t baseNumber);
 
 private:

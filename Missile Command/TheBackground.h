@@ -15,6 +15,8 @@ public:
 
 	void Update();
 
+	void WaveColor(Color waveColor);
+
 private:
 	Model3D* Ground = nullptr;
 

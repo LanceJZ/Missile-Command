@@ -42,11 +42,11 @@ bool TheCityManager::BeginRun()
 	return false;
 }
 
-void TheCityManager::SetCityModels(Model& innerModel, Model& outerModel)
+void TheCityManager::SetCityModels(Model& innerModel, Model& mainModel)
 {
 	for (int i = 0; i < 6; i++)
 	{
-		Cities[i]->SetCityModels(innerModel, outerModel);
+		Cities[i]->SetCityModels(innerModel, mainModel);
 	}
 }
 
@@ -56,11 +56,11 @@ void TheCityManager::Update()
 
 }
 
-void TheCityManager::NewWave()
+void TheCityManager::NewWave(Color mainColor, Color innerColor)
 {
 	for (const auto &city : Cities)
 	{
-		city->SetColor(MainColor, InnerColor);
+		city->SetColor(mainColor, innerColor);
 
 		if (BonusCities > 0 && !city->Enabled)
 		{
@@ -80,5 +80,5 @@ void TheCityManager::NewGame()
 		city->Return();
 	}
 
-	NewWave();
+	NewWave(Blue, Aqua);
 }

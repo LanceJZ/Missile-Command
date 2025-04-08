@@ -20,7 +20,7 @@ public:
 
 	void Update();
 
-	void Reset();
+	void Reset(Color &color);
 	void Clear();
 
 	int GetMissileCount();

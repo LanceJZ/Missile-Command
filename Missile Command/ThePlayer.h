@@ -29,7 +29,7 @@ public:
 	void FixedUpdate(float deltaTime);
 	void Draw3D();
 
-	void Reset();
+	void Reset(Color color);
 	void Spawn(Vector3 position);
 	void NewGame();
 

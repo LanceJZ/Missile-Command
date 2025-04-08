@@ -21,7 +21,6 @@ bool TheABMBase::Initialize()
 		ABMAmmo[i]->Scale = 1.75f;
 		ABMAmmo[i]->Stationary = true;
 		ABMAmmo[i]->NoCollision = true;
-		ABMAmmo[i]->ModelColor = Blue;
 	}
 
 	return false;
@@ -70,19 +69,20 @@ void TheABMBase::Update()
 
 }
 
-void TheABMBase::Reset()
+void TheABMBase::Reset(Color &color)
 {
-	for (auto missile : ABMAmmo)
+	for (const auto &ammo : ABMAmmo)
 	{
-		missile->Enabled = true;
+		ammo->Enabled = true;
+		ammo->ModelColor = color;
 	}
 }
 
 void TheABMBase::Clear()
 {
-	for (auto missile : ABMAmmo)
+	for (auto ammo : ABMAmmo)
 	{
-		missile->Enabled = false;
+		ammo->Enabled = false;
 	}
 }
 
@@ -102,9 +102,9 @@ bool TheABMBase::MissileFired()
 {
 	int lastInStack = -1;
 
-	for (auto missile : ABMAmmo)
+	for (const auto &ammo : ABMAmmo)
 	{
-		if (missile->Enabled) lastInStack++;
+		if (ammo->Enabled) lastInStack++;
 	}
 
 	if (lastInStack < 0) return false;

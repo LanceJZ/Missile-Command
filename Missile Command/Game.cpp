@@ -26,6 +26,7 @@ bool Game::Initialize()
 	float multiW = 1.0f, multiH = 1.0f;
 	FieldSize = { GetScreenWidth() * multiW, (float)GetScreenHeight() * multiH };
 
+	Logic->SetBackground(BackGround);
 	Logic->SetPlayer(Player);
 	Logic->SetMissileBases(ABMBases);
 	Logic->SetEnemies(Enemies);

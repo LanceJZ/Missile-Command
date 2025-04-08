@@ -1,6 +1,7 @@
 #pragma once
 #include "Globals.h"
 #include "Colors.h"
+#include "TheBackground.h"
 #include "ThePlayer.h"
 #include "EnemyControl.h"
 #include "TheCityManager.h"
@@ -26,7 +27,7 @@ struct WaveColorData
 {
 	Color Background = {};
 	Color Ground = {};
-	Color CityandABM = {};
+	Color CityMainABM = {};
 	Color CityInner = {};
 	Color ICBM = {};
 };
@@ -41,6 +42,7 @@ public:
 
 	GameState State = InPlay;
 
+	void SetBackground(TheBackground* background);
 	void SetPlayer(ThePlayer* player);
 	void SetEnemies(EnemyControl* enemies);
 	void SetTheCityManager(TheCityManager* cityManager);
@@ -72,6 +74,7 @@ private:
 
 	Colors GameColors;
 
+	TheBackground* Background = {};
 	ThePlayer* Player = {};
 	EnemyControl* Enemies = {};
 	TheCityManager* CityManager = {};

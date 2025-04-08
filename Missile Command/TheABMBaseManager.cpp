@@ -53,11 +53,11 @@ void TheABMBaseManager::Update()
 
 }
 
-void TheABMBaseManager::Reset()
+void TheABMBaseManager::Reset(Color color)
 {
-	for (auto base : ABMBases)
+	for (const auto &base : ABMBases)
 	{
-		base->Reset();
+		base->Reset(color);
 	}
 }
 

@@ -18,9 +18,6 @@ bool ThePlayer::Initialize()
 {
 	Model3D::Initialize();
 
-	ModelColor = Blue;
-	//Cull = false;
-
 	EM.SetTimer(TargetColorTimerID, 0.05f);
 
 	return false;
@@ -76,11 +73,11 @@ void ThePlayer::Draw3D()
 
 }
 
-void ThePlayer::Reset()
+void ThePlayer::Reset(Color color)
 {
 	Position = { 0, 0, 0 };
-	Velocity = { 0, 0, 0 };
 	Enabled = true;
+	ModelColor = color;
 }
 
 void ThePlayer::Spawn(Vector3 position)
@@ -91,7 +88,7 @@ void ThePlayer::Spawn(Vector3 position)
 void ThePlayer::NewGame()
 {
 	GameOver = false;
-	Reset();
+	Reset(Blue);
 }
 
 void ThePlayer::FireABM()
@@ -204,7 +201,7 @@ void ThePlayer::FireABM()
 		FM.Model3DFactory(ABMs.back(), ShotModel, CurrentColor, abmBasePosition,
 			abmVelocity);
 	}
-	
+
 	ABMs[shotNumber]->Spawn(abmBasePosition, Position,
 		abmVelocity, CurrentColor);
 	ABMs[shotNumber]->TargetIndex = SetTarget();
