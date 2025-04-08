@@ -159,6 +159,13 @@ void TheICBMManager::Reset()
 	MissileSpeed = 20.15f;
 	CealingPercent = 0.68f;
 	LaunchCealing = GetLaunchCealing();
+
+	for (const auto& missiles : ICBMs)
+	{
+		missiles->Destroy();
+	}
+
+	Flier->Destroy();
 }
 
 bool TheICBMManager::IsItTimeForAnotherSalvo()

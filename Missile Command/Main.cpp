@@ -111,7 +111,7 @@ int WinMain()
 		}
 
 		BeginDrawing();
-		ClearBackground({ 8, 2, 16, 100 });
+		//ClearBackground({ 8, 2, 16, 100 });
 		BeginMode3D(TheCamera);
 		EM.Draw3D();
 		game.Draw3D();

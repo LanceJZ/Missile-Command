@@ -131,6 +131,7 @@ bool GameLogic::BeginRun()
 
 	NewGame();
 
+
 	return false;
 }
 
@@ -171,6 +172,14 @@ void GameLogic::Input()
 			NewGame();
 		}
 	}
+
+#ifdef _DEBUG
+	if (IsKeyPressed(KEY_W))
+	{
+		Enemies->NewGame();
+		NextWave();
+	}
+#endif
 }
 
 void GameLogic::NewGame()
@@ -178,7 +187,7 @@ void GameLogic::NewGame()
 	NextNewCityScore = 10000;
 	Score.ClearScore();
 
-	Background->WaveColor(Yellow);
+	Background->WaveColor(Yellow, BLACK);
 	Player->NewGame();
 	Enemies->NewGame();
 	CityManager->NewGame();
@@ -331,7 +340,7 @@ void GameLogic::NextWave()
 	const Color groundColor = WaveColors[waveColor].Ground;
 	const Color cityMainABMColor = WaveColors[waveColor].CityMainABM;
 	const Color cityInnerColor = WaveColors[waveColor].CityInner;
-	const Color icmbColor = WaveColors[waveColor].ICBM;
+	const Color icbmColor = WaveColors[waveColor].ICBM;
 
 	if (Wave < 11)	ScoreMultiplier = (int)(Wave / 2) + 1;
 
@@ -374,11 +383,10 @@ void GameLogic::NextWave()
 		Enemies->ICBMControl->Cities[i].Targeted = false;
 	}
 
-	Background->WaveColor(groundColor);
+	Background->WaveColor(groundColor, backgroundColor);
 	Player->Reset(cityMainABMColor);
 	ABMBaseManager->Reset(cityMainABMColor);
-	Enemies->ICBMControl->NewWave(icmbColor);
-	Enemies->NextWave(Wave, icmbColor, cityMainABMColor);
+	Enemies->NextWave(Wave, icbmColor, cityMainABMColor);
 
 	State = InPlay;
 }

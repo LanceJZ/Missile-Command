@@ -88,6 +88,7 @@ void EnemyControl::NextWave(unsigned wave, Color mainColor, Color innerColor)
 {
 	Wave = wave;
 	Flier->NextWave(Wave, mainColor, innerColor);
+	ICBMControl->NewWave(mainColor);
 
 	if (Wave < 8) EM.SetTimer(FlierLaunchTimerID, FlierCooldown[Wave - 1]);
 }
@@ -122,4 +123,5 @@ void EnemyControl::SpawnFlier()
 
 void EnemyControl::Reset()
 {
+	ICBMControl->Reset();
 }

@@ -39,9 +39,11 @@ void TheBackground::Update()
 {
 	Common::Update();
 
+	ClearBackground(BackGroundColor);
 }
 
-void TheBackground::WaveColor(Color waveColor)
+void TheBackground::WaveColor(Color groundColor, Color backgroundColor)
 {
-	Ground->ModelColor = waveColor;
+	Ground->ModelColor = groundColor;
+	BackGroundColor = backgroundColor;
 }

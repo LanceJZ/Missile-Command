@@ -15,10 +15,11 @@ public:
 
 	void Update();
 
-	void WaveColor(Color waveColor);
+	void WaveColor(Color groundColor, Color backgroundColor);
 
 private:
 	Model3D* Ground = nullptr;
+	Color BackGroundColor = {};
 
 };
 
