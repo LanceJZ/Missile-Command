@@ -29,13 +29,14 @@ public:
 	void FixedUpdate(float deltaTime);
 	void Draw3D();
 
-	void Reset(Color color);
+	void Reset();
+	void NextWave(Color color);
 	void Spawn(Vector3 position);
 	void NewGame();
 
 private:
 	size_t TargetColorTimerID = 0;
-	float ShotSpeed = 300.0f;
+	float ShotSpeed = 5.0f * 60.0f * 2.15f;
 
 	Color CurrentColor = Blue;
 

@@ -73,7 +73,14 @@ void ThePlayer::Draw3D()
 
 }
 
-void ThePlayer::Reset(Color color)
+void ThePlayer::Reset()
+{
+	for (const auto &abms: ABMs) abms->Destroy();
+
+	for (const auto &targets: Targets) targets->Destroy();
+}
+
+void ThePlayer::NextWave(Color color)
 {
 	Position = { 0, 0, 0 };
 	Enabled = true;
@@ -88,7 +95,7 @@ void ThePlayer::Spawn(Vector3 position)
 void ThePlayer::NewGame()
 {
 	GameOver = false;
-	Reset(Blue);
+	NextWave(Blue);
 }
 
 void ThePlayer::FireABM()

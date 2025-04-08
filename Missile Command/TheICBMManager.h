@@ -57,8 +57,9 @@ private:
 	float FlierFireRate[7] = {};
 
 	unsigned NumberOfICBMsEachWave[19] = {};
+	float ICBMSpeedonWave[19] = {};
 
-	Color CurrentColor = Red;
+	Color CurrentColor = {};
 
 	Colors GameColors;
 

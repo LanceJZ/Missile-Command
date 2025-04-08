@@ -111,13 +111,13 @@ void EnemyControl::SpawnFlier()
 
 	if (GetRandomValue(0, 1) == 0)
 	{
-		speed = 60.0f / 3.0f;
+		speed = (60.0f / 3.0f) * 1.5f;
 		Flier->SetModel(BomberModel);
 		Flier->Satelite = false;
 	}
 	else
 	{
-		speed = 60.0f / 2.0f;
+		speed = (60.0f / 2.0f) * 1.5f;
 		Flier->SetModel(SateliteModel);
 		Flier->Satelite = true;
 	}

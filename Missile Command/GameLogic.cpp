@@ -131,7 +131,6 @@ bool GameLogic::BeginRun()
 
 	NewGame();
 
-
 	return false;
 }
 
@@ -179,7 +178,7 @@ void GameLogic::Input()
 		Reset();
 		NextWave();
 
-		const std::string wave = "Advanced to Wave " + std::to_string(Wave);
+		const std::string wave = "Advanced to Wave " + std::to_string(Wave + 1);
 
 		TraceLog(LOG_INFO, wave.c_str());
 	}
@@ -188,9 +187,8 @@ void GameLogic::Input()
 
 void GameLogic::NewGame()
 {
-	NextNewCityScore = 10000;
 	Score.ClearScore();
-
+	NextNewCityScore = 10000;
 	Background->WaveColor(Yellow, BLACK);
 	Player->NewGame();
 	Enemies->NewGame();
@@ -312,7 +310,8 @@ void GameLogic::CheckICBMs()
 		}
 	}
 
-	if (missileCount == 0) ReadyForNextWave = true;
+	if (missileCount == 0 && Enemies->ICBMControl->OutOfMissiles)
+		ReadyForNextWave = true;
 }
 
 void GameLogic::CheckExplosionsActive()
@@ -388,7 +387,7 @@ void GameLogic::NextWave()
 	}
 
 	Background->WaveColor(groundColor, backgroundColor);
-	Player->Reset(cityMainABMColor);
+	Player->NextWave(cityMainABMColor);
 	ABMBaseManager->Reset(cityMainABMColor);
 	Enemies->NextWave(Wave, icbmColor, cityMainABMColor);
 	Score.SetColor(icbmColor);
@@ -442,4 +441,5 @@ void GameLogic::Reset()
 	}
 
 	Enemies->Reset();
+	Player->Reset();
 }

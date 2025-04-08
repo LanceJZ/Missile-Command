@@ -56,7 +56,7 @@ void Shot::Spawn(Vector3& position, Vector3& target, Vector3& velocity, Color co
 
 	TargetPosition = target;
 	StartPosition = position;
-	
+
 	TrailColor = color;
 
 	EM.ResetTimer(CurrentColorTimerID);
@@ -69,7 +69,7 @@ void Shot::Destroy()
 
 bool Shot::CheckHitTarget()
 {
-	bool hit = CirclesIntersect(TargetPosition, 5.0f);
+	bool hit = CirclesIntersect(TargetPosition, 15.0f);
 
 	if (hit) Destroy();
 

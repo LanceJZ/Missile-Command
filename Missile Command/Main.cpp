@@ -85,8 +85,7 @@ int WinMain()
 #endif
 		EM.AlwaysUpdate(deltaTime);
 
-		if (game.Logic->State != GameState::Pause &&
-			game.Logic->State != GameState::Ended)
+		if (game.Logic->State != GameState::Pause)
 		{
 			EM.Input();
 

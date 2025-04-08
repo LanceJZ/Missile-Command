@@ -54,13 +54,33 @@ bool TheICBMManager::Initialize()
 	NumberOfICBMsEachWave[17] = 18;
 	NumberOfICBMsEachWave[18] = 20;
 
-	FlierFireRate[0] = 128.0f/60.0f;
-	FlierFireRate[1] = 96.0f/60.0f;
-	FlierFireRate[2] = 64.0f/60.0f;
-	FlierFireRate[3] = 48.0f/60.0f;
-	FlierFireRate[4] = 32.0f/60.0f;
+	FlierFireRate[0] = 128.0f / 60.0f;
+	FlierFireRate[1] = 96.0f / 60.0f;
+	FlierFireRate[2] = 64.0f / 60.0f;
+	FlierFireRate[3] = 48.0f / 60.0f;
+	FlierFireRate[4] = 32.0f / 60.0f;
 	FlierFireRate[5] = FlierFireRate[4];
-	FlierFireRate[6] = 16.0f/60.0f;
+	FlierFireRate[6] = 16.0f / 60.0f;
+
+	ICBMSpeedonWave[0] = 60.0f / 4.8125f;
+	ICBMSpeedonWave[1] = 60.0f / 2.875f;
+	ICBMSpeedonWave[2] = 60.0f / 1.75f;
+	ICBMSpeedonWave[3] = 60.0f / 1.03f;
+	ICBMSpeedonWave[4] = 60.0f / 1.00625f;
+	ICBMSpeedonWave[5] = 60.0f / 1.00375f;
+	ICBMSpeedonWave[6] = 60.0f / 1.0025f;
+	ICBMSpeedonWave[7] = 60.0f / 1.00125f;
+	ICBMSpeedonWave[8] = 60.0f / 1.000625f;
+	ICBMSpeedonWave[9] = 60.0f / 1.0004f;
+	ICBMSpeedonWave[10] = 60.0f / 1.0002f;
+	ICBMSpeedonWave[11] = 60.0f / 1.00016f;
+	ICBMSpeedonWave[12] = 60.0f / 1.0008f;
+	ICBMSpeedonWave[13] = 60.0f / 1.0004f;
+	ICBMSpeedonWave[14] = 60.0f / 1.0002f;
+	ICBMSpeedonWave[15] = 60.0f / 1.00016f;
+	ICBMSpeedonWave[16] = 60.0f / 1.00008f;
+	ICBMSpeedonWave[17] = 60.0f / 1.00004f;
+	ICBMSpeedonWave[18] = 60.0f / 1.00002f;
 
 	return false;
 }
@@ -131,9 +151,10 @@ void TheICBMManager::NewWave(Color waveColor)
 
 	if (Wave < 20)
 	{
-		if (MissileSpeed < 60.0f * 4.15f) MissileSpeed *= 1.125f;
+		MissileSpeed = ICBMSpeedonWave[Wave] * 2.15f;
 		ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
 	}
+	else MissileSpeed = 60.0f * 2.15f;
 
 	ICBMsFiredThisWave = 0;
 
@@ -170,10 +191,11 @@ void TheICBMManager::NewGame()
 	Wave = 0;
 	OutOfMissiles = false;
 	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
+	MissileSpeed = ICBMSpeedonWave[Wave] * 2.15f;
 	ICBMsFiredThisWave = 0;
-	MissileSpeed = 20.15f;
 	CealingPercent = 0.68f;
 	LaunchCealing = GetLaunchCealing();
+	CurrentColor = Red;
 
 	Reset();
 }
