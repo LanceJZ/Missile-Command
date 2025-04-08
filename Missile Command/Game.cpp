@@ -83,12 +83,6 @@ bool Game::BeginRun()
 
 void Game::Input()
 {
-	Logic->Input();
-
-	if (Logic->State == Ended)
-	{
-		if (IsKeyPressed(KEY_N)) Logic->NewGame();
-	}
 }
 
 

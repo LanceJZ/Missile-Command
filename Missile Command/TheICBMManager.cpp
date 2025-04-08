@@ -128,8 +128,13 @@ void TheICBMManager::NewWave(Color waveColor)
 	OutOfMissiles = false;
 	WaveEnded = false;
 	Wave++;
-	MissileSpeed *= 1.25f;
-	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
+
+	if (Wave < 20)
+	{
+		if (MissileSpeed < 60.0f * 4.15f) MissileSpeed *= 1.125f;
+		ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
+	}
+
 	ICBMsFiredThisWave = 0;
 
 	if (CealingPercent > MinimumCleaingPercent) CealingPercent -= 0.018f;
@@ -152,6 +157,16 @@ void TheICBMManager::EndWave()
 
 void TheICBMManager::Reset()
 {
+	for (const auto& missiles : ICBMs)
+	{
+		missiles->Destroy();
+	}
+
+	Flier->Destroy();
+}
+
+void TheICBMManager::NewGame()
+{
 	Wave = 0;
 	OutOfMissiles = false;
 	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
@@ -160,12 +175,7 @@ void TheICBMManager::Reset()
 	CealingPercent = 0.68f;
 	LaunchCealing = GetLaunchCealing();
 
-	for (const auto& missiles : ICBMs)
-	{
-		missiles->Destroy();
-	}
-
-	Flier->Destroy();
+	Reset();
 }
 
 bool TheICBMManager::IsItTimeForAnotherSalvo()

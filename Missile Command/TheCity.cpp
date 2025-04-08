@@ -25,7 +25,7 @@ bool TheCity::BeginRun()
 {
 	Model3D::BeginRun();
 
-	Radius = InnerModel->Radius * 0.75f;
+	Radius = InnerModel->Radius * 0.33f;
 	InnerModel->NoCollision = true;
 
 	return false;

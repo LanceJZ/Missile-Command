@@ -29,6 +29,7 @@ public:
 	void ResetLaunchTimer();
 	void NextWave(unsigned wave, Color mainColor, Color innerColor);
 	void NewGame();
+	void Reset();
 
 private:
 
@@ -40,5 +41,4 @@ private:
 	Model SateliteModel = {};
 
 	void SpawnFlier();
-	void Reset();
 };

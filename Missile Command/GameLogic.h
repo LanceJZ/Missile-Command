@@ -92,4 +92,5 @@ private:
 	void NextWave();
 	void IsOver();
 	void GameStateSwitch();
+	void Reset();
 };

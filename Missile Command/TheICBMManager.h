@@ -36,6 +36,7 @@ public:
 	void NewWave(Color waveColor);
 	void EndWave();
 	void Reset();
+	void NewGame();
 
 private:
 	bool WaveEnded = false;

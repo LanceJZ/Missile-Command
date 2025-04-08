@@ -176,8 +176,12 @@ void GameLogic::Input()
 #ifdef _DEBUG
 	if (IsKeyPressed(KEY_W))
 	{
-		Enemies->NewGame();
+		Reset();
 		NextWave();
+
+		const std::string wave = "Advanced to Wave " + std::to_string(Wave);
+
+		TraceLog(LOG_INFO, wave.c_str());
 	}
 #endif
 }
@@ -387,6 +391,7 @@ void GameLogic::NextWave()
 	Player->Reset(cityMainABMColor);
 	ABMBaseManager->Reset(cityMainABMColor);
 	Enemies->NextWave(Wave, icbmColor, cityMainABMColor);
+	Score.SetColor(icbmColor);
 
 	State = InPlay;
 }
@@ -427,4 +432,14 @@ void GameLogic::GameStateSwitch()
 	default:
 		break;
 	}
+}
+
+void GameLogic::Reset()
+{
+	for (const auto &explosion : Explosions)
+	{
+		explosion->Destroy();
+	}
+
+	Enemies->Reset();
 }

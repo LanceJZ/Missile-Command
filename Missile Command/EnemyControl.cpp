@@ -95,11 +95,15 @@ void EnemyControl::NextWave(unsigned wave, Color mainColor, Color innerColor)
 
 void EnemyControl::NewGame()
 {
-	Reset();
-
 	Wave = 0;
+
+	ICBMControl->NewGame();
 }
 
+void EnemyControl::Reset()
+{
+	ICBMControl->Reset();
+}
 
 void EnemyControl::SpawnFlier()
 {
@@ -119,9 +123,4 @@ void EnemyControl::SpawnFlier()
 	}
 
 	Flier->Spawn(speed);
-}
-
-void EnemyControl::Reset()
-{
-	ICBMControl->Reset();
 }
