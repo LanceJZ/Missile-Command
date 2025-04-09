@@ -117,16 +117,24 @@ bool GameLogic::BeginRun()
 
 	for (int i = 0; i < 6; i++)
 	{
-		Enemies->ICBMControl->Cities[i].Position = CityManager->Cities[i]->Position;
+		Enemies->ICBMControl->Cities[i].Position =
+			CityManager->Cities[i]->Position;
 		Enemies->ICBMControl->Cities[i].Active = true;
 		Enemies->ICBMControl->Cities[i].Targeted = false;
 	}
 
 	for (int i = 0; i < 3; i++)
 	{
-		Enemies->ICBMControl->ABMBases[i].Position = ABMBaseManager->ABMBases[i]->Position;
+		Enemies->ICBMControl->ABMBases[i].Position =
+			ABMBaseManager->ABMBases[i]->Position;
 		Enemies->ICBMControl->ABMBases[i].Active = true;
 		Enemies->ICBMControl->ABMBases[i].Targeted = false;
+	}
+
+	for (const auto& sBomb : Enemies->ICBMControl->SmartBombs)
+	{
+		sBomb->SetTargetRefs(Player->Targets);
+		sBomb->SetExplosionRefs(Explosions);
 	}
 
 	NewGame();

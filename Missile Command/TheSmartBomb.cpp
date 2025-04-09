@@ -14,6 +14,16 @@ void TheSmartBomb::SetEdgeModel(Model &edge)
 	EdgeModel->SetModel(edge);
 }
 
+void TheSmartBomb::SetTargetRefs(std::vector<Model3D*> targets)
+{
+	TargetRefs = targets;
+}
+
+void TheSmartBomb::SetExplosionRefs(std::vector<TheExplosion*> explosions)
+{
+	ExplosionRefs = explosions;
+}
+
 bool TheSmartBomb::Initialize()
 {
 	Model3D::Initialize();
@@ -42,6 +52,16 @@ void TheSmartBomb::Update(float deltaTime)
 		EM.ResetTimer(ColorChangeTimerID);
 		ModelColor = GameColors.ChangeColor();
 	}
+
+	switch (CurrentMode)
+	{
+	case Go:
+		GoTime();
+		break;
+	case Evade:
+		EvadeTime();
+		break;
+	}
 }
 
 void TheSmartBomb::Draw3D()
@@ -55,9 +75,12 @@ void TheSmartBomb::NextWave(Color color, Color edgeColor)
 	EdgeModel->ModelColor = edgeColor;
 }
 
-void TheSmartBomb::Spawn()
+void TheSmartBomb::Spawn(Vector3 position, Vector3 target, float speed)
 {
-
+	Entity::Spawn(position);
+	TargetPosition = target;
+	Speed = speed;
+	CurrentMode = Go;
 }
 
 void TheSmartBomb::Destroy()
@@ -66,8 +89,44 @@ void TheSmartBomb::Destroy()
 
 }
 
-void TheSmartBomb::Spawn(Vector3 position)
+void TheSmartBomb::GoTime()
 {
-	Entity::Spawn(position);
+	Velocity = GetVelocityFromVectorZ(TargetPosition, Speed);
 
+	if (CheckForEvade()) CurrentMode = Evade;
+}
+
+void TheSmartBomb::EvadeTime()
+{
+	Velocity = M.GetVelocityFromVectorsZ(EvadeTargetPosition, Position, Speed);
+
+	if (CheckGoodForGo()) CurrentMode = Go;
+}
+
+bool TheSmartBomb::CheckForEvade()
+{
+	for (const auto& target : TargetRefs)
+	{
+		if (CheckCollisionSpheres(target->Position, target->Radius, Position, Radius))
+		{
+			EvadeTargetPosition = target->Position;
+			return true;
+		}
+	}
+
+	for (const auto& explosion : ExplosionRefs)
+	{
+		if (CheckCollisionSpheres(explosion->Position, explosion->Radius, Position, Radius))
+		{
+			EvadeTargetPosition = explosion->Position;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool TheSmartBomb::CheckGoodForGo()
+{
+	return !CheckForEvade();
 }

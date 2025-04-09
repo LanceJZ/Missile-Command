@@ -3,6 +3,7 @@
 #include "Shot.h"
 #include "Colors.h"
 #include "TheFlier.h"
+#include "TheSmartBomb.h"
 
 struct TargetData
 {
@@ -23,9 +24,11 @@ public:
 	Shot* ICBMs[8];
 	TargetData Cities[6] = {};
 	TargetData ABMBases[3] = {};
+	TheSmartBomb* SmartBombs[3] = {};
 
 	void SetMissileModels(Model& missileModel);
 	void SetBomberReference(TheFlier* bomber);
+	void SetSmartBombModel(Model &smartBombMainModel, Model &smartBombEdgeModel);
 
 	bool Initialize();
 	bool BeginRun();
@@ -33,7 +36,7 @@ public:
 	void Update();
 
 	void ResetFlierFireTimer();
-	void NewWave(Color waveColor);
+	void NewWave(Color icbmColor, Color edgeColor);
 	void EndWave();
 	void Reset();
 	void NewGame();
@@ -46,6 +49,7 @@ private:
 
 	unsigned ICBMsFiredMax = 12;
 	unsigned ICBMsFiredThisWave = 0;
+	unsigned SmartBombsFiredThisWave = 0;
 	unsigned CitiesTargeted = 0;
 	const unsigned CitiesTargetedMax = 3;
 
@@ -57,7 +61,8 @@ private:
 	float FlierFireRate[7] = {};
 
 	unsigned NumberOfICBMsEachWave[19] = {};
-	float ICBMSpeedonWave[19] = {};
+	unsigned NumberOfSmartBombsEachWave[11] = {};
+	float ICBMSpeedForWave[19] = {};
 
 	Color CurrentColor = {};
 
@@ -67,6 +72,7 @@ private:
 
 	bool IsItTimeForAnotherSalvo();
 	void FireSalvo();
+	void LaunchSmartBomb();
 	bool FlierFires();
 	void FireICBM(Shot* missile, Vector3& position);
 	void CitiesToTarget();

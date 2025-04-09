@@ -3,7 +3,6 @@
 #include "ThePlayer.h"
 #include "TheICBMManager.h"
 #include "TheFlier.h"
-#include "TheSmartBomb.h"
 
 class EnemyControl : public Common
 {
@@ -16,7 +15,6 @@ public:
 
 	TheICBMManager *ICBMControl = nullptr;
 	TheFlier *Flier = nullptr;
-	TheSmartBomb* SmartBombs[3] = {};
 
 	void SetPlayer(ThePlayer* player);
 	void SetICBMModel(Model &missileModel);

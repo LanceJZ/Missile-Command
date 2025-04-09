@@ -7,6 +7,11 @@ TheICBMManager::TheICBMManager()
 		EM.AddModel3D(ICBMs[i] = DBG_NEW Shot());
 	}
 
+	for (int i = 0; i < 3; i++)
+	{
+		EM.AddModel3D(SmartBombs[i] = DBG_NEW TheSmartBomb());
+	}
+
 	LaunchCheckTimerID = EM.AddTimer();
 	FlierFireTimerID = EM.AddTimer();
 }
@@ -26,6 +31,15 @@ void TheICBMManager::SetMissileModels(Model& missileModel)
 void TheICBMManager::SetBomberReference(TheFlier* bomber)
 {
 	Flier = bomber;
+}
+
+void TheICBMManager::SetSmartBombModel(Model& smartBombMainModel, Model& smartBombEdgeModel)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		SmartBombs[i]->SetModel(smartBombMainModel);
+		SmartBombs[i]->SetEdgeModel(smartBombEdgeModel);
+	}
 }
 
 bool TheICBMManager::Initialize()
@@ -54,6 +68,18 @@ bool TheICBMManager::Initialize()
 	NumberOfICBMsEachWave[17] = 18;
 	NumberOfICBMsEachWave[18] = 20;
 
+	NumberOfSmartBombsEachWave[0] = 1; // Starts at wave 6
+	NumberOfSmartBombsEachWave[1] = 1;
+	NumberOfSmartBombsEachWave[2] = 2;
+	NumberOfSmartBombsEachWave[3] = 3;
+	NumberOfSmartBombsEachWave[4] = 4;
+	NumberOfSmartBombsEachWave[5] = 4;
+	NumberOfSmartBombsEachWave[6] = 5;
+	NumberOfSmartBombsEachWave[7] = 5;
+	NumberOfSmartBombsEachWave[8] = 6;
+	NumberOfSmartBombsEachWave[9] = 6;
+	NumberOfSmartBombsEachWave[10] = 7; // Continues with this amount forever more.
+
 	FlierFireRate[0] = 128.0f / 60.0f;
 	FlierFireRate[1] = 96.0f / 60.0f;
 	FlierFireRate[2] = 64.0f / 60.0f;
@@ -62,25 +88,25 @@ bool TheICBMManager::Initialize()
 	FlierFireRate[5] = FlierFireRate[4];
 	FlierFireRate[6] = 16.0f / 60.0f;
 
-	ICBMSpeedonWave[0] = 60.0f / 4.8125f;
-	ICBMSpeedonWave[1] = 60.0f / 2.875f;
-	ICBMSpeedonWave[2] = 60.0f / 1.75f;
-	ICBMSpeedonWave[3] = 60.0f / 1.03f;
-	ICBMSpeedonWave[4] = 60.0f / 1.00625f;
-	ICBMSpeedonWave[5] = 60.0f / 1.00375f;
-	ICBMSpeedonWave[6] = 60.0f / 1.0025f;
-	ICBMSpeedonWave[7] = 60.0f / 1.00125f;
-	ICBMSpeedonWave[8] = 60.0f / 1.000625f;
-	ICBMSpeedonWave[9] = 60.0f / 1.0004f;
-	ICBMSpeedonWave[10] = 60.0f / 1.0002f;
-	ICBMSpeedonWave[11] = 60.0f / 1.00016f;
-	ICBMSpeedonWave[12] = 60.0f / 1.0008f;
-	ICBMSpeedonWave[13] = 60.0f / 1.0004f;
-	ICBMSpeedonWave[14] = 60.0f / 1.0002f;
-	ICBMSpeedonWave[15] = 60.0f / 1.00016f;
-	ICBMSpeedonWave[16] = 60.0f / 1.00008f;
-	ICBMSpeedonWave[17] = 60.0f / 1.00004f;
-	ICBMSpeedonWave[18] = 60.0f / 1.00002f;
+	ICBMSpeedForWave[0] = 60.0f / 4.8125f;
+	ICBMSpeedForWave[1] = 60.0f / 2.875f;
+	ICBMSpeedForWave[2] = 60.0f / 1.75f;
+	ICBMSpeedForWave[3] = 60.0f / 1.3f;
+	ICBMSpeedForWave[4] = 60.0f / 1.1625f;
+	ICBMSpeedForWave[5] = 60.0f / 1.1375f;
+	ICBMSpeedForWave[6] = 60.0f / 1.125f;
+	ICBMSpeedForWave[7] = 60.0f / 1.025f;
+	ICBMSpeedForWave[8] = 60.0f / 1.01625f;
+	ICBMSpeedForWave[9] = 60.0f / 1.014f;
+	ICBMSpeedForWave[10] = 60.0f / 1.012f;
+	ICBMSpeedForWave[11] = 60.0f / 1.006f;
+	ICBMSpeedForWave[12] = 60.0f / 1.0018f;
+	ICBMSpeedForWave[13] = 60.0f / 1.0014f;
+	ICBMSpeedForWave[14] = 60.0f / 1.0012f;
+	ICBMSpeedForWave[15] = 60.0f / 1.0006f;
+	ICBMSpeedForWave[16] = 60.0f / 1.00018f;
+	ICBMSpeedForWave[17] = 60.0f / 1.00014f;
+	ICBMSpeedForWave[18] = 60.0f / 1.000125f;
 
 	return false;
 }
@@ -115,6 +141,8 @@ void TheICBMManager::Update()
 
 	if (OutOfMissiles) return;
 
+	if (WaveEnded) return;
+
 	if (ICBMsFiredThisWave > ICBMsFiredMax)
 	{
 		OutOfMissiles = true;
@@ -125,7 +153,26 @@ void TheICBMManager::Update()
 	{
 		EM.ResetTimer(LaunchCheckTimerID);
 
-		if (IsItTimeForAnotherSalvo() && !WaveEnded) FireSalvo();
+		if (IsItTimeForAnotherSalvo()) FireSalvo();
+
+		if (Wave > 5)
+		{
+			int attacks = 0;
+
+			for (const auto &smartBomb : SmartBombs)
+			{
+				if (smartBomb->Enabled) attacks+=2;
+			}
+
+			for (const auto &missile : ICBMs)
+			{
+				if (missile->Enabled) attacks++;
+			}
+
+			if (attacks > 7) return;
+
+			LaunchSmartBomb();
+		}
 	}
 
 	if (Flier->Enabled)
@@ -142,21 +189,22 @@ void TheICBMManager::ResetFlierFireTimer()
 	EM.ResetTimer(FlierFireTimerID);
 }
 
-void TheICBMManager::NewWave(Color waveColor)
+void TheICBMManager::NewWave(Color icbmColor, Color edgeColor)
 {
-	CurrentColor = waveColor;
+	CurrentColor = icbmColor;
 	OutOfMissiles = false;
 	WaveEnded = false;
 	Wave++;
 
 	if (Wave < 20)
 	{
-		MissileSpeed = ICBMSpeedonWave[Wave] * 2.15f;
+		MissileSpeed = ICBMSpeedForWave[Wave] * 2.15f;
 		ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
 	}
 	else MissileSpeed = 60.0f * 2.15f;
 
 	ICBMsFiredThisWave = 0;
+	SmartBombsFiredThisWave = 0;
 
 	if (CealingPercent > MinimumCleaingPercent) CealingPercent -= 0.018f;
 
@@ -166,6 +214,9 @@ void TheICBMManager::NewWave(Color waveColor)
 	{
 		EM.SetTimer(FlierFireTimerID, FlierFireRate[Wave - 1]);
 	}
+
+	for (const auto &smartBomb : SmartBombs)
+		smartBomb->NextWave(icbmColor, edgeColor);
 
 	CitiesToTarget();
 	FireSalvo();
@@ -191,8 +242,9 @@ void TheICBMManager::NewGame()
 	Wave = 0;
 	OutOfMissiles = false;
 	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
-	MissileSpeed = ICBMSpeedonWave[Wave] * 2.15f;
+	MissileSpeed = ICBMSpeedForWave[Wave] * 2.15f;
 	ICBMsFiredThisWave = 0;
+	SmartBombsFiredThisWave = 0;
 	CealingPercent = 0.68f;
 	LaunchCealing = GetLaunchCealing();
 	CurrentColor = Red;
@@ -205,13 +257,20 @@ bool TheICBMManager::IsItTimeForAnotherSalvo()
 	int activeICBMs = 0;
 	bool belowCealing = false;
 
+	for (const auto &smartBomb : SmartBombs)
+	{
+		if (smartBomb->Enabled) activeICBMs+=2;
+	}
+
 	for (const auto &missile : ICBMs)
 	{
 		if (missile->Enabled && !missile->ByFlier)
 		{
-			if (missile->Position.y > LaunchCealing) belowCealing = true;
-
 			activeICBMs++;
+
+			if (activeICBMs > 7) return false;
+
+			if (missile->Position.y > LaunchCealing) belowCealing = true;
 		}
 	}
 
@@ -239,6 +298,36 @@ void TheICBMManager::FireSalvo()
 				if (ICBMsFiredThisWave > ICBMsFiredMax) return;
 				break;
 			}
+		}
+	}
+}
+
+void TheICBMManager::LaunchSmartBomb()
+{
+	for (const auto &smartBomb : SmartBombs)
+	{
+		if (!smartBomb->Enabled)
+		{
+			SmartBombsFiredThisWave++;
+			Vector3 position = {M.GetRandomFloat((float)-WindowHalfWidth,
+				(float)WindowHalfWidth), (float)-WindowHalfHeight + 45.0f, 0.0f};
+			int cityIndex = GetRandomValue(0, 5);
+			Vector3 target = {0.0f, 0.0f, 0.0f};
+
+			if (Cities[cityIndex].Targeted)
+			{
+				target = Cities[cityIndex].Position;
+			}
+			else
+			{
+				target = ABMBases[GetRandomValue(0, 2)].Position;
+			}
+
+			smartBomb->Spawn(position, target, MissileSpeed);
+
+			if (Wave > 8) smartBomb->OrderNineIsEngaged = true;
+
+			break;
 		}
 	}
 }

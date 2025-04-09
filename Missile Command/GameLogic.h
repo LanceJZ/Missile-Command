@@ -82,7 +82,6 @@ private:
 
 	std::vector<TheExplosion*> Explosions = {};
 
-
 	void MakeExplosion(Vector3 position);
 	void InGame();
 	void InMainMenu();
