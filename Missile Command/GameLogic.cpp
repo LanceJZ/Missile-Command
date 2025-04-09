@@ -389,7 +389,7 @@ void GameLogic::NextWave()
 	Background->WaveColor(groundColor, backgroundColor);
 	Player->NextWave(cityMainABMColor);
 	ABMBaseManager->Reset(cityMainABMColor);
-	Enemies->NextWave(Wave, icbmColor, cityMainABMColor);
+	Enemies->NextWave(Wave, icbmColor, cityMainABMColor, groundColor);
 	Score.SetColor(icbmColor);
 
 	State = InPlay;

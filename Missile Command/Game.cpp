@@ -63,10 +63,13 @@ bool Game::Load()
 	Player->SetTargetandShotModel(CM.LoadAndGetModel("PlayerTarget"), cube);
 
 	ABMBases->SetMissileModel(CM.LoadAndGetModel("MissileAmmo"));
+
 	Enemies->SetICBMModel(cube);
 	Enemies->SetBomberModel(CM.LoadAndGetModel("MC_Bomber"));
 	Enemies->SetSateliteModel(CM.LoadAndGetModel("MC_SatelliteMain-1"),
 		CM.LoadAndGetModel("MC_SateliteInside"));
+	Enemies->SetSmartBombModel(CM.LoadAndGetModel("SmartBomb"),
+		CM.LoadAndGetModel("SmartBombEdge"));
 
 	Cities->SetCityModels(CM.LoadAndGetModel("InnerCity"),
 		CM.LoadAndGetModel("OuterCity"));
