@@ -131,12 +131,6 @@ bool GameLogic::BeginRun()
 		Enemies->ICBMControl->ABMBases[i].Targeted = false;
 	}
 
-	for (const auto& sBomb : Enemies->ICBMControl->SmartBombs)
-	{
-		sBomb->SetTargetRefs(Player->Targets);
-		sBomb->SetExplosionRefs(Explosions);
-	}
-
 	NewGame();
 
 	return false;
@@ -152,6 +146,11 @@ void GameLogic::FixedUpdate()
 	Common::FixedUpdate();
 
 	GameStateSwitch();
+
+	for (const auto& sBomb : Enemies->ICBMControl->SmartBombs)
+	{
+		sBomb->SetTargetRefs(Player->Targets);
+	}
 }
 
 void GameLogic::Input()
@@ -226,6 +225,11 @@ void GameLogic::MakeExplosion(Vector3 position)
 			WHITE, position, {0});
 	}
 	else Explosions.at(explosionNumber)->Spawn(position);
+
+	for (const auto& sBomb : Enemies->ICBMControl->SmartBombs)
+	{
+		sBomb->SetExplosionRefs(Explosions);
+	}
 }
 
 void GameLogic::InGame()
@@ -275,7 +279,45 @@ void GameLogic::CheckICBMs()
 			Enemies->ResetLaunchTimer();
 			break;
 		}
+
+		for (const auto &sBomb : Enemies->ICBMControl->SmartBombs)
+		{
+			if (sBomb->Enabled)
+			{
+				if (sBomb->CirclesIntersect(*Explosions[i]))
+				{
+					sBomb->Destroy();
+					MakeExplosion(sBomb->Position);
+				}
+			}
+		}
 	}
+
+		for (const auto &sBomb : Enemies->ICBMControl->SmartBombs)
+		{
+			if (sBomb->Enabled)
+			{
+				for (const auto &city : CityManager->Cities)
+				{
+					if (sBomb->CirclesIntersect(*city))
+					{
+						sBomb->Destroy();
+						MakeExplosion(sBomb->Position);
+						city->Destroy();
+					}
+				}
+
+				for (const auto &base : ABMBaseManager->ABMBases)
+				{
+					if (sBomb->CirclesIntersect(base->Position, base->Radius))
+					{
+						sBomb->Destroy();
+						MakeExplosion(sBomb->Position);
+						base->Clear();
+					}
+				}
+			}
+		}
 
 	for (auto missile : Enemies->ICBMControl->ICBMs)
 	{

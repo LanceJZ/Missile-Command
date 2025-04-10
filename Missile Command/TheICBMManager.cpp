@@ -155,7 +155,7 @@ void TheICBMManager::Update()
 
 		if (IsItTimeForAnotherSalvo()) FireSalvo();
 
-		if (Wave > 5)
+		if (Wave > 4)
 		{
 			int attacks = 0;
 
@@ -232,6 +232,11 @@ void TheICBMManager::Reset()
 	for (const auto& missiles : ICBMs)
 	{
 		missiles->Destroy();
+	}
+
+	for (const auto& smartBombs : SmartBombs)
+	{
+		smartBombs->Destroy();
 	}
 
 	Flier->Destroy();

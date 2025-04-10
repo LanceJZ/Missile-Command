@@ -13,8 +13,8 @@ public:
 	bool OrderNineIsEngaged = false;
 
 	void SetEdgeModel(Model &edge);
-	void SetTargetRefs(std::vector<Model3D*> targets);
-	void SetExplosionRefs(std::vector<TheExplosion*> explosions);
+	void SetTargetRefs(std::vector<Model3D*> &targets);
+	void SetExplosionRefs(std::vector<TheExplosion*> &explosions);
 	bool Initialize();
 	bool BeginRun();
 
