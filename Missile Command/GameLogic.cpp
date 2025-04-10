@@ -385,6 +385,8 @@ void GameLogic::NextWave()
 	ReadyForNextWave = false;
 	int cityCount = 0;
 
+	Enemies->Reset();
+
 	size_t waveColor = (Wave / 2);
 
 	if (waveColor > 9) waveColor = 0;

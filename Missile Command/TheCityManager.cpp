@@ -72,7 +72,7 @@ void TheCityManager::NewWave(Color mainColor, Color innerColor)
 
 void TheCityManager::NewGame()
 {
-	BonusCities = 0;
+	BonusCities = 1;
 	NextBonusCityAmount = 8000;
 
 	for (const auto &city : Cities)

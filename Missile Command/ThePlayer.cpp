@@ -82,7 +82,6 @@ void ThePlayer::Reset()
 
 void ThePlayer::NextWave(Color color)
 {
-	Position = { 0, 0, 0 };
 	Enabled = true;
 	ModelColor = color;
 }

@@ -153,9 +153,7 @@ void TheICBMManager::Update()
 	{
 		EM.ResetTimer(LaunchCheckTimerID);
 
-		if (IsItTimeForAnotherSalvo()) FireSalvo();
-
-		if (Wave > 4)
+		if (Wave > 4 && ICBMsFiredThisWave > 4)
 		{
 			int attacks = 0;
 
@@ -169,19 +167,24 @@ void TheICBMManager::Update()
 				if (missile->Enabled) attacks++;
 			}
 
-			if (attacks > 7) return;
-
-			LaunchSmartBomb();
+			if (attacks < 8) LaunchSmartBomb();
+			else if (IsItTimeForAnotherSalvo()) FireSalvo();
 		}
-	}
 
-	if (Flier->Enabled)
-	{
-		if (EM.TimerElapsed(FlierFireTimerID))
+		if (IsItTimeForAnotherSalvo())
 		{
-			if (FlierFires()) EM.ResetTimer(FlierFireTimerID);
+			FireSalvo();
+
+			if (Flier->Enabled)
+			{
+				if (EM.TimerElapsed(FlierFireTimerID) && ICBMsFiredThisWave > 4)
+				{
+					if (FlierFires()) EM.ResetTimer(FlierFireTimerID);
+				}
+			}
 		}
 	}
+
 }
 
 void TheICBMManager::ResetFlierFireTimer()

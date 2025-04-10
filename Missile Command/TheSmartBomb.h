@@ -51,5 +51,4 @@ private:
 	void GoTime();
 	void EvadeTime();
 	bool CheckForEvade();
-	bool CheckGoodForGo();
 };

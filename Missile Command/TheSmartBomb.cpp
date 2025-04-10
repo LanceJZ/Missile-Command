@@ -105,7 +105,7 @@ void TheSmartBomb::EvadeTime()
 {
 	Velocity = M.GetVelocityFromVectorsZ(EvadeTargetPosition, Position, Speed);
 
-	if (CheckGoodForGo()) CurrentMode = Go;
+	if (!CheckForEvade()) CurrentMode = Go;
 }
 
 bool TheSmartBomb::CheckForEvade()
@@ -137,9 +137,4 @@ bool TheSmartBomb::CheckForEvade()
 	}
 
 	return false;
-}
-
-bool TheSmartBomb::CheckGoodForGo()
-{
-	return !CheckForEvade();
 }
