@@ -443,6 +443,7 @@ void GameLogic::NextWave()
 	ABMBaseManager->Reset(cityMainABMColor);
 	Enemies->NextWave(Wave, icbmColor, cityMainABMColor, groundColor);
 	Score.SetColor(icbmColor);
+	HighScore.SetColor(icbmColor);
 
 	State = InPlay;
 }

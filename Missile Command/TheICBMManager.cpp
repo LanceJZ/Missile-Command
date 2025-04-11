@@ -119,7 +119,7 @@ bool TheICBMManager::BeginRun()
 
 	CitiesToTarget();
 
-	FireSalvo();
+	//FireSalvo();
 
 	return false;
 }
@@ -171,17 +171,19 @@ void TheICBMManager::Update()
 			else if (IsItTimeForAnotherSalvo()) FireSalvo();
 		}
 
+		IsItMERVTime();
+
+		if (Flier->Enabled)
+		{
+			if (EM.TimerElapsed(FlierFireTimerID) && ICBMsFiredThisWave > 4)
+			{
+				if (FlierFires()) EM.ResetTimer(FlierFireTimerID);
+			}
+		}
+
 		if (IsItTimeForAnotherSalvo())
 		{
 			FireSalvo();
-
-			if (Flier->Enabled)
-			{
-				if (EM.TimerElapsed(FlierFireTimerID) && ICBMsFiredThisWave > 4)
-				{
-					if (FlierFires()) EM.ResetTimer(FlierFireTimerID);
-				}
-			}
 		}
 	}
 
@@ -198,6 +200,7 @@ void TheICBMManager::NewWave(Color icbmColor, Color edgeColor)
 	OutOfMissiles = false;
 	WaveEnded = false;
 	Wave++;
+	ICBMMaxSalvosThisWave++;
 
 	if (Wave < 20)
 	{
@@ -248,6 +251,8 @@ void TheICBMManager::Reset()
 void TheICBMManager::NewGame()
 {
 	Wave = 0;
+	ICBMMaxSalvosThisWave = 2;
+	ICBMSalvosFired = 0;
 	OutOfMissiles = false;
 	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
 	MissileSpeed = ICBMSpeedForWave[Wave] * 2.15f;
@@ -262,6 +267,21 @@ void TheICBMManager::NewGame()
 
 bool TheICBMManager::IsItTimeForAnotherSalvo()
 {
+	if (ICBMSalvosFired > ICBMMaxSalvosThisWave)
+	{
+		bool tooLowForMIRV = true;
+
+		for (const auto &missile : ICBMs)
+		{
+			if (missile->Enabled)
+			{
+				if (missile->Position.y > 0.0f) tooLowForMIRV = true;
+			}
+		}
+
+		if (!tooLowForMIRV) return false;
+	}
+
 	int activeICBMs = 0;
 	bool belowCealing = false;
 
@@ -287,11 +307,54 @@ bool TheICBMManager::IsItTimeForAnotherSalvo()
 	return false;
 }
 
+void TheICBMManager::IsItMERVTime()
+{
+	int activeICBMs = 0;
+
+	for (const auto &smartBomb : SmartBombs)
+	{
+		if (smartBomb->Enabled) activeICBMs+=2;
+	}
+
+	for (const auto& missile : ICBMs)
+	{
+		if (missile->Enabled && !missile->ByFlier)
+		{
+			activeICBMs++;
+
+			if (activeICBMs > 7) return;
+
+			if (missile->Position.y > -(159.0f - 115.0f) * 4.15f)
+			{
+				if (missile->Position.y < -(128.0f - 115.0f) * 4.15f)
+				{
+					Vector3 position = missile->Position;
+
+					for (int i = 0; i < 2; i++)
+					{
+						for (const auto& missileMIRV : ICBMs)
+						{
+							if (!missileMIRV->Enabled)
+							{
+								FireICBM(missileMIRV, position);
+							}
+						}
+					}
+
+					break;
+				}
+			}
+		}
+	}
+}
+
 void TheICBMManager::FireSalvo()
 {
 	// TODO: Change X so it adds a random value to the next one, starting
 	// TODO: from -WindowWidth +45, make sure they all don't add up to more than
 	// TODO: WindowWidth - 45.
+
+	ICBMSalvosFired ++;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -301,9 +364,13 @@ void TheICBMManager::FireSalvo()
 			{
 				Vector3 position = {M.GetRandomFloat((float)-WindowHalfWidth,
 					(float)WindowHalfWidth), (float)-WindowHalfHeight + 45.0f, 0.0f};
+
 				FireICBM(missile, position);
+
 				missile->ByFlier = false;
+
 				if (ICBMsFiredThisWave > ICBMsFiredMax) return;
+
 				break;
 			}
 		}

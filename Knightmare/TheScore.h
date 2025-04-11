@@ -18,7 +18,8 @@ public:
 	void SetHighScore(int highScore);
 	void ClearScore();
 	void SetColor(Color color);
-	void SetScorePosition(int x, int y);
+	void SetPosition(int x, int y);
+	void SetPosition(int x);
 	void SetFontSize(int fontSize);
 
 	unsigned int GetScore();

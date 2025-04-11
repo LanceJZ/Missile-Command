@@ -31,7 +31,8 @@ void TheScore::Draw2D()
 	std::string scoreString = std::to_string(Score);
 
 	DrawText(scoreString.c_str(),
-		X - (int)(scoreString.length() * (int)(FontSize * 0.5f)), Y, FontSize, CurrentColor);
+		X - (int)(scoreString.length() * (int)(FontSize * 0.5f)), Y,
+		FontSize, CurrentColor);
 }
 
 void TheScore::AddToScore(int amount)
@@ -59,10 +60,15 @@ void TheScore::SetColor(Color color)
 	CurrentColor = color;
 }
 
-void TheScore::SetScorePosition(int x, int y)
+void TheScore::SetPosition(int x, int y)
 {
 	X = x;
 	Y = y;
+}
+
+void TheScore::SetPosition(int x)
+{
+	X = x;
 }
 
 void TheScore::SetFontSize(int fontSize)

@@ -25,6 +25,7 @@ ParticleManager Particles = {};
 Camera TheCamera = {};
 Vector2 FieldSize = {};
 TheScore Score = {};
+TheScore HighScore = {};
 
 #ifdef _DEBUG
 int main()
@@ -118,6 +119,7 @@ int WinMain()
 		EM.Draw2D();
 		game.Draw2D();
 		Score.Draw2D();
+		HighScore.Draw2D();
 
 #ifdef _DEBUG
 		DrawFPS(5, 5);

@@ -51,6 +51,8 @@ private:
 	unsigned ICBMsFiredThisWave = 0;
 	unsigned SmartBombsFiredThisWave = 0;
 	unsigned CitiesTargeted = 0;
+	unsigned ICBMSalvosFired = 0;
+	unsigned ICBMMaxSalvosThisWave = 2;
 	const unsigned CitiesTargetedMax = 3;
 
 	float MissileSpeed = 20.15f;
@@ -71,6 +73,7 @@ private:
 	TheFlier* Flier = nullptr;
 
 	bool IsItTimeForAnotherSalvo();
+	void IsItMERVTime();
 	void FireSalvo();
 	void LaunchSmartBomb();
 	bool FlierFires();

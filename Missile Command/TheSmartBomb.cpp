@@ -29,6 +29,7 @@ bool TheSmartBomb::Initialize()
 {
 	Model3D::Initialize();
 
+	Scale = 2.0f;
 	EM.SetTimer(ColorChangeTimerID, 0.05f);
 
 	return false;

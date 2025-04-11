@@ -13,3 +13,4 @@ extern KnightMath M;
 extern ParticleManager Particles;
 extern Vector2 FieldSize;
 extern TheScore Score;
+extern TheScore HighScore;
