@@ -128,17 +128,6 @@ void TheICBMManager::Update()
 {
 	Common::Update();
 
-	//for (const auto &missile : ICBMs)
-	//{
-	//	if (missile->Enabled)
-	//	{
-	//		if (missile->Position.y > (float)WindowHalfHeight - 14.0f * 5.0f)
-	//		{
-	//			missile->Destroy();
-	//		}
-	//	}
-	//}
-
 	if (OutOfMissiles) return;
 
 	if (WaveEnded) return;
@@ -148,6 +137,15 @@ void TheICBMManager::Update()
 		OutOfMissiles = true;
 		return;
 	}
+
+	bool citiesGone = true;
+
+	for (const auto &city : Cities)
+	{
+		if (city.Active && city.Targeted) citiesGone = false;
+	}
+
+	CityTargetsDestroyed = citiesGone;
 
 	if (EM.TimerElapsed(LaunchCheckTimerID))
 	{
@@ -199,6 +197,7 @@ void TheICBMManager::NewWave(Color icbmColor, Color edgeColor)
 	CurrentColor = icbmColor;
 	OutOfMissiles = false;
 	WaveEnded = false;
+	CityTargetsDestroyed = false;
 	Wave++;
 	ICBMMaxSalvosThisWave++;
 
@@ -254,6 +253,7 @@ void TheICBMManager::NewGame()
 	ICBMMaxSalvosThisWave = 2;
 	ICBMSalvosFired = 0;
 	OutOfMissiles = false;
+	CityTargetsDestroyed = false;
 	ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
 	MissileSpeed = ICBMSpeedForWave[Wave] * 2.15f;
 	ICBMsFiredThisWave = 0;

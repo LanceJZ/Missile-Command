@@ -17,6 +17,7 @@ public:
 	virtual ~TheCity();
 
 	CityState State = Active;
+	bool Targeted = false;
 
 	bool Initialize();
 	bool BeginRun();

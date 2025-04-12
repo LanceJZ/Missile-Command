@@ -19,6 +19,7 @@ public:
 	virtual ~TheICBMManager();
 
 	bool OutOfMissiles = false;
+	bool CityTargetsDestroyed = false;
 	unsigned Wave = 0;
 
 	Shot* ICBMs[8];

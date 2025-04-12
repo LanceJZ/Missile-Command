@@ -53,6 +53,7 @@ void TheCity::Spawn(Vector3 position)
 	Entity::Spawn(position);
 
 	InnerModel->Spawn(position);
+	Targeted = false;
 }
 
 void TheCity::Return()

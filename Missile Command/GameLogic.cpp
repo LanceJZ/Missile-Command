@@ -146,21 +146,6 @@ void GameLogic::FixedUpdate()
 	Common::FixedUpdate();
 
 	GameStateSwitch();
-
-	for (const auto& sBomb : Enemies->ICBMControl->SmartBombs)
-	{
-		sBomb->SetTargetRefs(Player->Targets);
-	}
-
-	if (OutofAmmo)
-	{
-		if (CheckExplosionsActive()) GetToEndofWaveFast = true;
-	}
-
-	if (GetToEndofWaveFast)
-	{
-
-	}
 }
 
 void GameLogic::Update()
@@ -254,6 +239,19 @@ void GameLogic::InGame()
 	CheckICBMs();
 
 	if (ReadyForNextWave) if (CheckExplosionsActive()) State = StartNewWave;
+
+	for (const auto& sBomb : Enemies->ICBMControl->SmartBombs)
+	{
+		sBomb->SetTargetRefs(Player->Targets);
+	}
+
+	if (OutofAmmo)
+	{
+		if (CheckExplosionsActive()) GetToEndofWaveFast = true;
+
+		if (GetToEndofWaveFast && Enemies->ICBMControl->CityTargetsDestroyed)
+			JustEndIt = true;
+	}
 }
 
 void GameLogic::InMainMenu()
