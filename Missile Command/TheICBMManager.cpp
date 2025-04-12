@@ -128,16 +128,16 @@ void TheICBMManager::Update()
 {
 	Common::Update();
 
-	for (const auto &missile : ICBMs)
-	{
-		if (missile->Enabled)
-		{
-			if (missile->Position.y > (float)WindowHalfHeight - 14.0f * 5.0f)
-			{
-				missile->Destroy();
-			}
-		}
-	}
+	//for (const auto &missile : ICBMs)
+	//{
+	//	if (missile->Enabled)
+	//	{
+	//		if (missile->Position.y > (float)WindowHalfHeight - 14.0f * 5.0f)
+	//		{
+	//			missile->Destroy();
+	//		}
+	//	}
+	//}
 
 	if (OutOfMissiles) return;
 

@@ -371,7 +371,7 @@ void GameLogic::CheckICBMs()
 
 			for (const auto &city : CityManager->Cities)
 			{
-				if (missile->CirclesIntersect(*city))
+				if (missile->CirclesIntersect(city->Position, city->Radius))
 				{
 					missile->Destroy();
 					MakeExplosion(city->Position);
