@@ -39,6 +39,8 @@ public:
 	virtual ~GameLogic();
 
 	bool PlayBackgroundMusic = true;
+	bool GetToEndofWaveFast = false;
+	bool JustEndIt = false;
 
 	GameState State = InPlay;
 
@@ -54,6 +56,7 @@ public:
 	bool Load();
 
 	void FixedUpdate();
+	void Update();
 	void Input();
 	void NewGame();
 
@@ -61,6 +64,7 @@ private:
 	bool GameEnded = false;
 	bool Paused = false;
 	bool ReadyForNextWave = false;
+	bool OutofAmmo = false;
 
 	unsigned Wave = 0;
 	unsigned NextNewCityScore = 10000;
@@ -87,7 +91,7 @@ private:
 	void InMainMenu();
 	void CheckABMs();
 	void CheckICBMs();
-	void CheckExplosionsActive();
+	bool CheckExplosionsActive();
 	void NextWave();
 	void IsOver();
 	void GameStateSwitch();

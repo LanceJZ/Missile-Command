@@ -91,6 +91,17 @@ int WinMain()
 			EM.Input();
 
 			EM.Update(deltaTime);
+
+			if (game.Logic->GetToEndofWaveFast)
+			{
+				for (int i = 0; i < 4; i++) EM.Update(deltaTime);
+			}
+
+			if (game.Logic->JustEndIt)
+			{
+				for (int i = 0; i < 5; i++) EM.Update(deltaTime);
+			}
+
 			game.Update(deltaTime);
 			EM.FixedUpdate(deltaTime);
 			game.FixedUpdate(deltaTime);

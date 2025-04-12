@@ -51,6 +51,15 @@ void TheABMBaseManager::Update()
 {
 	Common::Update();
 
+	if (!OutOfAmmo)
+	{
+		OutOfAmmo = true;
+
+		for (const auto &base : ABMBases)
+		{
+			if (!base->OutOfAmmo) OutOfAmmo = false;
+		}
+	}
 }
 
 void TheABMBaseManager::Reset(Color color)
@@ -59,6 +68,8 @@ void TheABMBaseManager::Reset(Color color)
 	{
 		base->Reset(color);
 	}
+
+	OutOfAmmo = false;
 }
 
 bool TheABMBaseManager::MissileFired(size_t baseNumber)

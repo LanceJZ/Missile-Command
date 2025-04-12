@@ -234,10 +234,10 @@ void ThePlayer::CrosshairUpdate()
 		Y(-WindowHalfHeight);
 		SetMousePosition((int)GetMousePosition().x, 0);
 	}
-	else if (Y() > WindowHalfHeight)
+	else if (Y() > WindowHalfHeight - 203.0f)
 	{
-		Y((float)WindowHalfHeight);
-		SetMousePosition((int)GetMousePosition().x, (int)WindowFullHeight);
+		Y((float)WindowHalfHeight - 203.0f);
+		SetMousePosition((int)GetMousePosition().x, (int)WindowFullHeight - 203);
 	}
 }
 

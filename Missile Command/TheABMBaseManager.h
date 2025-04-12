@@ -9,6 +9,8 @@ public:
 	TheABMBaseManager();
 	virtual ~TheABMBaseManager();
 
+	bool OutOfAmmo = false;
+
 	TheABMBase* ABMBases[3];
 
 	bool Initialize();

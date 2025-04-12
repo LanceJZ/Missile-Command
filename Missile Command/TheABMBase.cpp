@@ -67,6 +67,18 @@ void TheABMBase::Update()
 {
 	Common::Update();
 
+	if (!OutOfAmmo)
+	{
+		OutOfAmmo = true;
+
+		for (const auto &ammo : ABMAmmo)
+		{
+			if (ammo->Enabled)
+			{
+				OutOfAmmo = false;
+			}
+		}
+	}
 }
 
 void TheABMBase::Reset(Color &color)
@@ -76,6 +88,8 @@ void TheABMBase::Reset(Color &color)
 		ammo->Enabled = true;
 		ammo->ModelColor = color;
 	}
+
+	OutOfAmmo = false;
 }
 
 void TheABMBase::Clear()

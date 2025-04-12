@@ -202,7 +202,7 @@ void TheICBMManager::NewWave(Color icbmColor, Color edgeColor)
 	Wave++;
 	ICBMMaxSalvosThisWave++;
 
-	if (Wave < 20)
+	if (Wave < 19)
 	{
 		MissileSpeed = ICBMSpeedForWave[Wave] * 2.15f;
 		ICBMsFiredMax = NumberOfICBMsEachWave[Wave];
@@ -330,7 +330,7 @@ void TheICBMManager::IsItMERVTime()
 				{
 					Vector3 position = missile->Position;
 
-					for (int i = 0; i < 2; i++)
+					for (int i = 0; i < 3; i++)
 					{
 						for (const auto& missileMIRV : ICBMs)
 						{
@@ -356,14 +356,22 @@ void TheICBMManager::FireSalvo()
 
 	ICBMSalvosFired ++;
 
+	float missileXPosition = (float)-WindowHalfWidth +
+		M.GetRandomFloat(105.0f, 400.0f);
+
 	for (int i = 0; i < 4; i++)
 	{
 		for (const auto &missile : ICBMs)
 		{
 			if (!missile->Enabled)
 			{
-				Vector3 position = {M.GetRandomFloat((float)-WindowHalfWidth,
-					(float)WindowHalfWidth), (float)-WindowHalfHeight + 45.0f, 0.0f};
+				Vector3 position = {missileXPosition,
+					(float)-WindowHalfHeight + 45.0f, 0.0f};
+
+				missileXPosition += M.GetRandomFloat(75.0f, 320.0f);
+
+				if (missileXPosition > (float)WindowHalfWidth - 145.0f)
+					missileXPosition = (float)WindowHalfWidth - 145.0f;
 
 				FireICBM(missile, position);
 
@@ -429,47 +437,8 @@ void TheICBMManager::FireICBM(Shot* missile, Vector3& position)
 	int cityIndex = GetRandomValue(0, 5);
 	Vector3 target = {0.0f, 0.0f, 0.0f};
 
-	if (Cities[cityIndex].Targeted)
-	{
-		target = Cities[cityIndex].Position;
-	}
-	else
-	{
-		if (GetRandomValue(0, 1) == 0)
-			target = ABMBases[GetRandomValue(0, 2)].Position;
-		else
-		{
-			target.y = (float)WindowHalfHeight - 10.0f * 5.0f;
-
-			if (cityIndex == 0) target.x =
-				Cities[0].Position.x +
-				(Cities[1].Position.x / 2.0f -
-				Cities[0].Position.x / 2.0f);
-
-			if (cityIndex == 1) target.x =
-				Cities[1].Position.x +
-				(Cities[2].Position.x / 2.0f -
-				Cities[1].Position.x / 2.0f);
-
-			if (cityIndex == 2) target.x =
-				Cities[2].Position.x + 100.0f;
-
-			if (cityIndex == 3) target.x =
-				Cities[3].Position.x +
-				(Cities[4].Position.x / 2.0f -
-				Cities[3].Position.x / 2.0f);
-
-			if (cityIndex == 4 || cityIndex == 5) target.x =
-				Cities[5].Position.x +
-				(Cities[5].Position.x / 2.0f -
-				Cities[4].Position.x / 2.0f);
-
-			if (cityIndex == 5) target.x =
-				Cities[5].Position.x + 100.0f;
-
-			target.z = 0.0f;
-		}
-	}
+	if (Cities[cityIndex].Targeted)	target = Cities[cityIndex].Position;
+	else target = ABMBases[GetRandomValue(0, 2)].Position;
 
 	Vector3 velocity = M.GetVelocityFromVectorsZ(position,
 		target, MissileSpeed);

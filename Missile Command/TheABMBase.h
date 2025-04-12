@@ -9,8 +9,9 @@ public:
 	TheABMBase();
 	virtual ~TheABMBase();
 
-	Vector3 Position = { 0, 0, 0 };
+	bool OutOfAmmo = false;
 	float Radius = 10.0f;
+	Vector3 Position = { 0, 0, 0 };
 
 	bool Initialize();
 	bool BeginRun();

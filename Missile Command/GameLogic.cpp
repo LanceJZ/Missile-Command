@@ -151,6 +151,22 @@ void GameLogic::FixedUpdate()
 	{
 		sBomb->SetTargetRefs(Player->Targets);
 	}
+
+	if (OutofAmmo)
+	{
+		if (CheckExplosionsActive()) GetToEndofWaveFast = true;
+	}
+
+	if (GetToEndofWaveFast)
+	{
+
+	}
+}
+
+void GameLogic::Update()
+{
+	Common::Update();
+
 }
 
 void GameLogic::Input()
@@ -237,7 +253,7 @@ void GameLogic::InGame()
 	CheckABMs();
 	CheckICBMs();
 
-	if (ReadyForNextWave) CheckExplosionsActive();
+	if (ReadyForNextWave) if (CheckExplosionsActive()) State = StartNewWave;
 }
 
 void GameLogic::InMainMenu()
@@ -262,6 +278,11 @@ void GameLogic::CheckABMs()
 				MakeExplosion(missile->Position);
 			}
 		}
+	}
+
+	if (ABMBaseManager->OutOfAmmo)
+	{
+		OutofAmmo = true;
 	}
 }
 
@@ -364,7 +385,7 @@ void GameLogic::CheckICBMs()
 		ReadyForNextWave = true;
 }
 
-void GameLogic::CheckExplosionsActive()
+bool GameLogic::CheckExplosionsActive()
 {
 	bool done = true;
 
@@ -376,13 +397,15 @@ void GameLogic::CheckExplosionsActive()
 		}
 	}
 
-	if (done) State = StartNewWave;
+	return done;
 }
 
 void GameLogic::NextWave()
 {
 	Wave++;
 	ReadyForNextWave = false;
+	GetToEndofWaveFast = false;
+	OutofAmmo = false;
 	int cityCount = 0;
 
 	Enemies->Reset();
