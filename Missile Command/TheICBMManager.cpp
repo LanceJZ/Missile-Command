@@ -117,15 +117,13 @@ bool TheICBMManager::BeginRun()
 
 	Reset();
 
-	CitiesToTarget();
-
-	//FireSalvo();
-
 	return false;
 }
 
 void TheICBMManager::Update()
 {
+	if (GameOver) return;
+
 	Common::Update();
 
 	if (OutOfMissiles) return;
@@ -261,8 +259,10 @@ void TheICBMManager::NewGame()
 	CealingPercent = 0.68f;
 	LaunchCealing = GetLaunchCealing();
 	CurrentColor = Red;
+	GameOver = false;
 
 	Reset();
+	CitiesToTarget();
 }
 
 bool TheICBMManager::IsItTimeForAnotherSalvo()

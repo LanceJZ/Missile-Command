@@ -23,6 +23,7 @@ public:
 
 	void NewWave(Color mainColor, Color innerColor);
 	void NewGame();
+	void Clear();
 
 private:
 

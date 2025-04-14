@@ -82,3 +82,11 @@ void TheCityManager::NewGame()
 
 	NewWave(Blue, Aqua);
 }
+
+void TheCityManager::Clear()
+{
+	for (const auto &city : Cities)
+	{
+		city->Destroy();
+	}
+}

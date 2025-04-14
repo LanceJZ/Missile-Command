@@ -27,6 +27,8 @@ bool TheBackground::BeginRun()
 	Common::BeginRun();
 
 	Ground->NoCollision = true;
+	Ground->ModelColor = YELLOW;
+
 	return false;
 }
 
@@ -42,8 +44,16 @@ void TheBackground::Update()
 	ClearBackground(BackGroundColor);
 }
 
+void TheBackground::Clear()
+{
+	ClearBackground(BLACK);
+	Ground->Enabled = false;
+}
+
 void TheBackground::WaveColor(Color groundColor, Color backgroundColor)
 {
 	Ground->ModelColor = groundColor;
 	BackGroundColor = backgroundColor;
+	Ground->Enabled = true;
+
 }

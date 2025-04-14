@@ -8,6 +8,8 @@ public:
 	OnScreenText();
 	virtual ~OnScreenText();
 
+	bool Enabled = false;
+
 	bool Initialize();
 
 	void FixedUpdate();

@@ -62,6 +62,14 @@ void TheABMBaseManager::Update()
 	}
 }
 
+void TheABMBaseManager::Clear()
+{
+	for (const auto &base : ABMBases)
+	{
+		base->Clear();
+	}
+}
+
 void TheABMBaseManager::Reset(Color color)
 {
 	for (const auto &base : ABMBases)

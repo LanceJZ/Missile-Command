@@ -21,7 +21,7 @@ bool Game::Initialize()
 {
 	Common::Initialize();
 
-	SetWindowTitle("Missile Command Alpha 0.20");
+	SetWindowTitle("Missile Command Alpha 0.30");
 
 	float multiW = 1.0f, multiH = 1.0f;
 	FieldSize = { GetScreenWidth() * multiW, (float)GetScreenHeight() * multiH };
@@ -35,9 +35,7 @@ bool Game::Initialize()
 	Enemies->SetPlayer(Player);
 
 	Score.SetPosition((int)(WindowHalfWidth / 1.75f), 2);
-	Score.SetColor(Red);
 	HighScore.SetPosition((int)(WindowHalfWidth * 1.15f), 2);
-	HighScore.SetColor(Red);
 
 	//Any Entities added after this point need this method fired manually.
 	DisableCursor();
@@ -88,6 +86,7 @@ bool Game::BeginRun()
 
 void Game::Input()
 {
+	if (Logic->State == MainMenu) Logic->Input();
 }
 
 

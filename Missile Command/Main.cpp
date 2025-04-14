@@ -88,7 +88,10 @@ int WinMain()
 
 		if (game.Logic->State != GameState::Pause)
 		{
-			EM.Input();
+			if (game.Logic->State != GameState::MainMenu)
+			{
+				EM.Input();
+			}
 
 			EM.Update(deltaTime);
 

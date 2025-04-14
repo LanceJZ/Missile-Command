@@ -2,6 +2,7 @@
 
 GameLogic::GameLogic()
 {
+	EM.AddOnScreenText(GameOverText = DBG_NEW GameOverScreen());
 }
 
 GameLogic::~GameLogic()
@@ -112,28 +113,10 @@ bool GameLogic::BeginRun()
 {
 	Common::BeginRun();
 
-	//State = MainMenu;
-	//GameEnded = true;
-
-	for (int i = 0; i < 6; i++)
-	{
-		Enemies->ICBMControl->Cities[i].Position =
-			CityManager->Cities[i]->Position;
-		Enemies->ICBMControl->Cities[i].Active = true;
-		Enemies->ICBMControl->Cities[i].Targeted = false;
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		Enemies->ICBMControl->ABMBases[i].Position =
-			ABMBaseManager->ABMBases[i]->Position;
-		Enemies->ICBMControl->ABMBases[i].Active = true;
-		Enemies->ICBMControl->ABMBases[i].Targeted = false;
-	}
-
 	NewGame();
+	IsOver();
 
-	return false;
+	return true;
 }
 
 bool GameLogic::Load()
@@ -158,15 +141,6 @@ void GameLogic::Input()
 {
 	if (State == MainMenu)
 	{
-		if (GameEnded)
-		{
-		}
-		else
-		{
-		}
-	}
-	else if (State == Ended)
-	{
 		if (IsGamepadAvailable(0))
 		{
 			if (IsGamepadButtonPressed(0, 15))//Start button
@@ -179,32 +153,64 @@ void GameLogic::Input()
 			NewGame();
 		}
 	}
+	else if (State == Ended)
+	{
+	}
 
 #ifdef _DEBUG
-	if (IsKeyPressed(KEY_W))
+	if (State == InPlay)
 	{
-		Reset();
-		NextWave();
+		if (IsKeyPressed(KEY_W))
+		{
+			Reset();
+			NextWave();
 
-		const std::string wave = "Advanced to Wave " + std::to_string(Wave + 1);
+			const std::string wave = "Advanced to Wave " + std::to_string(Wave + 1);
 
-		TraceLog(LOG_INFO, wave.c_str());
+			TraceLog(LOG_INFO, wave.c_str());
+		}
+
+		if (IsKeyPressed(KEY_O))
+		{
+			CityManager->Clear();
+		}
 	}
 #endif
 }
 
 void GameLogic::NewGame()
 {
-	Score.ClearScore();
+	for (int i = 0; i < 6; i++)
+	{
+		Enemies->ICBMControl->Cities[i].Position =
+			CityManager->Cities[i]->Position;
+		Enemies->ICBMControl->Cities[i].Active = true;
+		Enemies->ICBMControl->Cities[i].Targeted = false;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		Enemies->ICBMControl->ABMBases[i].Position =
+			ABMBaseManager->ABMBases[i]->Position;
+		Enemies->ICBMControl->ABMBases[i].Active = true;
+		Enemies->ICBMControl->ABMBases[i].Targeted = false;
+	}
+
+	Wave = 0;
 	NextNewCityScore = 10000;
+	GameOverText->Enabled = false;
+	Score.ClearScore();
+	Score.SetColor(Red);
+	HighScore.SetColor(Red);
 	Background->WaveColor(Yellow, BLACK);
 	Player->NewGame();
 	Enemies->NewGame();
 	CityManager->NewGame();
 	ABMBaseManager->Reset(Blue);
+	State = InPlay;
 }
 
-void GameLogic::MakeExplosion(Vector3 position)
+void GameLogic::MakeExplosion(Vector3 position, bool playerMade)
 {
 	bool spawnExplosion = true;
 	size_t explosionNumber = Explosions.size();
@@ -226,6 +232,8 @@ void GameLogic::MakeExplosion(Vector3 position)
 			WHITE, position, {0});
 	}
 	else Explosions.at(explosionNumber)->Spawn(position);
+
+	Explosions.at(explosionNumber)->PlayerMade = playerMade;
 
 	for (const auto& sBomb : Enemies->ICBMControl->SmartBombs)
 	{
@@ -256,12 +264,11 @@ void GameLogic::InGame()
 
 void GameLogic::InMainMenu()
 {
-	if (GameEnded)
-	{
-	}
-	else
-	{
-	}
+
+}
+
+void GameLogic::InGameOver()
+{
 }
 
 void GameLogic::CheckABMs()
@@ -273,7 +280,7 @@ void GameLogic::CheckABMs()
 			if (missile->CheckHitTarget())
 			{
 				Player->Targets.at(missile->TargetIndex)->Destroy();
-				MakeExplosion(missile->Position);
+				MakeExplosion(missile->Position, true);
 			}
 		}
 	}
@@ -292,8 +299,8 @@ void GameLogic::CheckICBMs()
 	{
 		if (Enemies->Flier->CirclesIntersect(*Explosions[i]))
 		{
-			MakeExplosion(Enemies->Flier->Position);
-			Score.AddToScore(100 * ScoreMultiplier);
+			MakeExplosion(Enemies->Flier->Position, true);
+			if (Explosions[i]->PlayerMade) Score.AddToScore(100 * ScoreMultiplier);
 			Enemies->Flier->Destroy();
 			Enemies->ResetLaunchTimer();
 			break;
@@ -306,37 +313,39 @@ void GameLogic::CheckICBMs()
 				if (sBomb->CirclesIntersect(*Explosions[i]))
 				{
 					sBomb->Destroy();
-					MakeExplosion(sBomb->Position);
+					MakeExplosion(sBomb->Position, Explosions[i]->PlayerMade);
+					if (Explosions[i]->PlayerMade)
+						Score.AddToScore(125 * ScoreMultiplier);
 				}
 			}
 		}
 	}
 
-		for (const auto &sBomb : Enemies->ICBMControl->SmartBombs)
+	for (const auto &sBomb : Enemies->ICBMControl->SmartBombs)
+	{
+		if (sBomb->Enabled)
 		{
-			if (sBomb->Enabled)
+			for (const auto &city : CityManager->Cities)
 			{
-				for (const auto &city : CityManager->Cities)
+				if (sBomb->CirclesIntersect(city->Position, city->Radius))
 				{
-					if (sBomb->CirclesIntersect(*city))
-					{
-						sBomb->Destroy();
-						MakeExplosion(sBomb->Position);
-						city->Destroy();
-					}
+					sBomb->Destroy();
+					MakeExplosion(sBomb->Position, false);
+					city->Destroy();
 				}
+			}
 
-				for (const auto &base : ABMBaseManager->ABMBases)
+			for (const auto &base : ABMBaseManager->ABMBases)
+			{
+				if (sBomb->CirclesIntersect(base->Position, base->Radius))
 				{
-					if (sBomb->CirclesIntersect(base->Position, base->Radius))
-					{
-						sBomb->Destroy();
-						MakeExplosion(sBomb->Position);
-						base->Clear();
-					}
+					sBomb->Destroy();
+					MakeExplosion(sBomb->Position, false);
+					base->Clear();
 				}
 			}
 		}
+	}
 
 	for (auto missile : Enemies->ICBMControl->ICBMs)
 	{
@@ -350,9 +359,10 @@ void GameLogic::CheckICBMs()
 				{
 					if (missile->CirclesIntersect(*Explosions[i]))
 					{
-						MakeExplosion(missile->Position);
+						MakeExplosion(missile->Position, Explosions[i]->PlayerMade);
 						missile->Destroy();
-						Score.AddToScore(25 * ScoreMultiplier);
+						if (Explosions[i]->PlayerMade)
+							Score.AddToScore(25 * ScoreMultiplier);
 					}
 				}
 			}
@@ -362,7 +372,7 @@ void GameLogic::CheckICBMs()
 				if (missile->CirclesIntersect(base->Position, base->Radius))
 				{
 					missile->Destroy();
-					MakeExplosion(missile->Position);
+					MakeExplosion(missile->Position, false);
 					base->Clear();
 				}
 			}
@@ -372,7 +382,7 @@ void GameLogic::CheckICBMs()
 				if (missile->CirclesIntersect(city->Position, city->Radius))
 				{
 					missile->Destroy();
-					MakeExplosion(city->Position);
+					MakeExplosion(city->Position, false);
 					city->Destroy();
 				}
 			}
@@ -408,15 +418,15 @@ void GameLogic::NextWave()
 
 	Enemies->Reset();
 
-	size_t waveColor = (Wave / 2);
+	WaveColorNumber = (Wave / 2);
 
-	if (waveColor > 9) waveColor = 0;
+	if (WaveColorNumber > 9) WaveColorNumber -= 10;
 
-	const Color backgroundColor = WaveColors[waveColor].Background;
-	const Color groundColor = WaveColors[waveColor].Ground;
-	const Color cityMainABMColor = WaveColors[waveColor].CityMainABM;
-	const Color cityInnerColor = WaveColors[waveColor].CityInner;
-	const Color icbmColor = WaveColors[waveColor].ICBM;
+	const Color backgroundColor = WaveColors[WaveColorNumber].Background;
+	const Color groundColor = WaveColors[WaveColorNumber].Ground;
+	const Color cityMainABMColor = WaveColors[WaveColorNumber].CityMainABM;
+	const Color cityInnerColor = WaveColors[WaveColorNumber].CityInner;
+	const Color icbmColor = WaveColors[WaveColorNumber].ICBM;
 
 	if (Wave < 11)	ScoreMultiplier = (int)(Wave / 2) + 1;
 
@@ -471,9 +481,17 @@ void GameLogic::NextWave()
 
 void GameLogic::IsOver()
 {
-	GameEnded = true;
-	Player->GameOver = true;
+	Enemies->ICBMControl->GameOver = true;
 	Player->Destroy();
+	Enemies->Reset();
+	ABMBaseManager->Clear();
+	CityManager->Clear();
+
+	GameOverText->BottomTextColor = WaveColors[WaveColorNumber].Background;
+	GameOverText->TopTextColor = WaveColors[WaveColorNumber].CityMainABM;
+	GameOverText->Enabled = true;
+
+	State = MainMenu;
 }
 
 void GameLogic::GameStateSwitch()
@@ -482,6 +500,8 @@ void GameLogic::GameStateSwitch()
 	{
 	case MainMenu:
 		InMainMenu();
+		break;
+	case GameOverHighScoreScreen:
 		break;
 	case InPlay:
 		InGame();
@@ -495,7 +515,7 @@ void GameLogic::GameStateSwitch()
 		break;
 	case BonusCityAwarded:
 		break;
-	case Attract:
+	case AttractAnimation:
 		break;
 	case HighScores:
 		break;

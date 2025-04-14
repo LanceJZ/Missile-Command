@@ -7,6 +7,7 @@
 #include "TheCityManager.h"
 #include "TheABMBaseManager.h"
 #include "TheExplosion.h"
+#include "GameOverScreen.h"
 
 enum GameState
 {
@@ -19,7 +20,10 @@ enum GameState
 	Pause,
 	HighScores,
 	MainMenu,
-	Attract,
+	SettingsMenu,
+	GameOverHighScoreScreen,
+	GameOverExplodeAnimation,
+	AttractAnimation,
 	StartNewWave
 };
 
@@ -61,11 +65,11 @@ public:
 	void NewGame();
 
 private:
-	bool GameEnded = false;
 	bool Paused = false;
 	bool ReadyForNextWave = false;
 	bool OutofAmmo = false;
 
+	size_t WaveColorNumber = 0;
 	unsigned Wave = 0;
 	unsigned NextNewCityScore = 10000;
 	int ScoreMultiplier = 1;
@@ -83,12 +87,14 @@ private:
 	EnemyControl* Enemies = {};
 	TheCityManager* CityManager = {};
 	TheABMBaseManager* ABMBaseManager = {};
+	GameOverScreen* GameOverText = {};
 
 	std::vector<TheExplosion*> Explosions = {};
 
-	void MakeExplosion(Vector3 position);
+	void MakeExplosion(Vector3 position, bool playerMade = false);
 	void InGame();
 	void InMainMenu();
+	void InGameOver();
 	void CheckABMs();
 	void CheckICBMs();
 	bool CheckExplosionsActive();

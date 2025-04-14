@@ -149,6 +149,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameOverScreen.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="TheFlier.cpp">
       <SubType>
       </SubType>
@@ -200,6 +204,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameOverScreen.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="TheFlier.h">
       <SubType>
       </SubType>

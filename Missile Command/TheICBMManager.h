@@ -18,6 +18,7 @@ public:
 	TheICBMManager();
 	virtual ~TheICBMManager();
 
+	bool GameOver = false;
 	bool OutOfMissiles = false;
 	bool CityTargetsDestroyed = false;
 	unsigned Wave = 0;

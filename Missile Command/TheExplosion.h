@@ -9,6 +9,8 @@ public:
 	TheExplosion();
 	virtual ~TheExplosion();
 
+	bool PlayerMade = false;
+
 	bool Initialize();
 	bool BeginRun();
 

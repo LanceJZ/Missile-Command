@@ -24,5 +24,8 @@ void OnScreenText::FixedUpdate()
 
 void OnScreenText::Draw2D()
 {
+	if (!Enabled) return;
+
+	Common::Draw2D();
 
 }

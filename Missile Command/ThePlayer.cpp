@@ -42,8 +42,6 @@ void ThePlayer::Input()
 {
 	Model3D::Input();
 
-	if (GameOver) return;
-
 	Keyboard();
 	Mouse();
 
@@ -61,8 +59,6 @@ void ThePlayer::Update(float deltaTime)
 
 void ThePlayer::FixedUpdate(float deltaTime)
 {
-	if (GameOver) return;
-
 	CrosshairUpdate();
 	TargetUpdate();
 }
@@ -93,7 +89,6 @@ void ThePlayer::Spawn(Vector3 position)
 
 void ThePlayer::NewGame()
 {
-	GameOver = false;
 	NextWave(Blue);
 }
 

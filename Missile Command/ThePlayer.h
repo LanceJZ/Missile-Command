@@ -11,9 +11,6 @@ public:
 	ThePlayer();
 	virtual ~ThePlayer();
 
-	bool GameOver = false;
-	bool Paused = false;
-
 	std::vector<Shot*> ABMs = {};
 	std::vector<Model3D*> Targets = {};
 

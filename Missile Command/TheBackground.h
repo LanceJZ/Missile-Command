@@ -15,6 +15,7 @@ public:
 
 	void Update();
 
+	void Clear();
 	void WaveColor(Color groundColor, Color backgroundColor);
 
 private:
