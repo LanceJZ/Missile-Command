@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "TheCity.h"
 #include "Colors.h"
+#include <vox_loader.h>
 
 class TheCityManager : public Common
 {
@@ -24,6 +25,7 @@ public:
 	void NewWave(Color mainColor, Color innerColor);
 	void NewGame();
 	void Clear();
+	bool CityCounted();
 
 private:
 

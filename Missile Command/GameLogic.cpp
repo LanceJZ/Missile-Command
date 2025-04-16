@@ -3,6 +3,16 @@
 GameLogic::GameLogic()
 {
 	EM.AddOnScreenText(GameOverText = DBG_NEW GameOverScreen());
+
+	BonusAmmoCountDelayTimerID = EM.AddTimer(0.25f);
+	BonusCityCountDelayTimerID = EM.AddTimer(0.5f);
+	BonusCityAnimationDelayTimerID = EM.AddTimer(0.1f);
+	BonusDoneCountingTimerID = EM.AddTimer(1.0f);
+	BonusCityAwardedTimerID = EM.AddTimer(3.0f);
+	BonusPointsBlankDelayTimerID = EM.AddTimer(0.5f);
+	WaveCrosshairDelayTimerID = EM.AddTimer(2.0f);
+	ScoreMultiplierDelayTimerID = EM.AddTimer(2.2f);
+	WaveStartDelayTimerID =	EM.AddTimer(3.0f);
 }
 
 GameLogic::~GameLogic()
@@ -197,7 +207,6 @@ void GameLogic::NewGame()
 	}
 
 	Wave = 0;
-	NextNewCityScore = 10000;
 	GameOverText->Enabled = false;
 	Score.ClearScore();
 	Score.SetColor(Red);
@@ -418,15 +427,15 @@ void GameLogic::NextWave()
 
 	Enemies->Reset();
 
-	WaveColorNumber = (Wave / 2);
+	size_t waveColorSetNumber = (Wave / 2);
 
-	if (WaveColorNumber > 9) WaveColorNumber -= 10;
+	if (waveColorSetNumber > 9) waveColorSetNumber = 0;
 
-	const Color backgroundColor = WaveColors[WaveColorNumber].Background;
-	const Color groundColor = WaveColors[WaveColorNumber].Ground;
-	const Color cityMainABMColor = WaveColors[WaveColorNumber].CityMainABM;
-	const Color cityInnerColor = WaveColors[WaveColorNumber].CityInner;
-	const Color icbmColor = WaveColors[WaveColorNumber].ICBM;
+	const Color backgroundColor = WaveColors[waveColorSetNumber].Background;
+	const Color groundColor = WaveColors[waveColorSetNumber].Ground;
+	const Color cityMainABMColor = WaveColors[waveColorSetNumber].CityMainABM;
+	const Color cityInnerColor = WaveColors[waveColorSetNumber].CityInner;
+	const Color icbmColor = WaveColors[waveColorSetNumber].ICBM;
 
 	if (Wave < 11)	ScoreMultiplier = (int)(Wave / 2) + 1;
 
@@ -475,6 +484,8 @@ void GameLogic::NextWave()
 	Enemies->NextWave(Wave, icbmColor, cityMainABMColor, groundColor);
 	Score.SetColor(icbmColor);
 	HighScore.SetColor(icbmColor);
+	GameOverText->BottomTextColor = WaveColors[waveColorSetNumber].Background;
+	GameOverText->TopTextColor = WaveColors[waveColorSetNumber].CityMainABM;
 
 	State = InPlay;
 }
@@ -486,9 +497,6 @@ void GameLogic::IsOver()
 	Enemies->Reset();
 	ABMBaseManager->Clear();
 	CityManager->Clear();
-
-	GameOverText->BottomTextColor = WaveColors[WaveColorNumber].Background;
-	GameOverText->TopTextColor = WaveColors[WaveColorNumber].CityMainABM;
 	GameOverText->Enabled = true;
 
 	State = MainMenu;
@@ -501,19 +509,25 @@ void GameLogic::GameStateSwitch()
 	case MainMenu:
 		InMainMenu();
 		break;
-	case GameOverHighScoreScreen:
-		break;
 	case InPlay:
 		InGame();
+		break;
+	case WaveEnded:
+		break;
+	case BonusPoints:
+		break;
+	case BonusCityAwarded:
+		break;
+	case BlankTheScreen:
+		break;
+	case DisplayScoreMultiplier:
 		break;
 	case Ended:
 		IsOver();
 		break;
-	case Bonus:
+	case GameOverExplodeAnimation:
 		break;
-	case BonusCity:
-		break;
-	case BonusCityAwarded:
+	case GameOverHighScoreScreen:
 		break;
 	case AttractAnimation:
 		break;
@@ -523,6 +537,7 @@ void GameLogic::GameStateSwitch()
 		NextWave();
 		break;
 	default:
+		State = MainMenu;
 		break;
 	}
 }

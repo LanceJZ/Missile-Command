@@ -90,3 +90,19 @@ void TheCityManager::Clear()
 		city->Destroy();
 	}
 }
+
+bool TheCityManager::CityCounted()
+{
+	int lastInLine = -1;
+
+	for (const auto &city : Cities)
+	{
+		if (city->Enabled) lastInLine++;
+	}
+
+	if (lastInLine  < 0) return false;
+
+	Cities[lastInLine]->Destroy();
+
+	return true;
+}

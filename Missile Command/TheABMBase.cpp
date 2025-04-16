@@ -127,3 +127,8 @@ bool TheABMBase::MissileFired()
 
 	return true;
 }
+
+bool TheABMBase::MissileCounted()
+{
+	return MissileFired();
+}

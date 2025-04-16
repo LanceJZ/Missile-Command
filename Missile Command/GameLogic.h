@@ -8,15 +8,12 @@
 #include "TheABMBaseManager.h"
 #include "TheExplosion.h"
 #include "GameOverScreen.h"
+#include "TheBonusScreen.h"
 
 enum GameState
 {
 	Ended,
 	InPlay,
-	Bonus,
-	BonusPoints,
-	BonusCity,
-	BonusCityAwarded,
 	Pause,
 	HighScores,
 	MainMenu,
@@ -24,6 +21,11 @@ enum GameState
 	GameOverHighScoreScreen,
 	GameOverExplodeAnimation,
 	AttractAnimation,
+	WaveEnded,
+	BonusPoints,
+	BonusCityAwarded,
+	BlankTheScreen,
+	DisplayScoreMultiplier,
 	StartNewWave
 };
 
@@ -69,9 +71,17 @@ private:
 	bool ReadyForNextWave = false;
 	bool OutofAmmo = false;
 
-	size_t WaveColorNumber = 0;
+	size_t BonusAmmoCountDelayTimerID = 0;
+	size_t BonusCityCountDelayTimerID = 0;
+	size_t BonusDoneCountingTimerID = 0;
+	size_t BonusCityAwardedTimerID = 0;
+	size_t BonusCityAnimationDelayTimerID = 0;
+	size_t BonusPointsBlankDelayTimerID = 0;
+	size_t ScoreMultiplierDelayTimerID = 0;
+	size_t WaveCrosshairDelayTimerID = 0;
+	size_t WaveStartDelayTimerID = 0;
+
 	unsigned Wave = 0;
-	unsigned NextNewCityScore = 10000;
 	int ScoreMultiplier = 1;
 
 	Vector2 AdjustedFieldSize = {};
@@ -88,6 +98,7 @@ private:
 	TheCityManager* CityManager = {};
 	TheABMBaseManager* ABMBaseManager = {};
 	GameOverScreen* GameOverText = {};
+	TheBonusScreen* BonusText = {};
 
 	std::vector<TheExplosion*> Explosions = {};
 

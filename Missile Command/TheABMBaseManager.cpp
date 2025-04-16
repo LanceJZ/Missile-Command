@@ -84,3 +84,8 @@ bool TheABMBaseManager::MissileFired(size_t baseNumber)
 {
 	return (ABMBases[baseNumber]->MissileFired());
 }
+
+bool TheABMBaseManager::MissileCounted(size_t baseNumber)
+{
+	return (ABMBases[baseNumber]->MissileCounted());
+}

@@ -26,6 +26,7 @@ public:
 
 	int GetMissileCount();
 	bool MissileFired();
+	bool MissileCounted();
 
 private:
 
