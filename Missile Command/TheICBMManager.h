@@ -39,6 +39,7 @@ public:
 
 	void ResetFlierFireTimer();
 	void NewWave(Color icbmColor, Color edgeColor);
+	void StartNewWave();
 	void EndWave();
 	void Reset();
 	void NewGame();

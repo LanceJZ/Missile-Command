@@ -73,6 +73,8 @@ bool TheBonusScreen::Initialize()
 
 bool TheBonusScreen::BeginRun()
 {
+	MainColor = Blue;
+	SecondaryColor = Red;
 
 	return false;
 }
@@ -89,7 +91,7 @@ void TheBonusScreen::Draw2D()
 
 	if (BonusPoints)
 	{
-		DrawText("BONUS POINTS", -WindowHalfWidth / 2,
+		DrawText("BONUS POINTS", WindowHalfWidth - 200,
 			WindowHalfHeight - 200, 45, MainColor);
 
 		std::string ammoPoints = std::to_string(AmmoBonus);
@@ -97,13 +99,13 @@ void TheBonusScreen::Draw2D()
 
 		if (AmmoBonus > 0)
 		{
-			DrawText(ammoPoints.c_str(), -WindowHalfWidth / 2,
+			DrawText(ammoPoints.c_str(), WindowHalfWidth - 100,
 				WindowHalfHeight, 45, SecondaryColor);
 		}
 
 		if (CityBonus > 0)
 		{
-			DrawText(cityPoints.c_str(), -WindowHalfWidth / 2,
+			DrawText(cityPoints.c_str(), WindowHalfWidth - 200,
 				WindowHalfHeight + 200, 45, SecondaryColor);
 		}
 	}
@@ -111,19 +113,19 @@ void TheBonusScreen::Draw2D()
 	{
 		std::string multiplier = std::to_string(Multiplier);
 
-		DrawText("PLAYER", -WindowHalfWidth / 2,
+		DrawText("PLAYER", WindowHalfWidth / 2,
 			WindowHalfHeight - 200, 45, MainColor);
-		DrawText("X POINTS", -WindowHalfWidth / 2,
+		DrawText("X POINTS", WindowHalfWidth / 2,
 			WindowHalfHeight, 45, MainColor);
 
-		DrawText("1", -WindowHalfWidth + 100,
+		DrawText("1", WindowHalfWidth + 100,
 			WindowHalfHeight - 200, 45, SecondaryColor);
-		DrawText(multiplier.c_str(), -WindowHalfWidth / 2 - 300,
+		DrawText(multiplier.c_str(), WindowHalfWidth / 2 - 300,
 			WindowHalfHeight, 45, SecondaryColor);
 
 		if (AtariLogo)
 		{
-			DrawText("ATARI   1980", -WindowHalfWidth / 2,
+			DrawText("ATARI   1980", WindowHalfWidth / 2,
 				WindowFullHeight, 45, MainColor);
 		}
 	}

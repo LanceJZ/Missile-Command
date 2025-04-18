@@ -100,6 +100,11 @@ void EnemyControl::NextWave(unsigned wave, Color icbmColor,
 	if (Wave < 8) EM.SetTimer(FlierLaunchTimerID, FlierCooldown[Wave - 1]);
 }
 
+void EnemyControl::StartNewWave()
+{
+	ICBMControl->StartNewWave();
+}
+
 void EnemyControl::NewGame()
 {
 	Wave = 0;

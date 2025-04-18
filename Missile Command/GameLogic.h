@@ -15,18 +15,19 @@ enum GameState
 	Ended,
 	InPlay,
 	Pause,
-	HighScores,
-	MainMenu,
-	SettingsMenu,
+	TheHighScores,
+	TheMainMenu,
+	TheSettingsMenu,
 	GameOverHighScoreScreen,
 	GameOverExplodeAnimation,
-	AttractAnimation,
-	WaveEnded,
-	BonusPoints,
-	BonusCityAwarded,
-	BlankTheScreen,
-	DisplayScoreMultiplier,
-	StartNewWave
+	TheAttractAnimation,
+	TheWaveEnded,
+	TheBonusPoints,
+	TheBonusCityAwarded,
+	TheBlankTheScreen,
+	TimeForNewWave,
+	TheDisplayScoreMultiplier,
+	TimeToStartNewWave
 };
 
 struct WaveColorData
@@ -70,7 +71,11 @@ private:
 	bool Paused = false;
 	bool ReadyForNextWave = false;
 	bool OutofAmmo = false;
+	bool CountingAmmo = false;
+	bool CountingCities = false;
 
+	size_t AmmoCounted = 0;
+	size_t TotalAmnoAtEnd = 0;
 	size_t BonusAmmoCountDelayTimerID = 0;
 	size_t BonusCityCountDelayTimerID = 0;
 	size_t BonusDoneCountingTimerID = 0;
@@ -109,7 +114,13 @@ private:
 	void CheckABMs();
 	void CheckICBMs();
 	bool CheckExplosionsActive();
+	void WaveEnded();
+	void DisplayBonusPoints();
+	void BonusCityAwarded();
+	void GoBlank();
 	void NextWave();
+	void DisplayScoreMultiplier();
+	void StartTheNewWave();
 	void IsOver();
 	void GameStateSwitch();
 	void Reset();

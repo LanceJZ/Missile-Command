@@ -1,6 +1,7 @@
 #pragma once
 #include "Globals.h"
 #include "OnScreenText.h"
+#include "Colors.h"
 
 class GameOverScreen : public OnScreenText
 {

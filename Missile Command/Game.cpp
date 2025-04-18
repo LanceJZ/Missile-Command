@@ -86,7 +86,7 @@ bool Game::BeginRun()
 
 void Game::Input()
 {
-	if (Logic->State == MainMenu) Logic->Input();
+	if (Logic->State == TheMainMenu) Logic->Input();
 }
 
 

@@ -5,6 +5,7 @@ TheABMBase::TheABMBase()
 	for (int i = 0; i < 10; i++)
 	{
 		EM.AddModel3D(ABMAmmo[i] = DBG_NEW Model3D());
+		EM.AddModel3D(AmmoCount[i] = DBG_NEW Model3D());
 	}
 }
 
@@ -21,6 +22,10 @@ bool TheABMBase::Initialize()
 		ABMAmmo[i]->Scale = 1.75f;
 		ABMAmmo[i]->Stationary = true;
 		ABMAmmo[i]->NoCollision = true;
+
+		AmmoCount[i]->Scale = 1.75f;
+		AmmoCount[i]->Stationary = true;
+		AmmoCount[i]->NoCollision = true;
 	}
 
 	return false;
@@ -38,6 +43,7 @@ void TheABMBase::SetMissileModel(Model& model)
 	for (int i = 0; i < 10; i++)
 	{
 		ABMAmmo[i]->SetModel(model);
+		AmmoCount[i]->SetModel(model);
 	}
 }
 
@@ -89,12 +95,23 @@ void TheABMBase::Reset(Color &color)
 		ammo->ModelColor = color;
 	}
 
+	for (const auto &ammo : AmmoCount)
+	{
+		ammo->Enabled = false;
+		ammo->ModelColor = color;
+	}
+
 	OutOfAmmo = false;
 }
 
 void TheABMBase::Clear()
 {
-	for (auto ammo : ABMAmmo)
+	for (const auto &ammo : ABMAmmo)
+	{
+		ammo->Enabled = false;
+	}
+
+	for (const auto &ammo : AmmoCount)
 	{
 		ammo->Enabled = false;
 	}
@@ -128,7 +145,18 @@ bool TheABMBase::MissileFired()
 	return true;
 }
 
-bool TheABMBase::MissileCounted()
+bool TheABMBase::MissileCounted(size_t count, size_t ammoCounted)
 {
-	return MissileFired();
+	bool counted = true;
+
+	if (MissileFired())
+	{
+		AmmoCount[count]->Enabled = true;
+		AmmoCount[count]->X((ammoCounted) * 14.0f);
+		AmmoCount[count]->Y(14.0f);
+
+		return true;
+	}
+
+	return false;
 }

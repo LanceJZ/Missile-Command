@@ -26,10 +26,12 @@ public:
 
 	int GetMissileCount();
 	bool MissileFired();
-	bool MissileCounted();
+	bool MissileCounted(size_t count, size_t ammoCounted);
 
 private:
+	size_t ABMCounted = 0;
 
 	Model3D* ABMAmmo[10];
+	Model3D* AmmoCount[10];
 
 };

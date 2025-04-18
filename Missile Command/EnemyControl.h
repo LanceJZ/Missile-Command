@@ -29,6 +29,7 @@ public:
 
 	void ResetLaunchTimer();
 	void NextWave(unsigned wave, Color mainColor, Color innerColor, Color edgeColor);
+	void StartNewWave();
 	void NewGame();
 	void Reset();
 

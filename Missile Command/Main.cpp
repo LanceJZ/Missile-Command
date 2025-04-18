@@ -88,7 +88,7 @@ int WinMain()
 
 		if (game.Logic->State != GameState::Pause)
 		{
-			if (game.Logic->State != GameState::MainMenu)
+			if (game.Logic->State != GameState::TheMainMenu)
 			{
 				EM.Input();
 			}

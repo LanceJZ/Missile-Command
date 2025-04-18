@@ -23,7 +23,6 @@ public:
 	void Clear();
 	void Reset(Color color);
 	bool MissileFired(size_t baseNumber);
-	bool MissileCounted(size_t baseNumber);
 
 private:
 

@@ -194,7 +194,7 @@ void TheICBMManager::NewWave(Color icbmColor, Color edgeColor)
 {
 	CurrentColor = icbmColor;
 	OutOfMissiles = false;
-	WaveEnded = false;
+	//WaveEnded = false;
 	CityTargetsDestroyed = false;
 	Wave++;
 	ICBMMaxSalvosThisWave++;
@@ -223,6 +223,11 @@ void TheICBMManager::NewWave(Color icbmColor, Color edgeColor)
 
 	CitiesToTarget();
 	FireSalvo();
+}
+
+void TheICBMManager::StartNewWave()
+{
+	WaveEnded = false;
 }
 
 void TheICBMManager::EndWave()

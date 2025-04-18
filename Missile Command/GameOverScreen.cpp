@@ -18,6 +18,8 @@ bool GameOverScreen::Initialize()
 
 bool GameOverScreen::BeginRun()
 {
+	BottomTextColor = BLACK;
+	TopTextColor = Blue;
 
 	return false;
 }
