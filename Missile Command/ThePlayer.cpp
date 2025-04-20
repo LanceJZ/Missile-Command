@@ -272,6 +272,7 @@ size_t ThePlayer::SetTarget()
 		Targets.push_back(new Model3D());
 		FM.Model3DFactory(Targets.at (targetNumber), TargetModel, CurrentColor,
 			Position, { 0.0f, 0.0f, 0.0f });
+		Targets.back()->Radius = 4.0f;
 	}
 	else Targets.at(targetNumber)->Spawn(Position);
 

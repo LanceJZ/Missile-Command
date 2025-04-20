@@ -2,7 +2,6 @@
 #include "Globals.h"
 #include "TheCity.h"
 #include "Colors.h"
-#include <vox_loader.h>
 
 class TheCityManager : public Common
 {
@@ -14,6 +13,7 @@ public:
 	unsigned NextBonusCityAmount = 8000;
 
 	TheCity* Cities[6];
+	TheCity* CityCount[6];
 
 	bool Initialize();
 	bool BeginRun();
@@ -25,7 +25,12 @@ public:
 	void NewWave(Color mainColor, Color innerColor);
 	void NewGame();
 	void Clear();
+
+	void ShowNextCountedCity(size_t cityCount, Color innerColor);
+
 	bool CityCounted();
+
+	size_t GetCityCount();
 
 private:
 

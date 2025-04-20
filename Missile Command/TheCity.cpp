@@ -74,3 +74,8 @@ void TheCity::SetColor(Color main, Color inner)
 	ModelColor = main;
 	InnerModel->ModelColor = inner;
 }
+
+void TheCity::SetCountColor(Color inner)
+{
+	InnerModel->ModelColor = inner;
+}

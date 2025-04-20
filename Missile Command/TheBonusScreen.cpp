@@ -64,6 +64,11 @@ void TheBonusScreen::ClearPoints()
 	Enabled = false;
 }
 
+Color TheBonusScreen::GetTextColor()
+{
+	return SecondaryColor;
+}
+
 bool TheBonusScreen::Initialize()
 {
 	OnScreenText::Initialize();
@@ -99,14 +104,14 @@ void TheBonusScreen::Draw2D()
 
 		if (AmmoBonus > 0)
 		{
-			DrawText(ammoPoints.c_str(), WindowHalfWidth - 100,
+			DrawText(ammoPoints.c_str(), WindowHalfWidth - 150,
 				WindowHalfHeight, 45, SecondaryColor);
 		}
 
 		if (CityBonus > 0)
 		{
 			DrawText(cityPoints.c_str(), WindowHalfWidth - 200,
-				WindowHalfHeight + 200, 45, SecondaryColor);
+				WindowHalfHeight + 115, 45, SecondaryColor);
 		}
 	}
 	else if (ScoreMultiplier)

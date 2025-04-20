@@ -152,7 +152,7 @@ bool TheABMBase::MissileCounted(size_t count, size_t ammoCounted)
 	if (MissileFired())
 	{
 		AmmoCount[count]->Enabled = true;
-		AmmoCount[count]->X((ammoCounted) * 14.0f);
+		AmmoCount[count]->X(((ammoCounted) * 14.0f) - 24.0f);
 		AmmoCount[count]->Y(14.0f);
 
 		return true;

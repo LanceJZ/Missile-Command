@@ -6,6 +6,8 @@ TheCityManager::TheCityManager()
 	{
 		EM.AddModel3D(Cities[i] = DBG_NEW TheCity());
 		Cities[i]->Destroy();
+		EM.AddModel3D(CityCount[i] = DBG_NEW TheCity());
+		CityCount[i]->Destroy();
 	}
 }
 
@@ -33,6 +35,15 @@ bool TheCityManager::Initialize()
 	Cities[5]->Position = { (208.0f - 256.0f / 2) * 5.0f,
 		(float)WindowHalfHeight - 13.0f * 5.0f, 0 };
 
+	int cityCount = 0;
+
+	for (const auto& city : CityCount)
+	{
+		city->Y(150.0f);
+		city->X(cityCount * 85.0f);
+		cityCount++;
+	}
+
 	return false;
 }
 
@@ -47,6 +58,7 @@ void TheCityManager::SetCityModels(Model& innerModel, Model& mainModel)
 	for (int i = 0; i < 6; i++)
 	{
 		Cities[i]->SetCityModels(innerModel, mainModel);
+		CityCount[i]->SetCityModels(innerModel, mainModel);
 	}
 }
 
@@ -67,6 +79,11 @@ void TheCityManager::NewWave(Color mainColor, Color innerColor)
 			city->Return();
 			BonusCities--;
 		}
+	}
+
+	for (const auto &city : CityCount)
+	{
+		city->SetColor(mainColor, innerColor);
 	}
 }
 
@@ -89,6 +106,17 @@ void TheCityManager::Clear()
 	{
 		city->Destroy();
 	}
+
+	for (const auto &city : CityCount)
+	{
+		city->Destroy();
+	}
+}
+
+void TheCityManager::ShowNextCountedCity(size_t cityCount, Color innerColor)
+{
+	CityCount[cityCount]->Return();
+	CityCount[cityCount]->SetCountColor(innerColor);
 }
 
 bool TheCityManager::CityCounted()
@@ -105,4 +133,16 @@ bool TheCityManager::CityCounted()
 	Cities[lastInLine]->Destroy();
 
 	return true;
+}
+
+size_t TheCityManager::GetCityCount()
+{
+	size_t count = 0;
+
+	for (const auto &city : Cities)
+	{
+		if (city->Enabled) count++;
+	}
+
+	return count;
 }

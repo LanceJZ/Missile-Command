@@ -25,6 +25,8 @@ public:
 	void ShowAtariLogo();
 	void HideAtariLogo();
 	void ClearPoints();
+	Color GetTextColor();
+
 private:
 	bool BonusPoints = false;
 	bool ScoreMultiplier = false;

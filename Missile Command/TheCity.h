@@ -31,6 +31,7 @@ public:
 	void Return();
 	void Destroy();
 	void SetColor(Color main, Color inner);
+	void SetCountColor(Color inner);
 
 private:
 	Model3D* InnerModel = nullptr;

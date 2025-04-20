@@ -73,9 +73,12 @@ private:
 	bool OutofAmmo = false;
 	bool CountingAmmo = false;
 	bool CountingCities = false;
+	bool CityAnimationDone = false;
 
 	size_t AmmoCounted = 0;
 	size_t TotalAmnoAtEnd = 0;
+	size_t CityAnimationOnCity = 0;
+	size_t CityActiveAtEndOfWave = 0;
 	size_t BonusAmmoCountDelayTimerID = 0;
 	size_t BonusCityCountDelayTimerID = 0;
 	size_t BonusDoneCountingTimerID = 0;
