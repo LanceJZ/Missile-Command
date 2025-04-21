@@ -68,17 +68,11 @@ void TheCityManager::Update()
 
 }
 
-void TheCityManager::NewWave(Color mainColor, Color innerColor)
+void TheCityManager::SetColors(Color mainColor, Color innerColor)
 {
 	for (const auto &city : Cities)
 	{
 		city->SetColor(mainColor, innerColor);
-
-		if (BonusCities > 0 && !city->Enabled)
-		{
-			city->Return();
-			BonusCities--;
-		}
 	}
 
 	for (const auto &city : CityCount)
@@ -97,7 +91,7 @@ void TheCityManager::NewGame()
 		city->Return();
 	}
 
-	NewWave(Blue, Aqua);
+	SetColors(Blue, Aqua);
 }
 
 void TheCityManager::Clear()

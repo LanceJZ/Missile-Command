@@ -628,12 +628,12 @@ void GameLogic::NextWave()
 	const Color cityInnerColor = WaveColors[waveColorSetNumber].CityInner;
 	const Color icbmColor = WaveColors[waveColorSetNumber].ICBM;
 
-	CityManager->NewWave(cityMainABMColor, cityInnerColor);
-
 	for (int i = 0; i < CitiesActive; i++)
 	{
-		CityManager->Cities[i]->Enabled = true;
+		CityManager->Cities[i]->Return();
 	}
+
+	CityManager->SetColors(cityMainABMColor, cityInnerColor);
 
 	for (int i = 0; i < 6; i++)
 	{

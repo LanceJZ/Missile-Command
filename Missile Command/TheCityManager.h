@@ -22,7 +22,7 @@ public:
 
 	void Update();
 
-	void NewWave(Color mainColor, Color innerColor);
+	void SetColors(Color mainColor, Color innerColor);
 	void NewGame();
 	void Clear();
 
