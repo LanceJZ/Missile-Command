@@ -20,10 +20,12 @@ public:
 	void SetBonusAmmo(unsigned ammoBonus);
 	void ShowBonusPoints();
 	void HideBonusPoints();
-	void ShowScoreMultiplier();
-	void HideScoreMultiplier(unsigned multiplier);
+	void ShowScoreMultiplier(unsigned multiplier);
+	void HideScoreMultiplier();
 	void ShowAtariLogo();
 	void HideAtariLogo();
+	void ShowBonusCityText();
+	void HideBonusCityText();
 	void ClearPoints();
 	Color GetTextColor();
 
@@ -31,6 +33,7 @@ private:
 	bool BonusPoints = false;
 	bool ScoreMultiplier = false;
 	bool AtariLogo = false;
+	bool BonusCityText = false;
 
 	unsigned CityBonus = 0;
 	unsigned AmmoBonus = 0;

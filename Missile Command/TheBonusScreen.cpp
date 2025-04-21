@@ -35,14 +35,14 @@ void TheBonusScreen::HideBonusPoints()
 	BonusPoints = false;
 }
 
-void TheBonusScreen::ShowScoreMultiplier()
+void TheBonusScreen::ShowScoreMultiplier(unsigned multiplier)
 {
+	Multiplier = multiplier;
 	ScoreMultiplier = true;
 }
 
-void TheBonusScreen::HideScoreMultiplier(unsigned multiplier)
+void TheBonusScreen::HideScoreMultiplier()
 {
-	Multiplier = multiplier;
 	ScoreMultiplier = false;
 }
 
@@ -56,12 +56,24 @@ void TheBonusScreen::HideAtariLogo()
 	AtariLogo = false;
 }
 
+void TheBonusScreen::ShowBonusCityText()
+{
+	BonusCityText = true;
+}
+
+void TheBonusScreen::HideBonusCityText()
+{
+	BonusCityText = false;
+}
+
 void TheBonusScreen::ClearPoints()
 {
 	CityBonus = 0;
 	AmmoBonus = 0;
-	Multiplier = 1;
-	Enabled = false;
+	BonusPoints = false;
+	ScoreMultiplier = false;
+	AtariLogo = false;
+	BonusCityText = false;
 }
 
 Color TheBonusScreen::GetTextColor()
@@ -118,14 +130,14 @@ void TheBonusScreen::Draw2D()
 	{
 		std::string multiplier = std::to_string(Multiplier);
 
-		DrawText("PLAYER", WindowHalfWidth / 2,
+		DrawText("PLAYER", WindowHalfWidth - 100,
 			WindowHalfHeight - 200, 45, MainColor);
-		DrawText("X POINTS", WindowHalfWidth / 2,
+		DrawText("X POINTS", WindowHalfWidth - 100,
 			WindowHalfHeight, 45, MainColor);
 
 		DrawText("1", WindowHalfWidth + 100,
 			WindowHalfHeight - 200, 45, SecondaryColor);
-		DrawText(multiplier.c_str(), WindowHalfWidth / 2 - 300,
+		DrawText(multiplier.c_str(), WindowHalfWidth - 150,
 			WindowHalfHeight, 45, SecondaryColor);
 
 		if (AtariLogo)
@@ -133,5 +145,10 @@ void TheBonusScreen::Draw2D()
 			DrawText("ATARI   1980", WindowHalfWidth / 2,
 				WindowFullHeight, 45, MainColor);
 		}
+	}
+	else if (BonusCityText)
+	{
+		DrawText("BONUS CITY", WindowHalfWidth / 2,
+			WindowFullHeight - 200, 45, MainColor);
 	}
 }

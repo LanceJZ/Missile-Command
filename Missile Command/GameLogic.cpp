@@ -9,10 +9,11 @@ GameLogic::GameLogic()
 	BonusCityCountDelayTimerID = EM.AddTimer(0.25f);
 	BonusCityAnimationDelayTimerID = EM.AddTimer(0.5f);
 	BonusDoneCountingTimerID = EM.AddTimer(1.0f);
-	BonusCityAwardedTimerID = EM.AddTimer(3.0f);
-	BonusPointsBlankDelayTimerID = EM.AddTimer(0.5f);
+	BonusCityTextDisplayTimerID = EM.AddTimer(2.0f);
+	BonusCityTextDoneTimerID = EM.AddTimer(2.0f);
+	BonusPointsBlankDelayTimerID = EM.AddTimer(1.5f);
 	WaveCrosshairDelayTimerID = EM.AddTimer(2.0f);
-	ScoreMultiplierDelayTimerID = EM.AddTimer(2.2f);
+	ScoreMultiplierDelayTimerID = EM.AddTimer(2.25f);
 	WaveStartDelayTimerID =	EM.AddTimer(3.0f);
 }
 
@@ -116,6 +117,15 @@ bool GameLogic::Initialize()
 	WaveColors[9].CityMainABM = Blue;
 	WaveColors[9].CityInner = LightGreen;
 	WaveColors[9].ICBM = BLACK;
+
+	WaveMultiplier[0] = 2;
+	WaveMultiplier[1] = 2;
+	WaveMultiplier[2] = 3;
+	WaveMultiplier[3] = 3;
+	WaveMultiplier[4] = 4;
+	WaveMultiplier[5] = 4;
+	WaveMultiplier[6] = 5;
+	WaveMultiplier[7] = 5;
 
 	return true;
 }
@@ -466,7 +476,7 @@ void GameLogic::DisplayBonusPoints()
 						CountingAmmo = false;
 						CountingCities = true;
 						CityAnimationDone = true;
-						CityActiveAtEndOfWave = CityManager->GetCityCount();
+						CitiesActive = CityManager->GetCityCount();
 					}
 				}
 				else return;
@@ -476,6 +486,8 @@ void GameLogic::DisplayBonusPoints()
 	}
 	else if (CountingCities)
 	{
+		EM.ResetTimer(BonusPointsBlankDelayTimerID);
+
 		if (EM.TimerElapsed(BonusCityAnimationDelayTimerID) && CityAnimationDone)
 		{
 			EM.ResetTimer(BonusCityCountDelayTimerID);
@@ -487,7 +499,7 @@ void GameLogic::DisplayBonusPoints()
 					city->Destroy();
 					CityAnimationOnCity++;
 					CityAnimationDone = false;
-					break;
+					return;
 				}
 			}
 		}
@@ -502,23 +514,97 @@ void GameLogic::DisplayBonusPoints()
 			BonusText->SetBonusCities((CityAnimationOnCity + 1)
 				* 100 * ScoreMultiplier);
 
-			if (CityAnimationOnCity + 1 == CityActiveAtEndOfWave)
+			if (CityAnimationOnCity + 1 == CitiesActive)
 			{
 				CountingCities = false;
-				Score.AddToScore((CityActiveAtEndOfWave * 100) * ScoreMultiplier);
+				Score.AddToScore((CitiesActive * 100) * ScoreMultiplier);
+
+				for (int i = 0; i < 3; i++)
+				{
+					if (Score.GetScore() > CityManager->NextBonusCityAmount)
+					{
+						CityManager->BonusCities++;
+						CityManager->NextBonusCityAmount += 8000;
+					}
+				}
+
+				if (CitiesActive + CityManager->BonusCities < 1)
+				{
+					State = Ended;
+					return;
+				}
+
+				if (CitiesActive < 6 && CityManager->BonusCities > 0)
+				{
+					State = TheBonusCityAwarded;
+					EM.ResetTimer(BonusCityTextDisplayTimerID);
+					DisplayBonusCityText = false;
+					return;
+				}
 			}
 			else CityAnimationDone = true;
-
+		}
+	}
+	else
+	{
+		if (EM.TimerElapsed(BonusPointsBlankDelayTimerID))
+		{
+			ClearScreen();
+			State = TheBlankTheScreen;
+			EM.ResetTimer(BonusPointsBlankDelayTimerID);
 		}
 	}
 }
 
 void GameLogic::BonusCityAwarded()
 {
+	if (EM.TimerElapsed(BonusCityTextDisplayTimerID) && !DisplayBonusCityText)
+	{
+		EM.ResetTimer(BonusCityTextDoneTimerID);
+		DisplayBonusCityText = true;
+		BonusText->ShowBonusCityText();
+
+		if (CitiesActive < 6 && CityManager->BonusCities > 0)
+		{
+			CitiesActive += CityManager->BonusCities;
+
+			if (CitiesActive > 6)
+			{
+				CityManager->BonusCities = CitiesActive - 6;
+				CitiesActive = 6;
+			}
+		}
+	}
+
+	if (DisplayBonusCityText)
+	{
+		if (EM.TimerElapsed(BonusCityTextDoneTimerID))
+		{
+			EM.ResetTimer(BonusPointsBlankDelayTimerID);
+			ClearScreen();
+			State = TheBlankTheScreen;
+		}
+	}
+}
+
+void GameLogic::ClearScreen()
+{
+	Background->Clear();
+	CityManager->Clear();
+	BonusText->ClearPoints();
+	ABMBaseManager->Clear();
+	Score.Enabled = false;
+	HighScore.Enabled = false;
 }
 
 void GameLogic::GoBlank()
 {
+	if (EM.TimerElapsed(BonusPointsBlankDelayTimerID))
+	{
+		EM.ResetTimer(ScoreMultiplierDelayTimerID);
+		NextWave();
+		State = TheDisplayScoreMultiplier;
+	}
 }
 
 void GameLogic::NextWave()
@@ -527,6 +613,8 @@ void GameLogic::NextWave()
 	ReadyForNextWave = false;
 	GetToEndofWaveFast = false;
 	OutofAmmo = false;
+	Score.Enabled = true;
+	HighScore.Enabled = true;
 
 	Enemies->Reset();
 
@@ -540,49 +628,11 @@ void GameLogic::NextWave()
 	const Color cityInnerColor = WaveColors[waveColorSetNumber].CityInner;
 	const Color icbmColor = WaveColors[waveColorSetNumber].ICBM;
 
-	if (Wave < 11)	ScoreMultiplier = (int)(Wave / 2) + 1;
-
-	//int missileBonus = 0;
-
-	////This to be moved to missile count.
-	//for (const auto &abmBase : ABMBaseManager->ABMBases)
-	//{
-	//	missileBonus += abmBase->GetMissileCount();
-	//}
-	//
-	//Score.AddToScore((missileBonus * 5) * ScoreMultiplier);
-
-	//This to be moved to city count.
-	//int cityCount = 0;
-	//for (const auto &city : CityManager->Cities)
-	//{
-	//	if (city->Enabled) cityCount++;
-	//}
-
-	//Score.AddToScore((cityCount * 100) * ScoreMultiplier);
-
-	for (int i = 0; i < 3; i++)
-	{
-		if (Score.GetScore() > CityManager->NextBonusCityAmount)
-		{
-			CityManager->BonusCities++;
-			CityManager->NextBonusCityAmount += 8000;
-		}
-	}
-
 	CityManager->NewWave(cityMainABMColor, cityInnerColor);
 
-	bool noCities = true;
-
-	for (const auto &city : CityManager->Cities)
+	for (int i = 0; i < CitiesActive; i++)
 	{
-		if (city->Enabled) noCities = false;
-	}
-
-	if (noCities)
-	{
-		State = Ended;
-		return;
+		CityManager->Cities[i]->Enabled = true;
 	}
 
 	for (int i = 0; i < 6; i++)
@@ -591,12 +641,10 @@ void GameLogic::NextWave()
 		Enemies->ICBMControl->Cities[i].Targeted = false;
 	}
 
-	Background->WaveColor(groundColor, backgroundColor);
-	Player->NextWave(cityMainABMColor);
-	ABMBaseManager->Reset(cityMainABMColor);
-	Enemies->NextWave(Wave, icbmColor, cityMainABMColor, groundColor);
 	Score.SetColor(icbmColor);
 	HighScore.SetColor(icbmColor);
+	Background->WaveColor(groundColor, backgroundColor);
+	Player->NextWave(cityMainABMColor);
 	GameOverText->BottomTextColor = backgroundColor;
 	GameOverText->TopTextColor = icbmColor;
 	BonusText->SetColors(cityMainABMColor, icbmColor);
@@ -604,12 +652,49 @@ void GameLogic::NextWave()
 
 void GameLogic::DisplayScoreMultiplier()
 {
+	unsigned multiplier = 1;
+
+	if (Wave > 2 && Wave < 11)
+	{
+		multiplier = WaveMultiplier[Wave - 1];
+	}
+	else if (Wave > 10)
+	{
+		multiplier = 6;
+	}
+
+	BonusText->ShowScoreMultiplier(multiplier);
+
+	if (EM.TimerElapsed(ScoreMultiplierDelayTimerID))
+	{
+		EM.ResetTimer(WaveStartDelayTimerID);
+		BonusText->ClearPoints();
+		State = TimeToStartNewWave;
+	}
 }
 
 void GameLogic::StartTheNewWave()
 {
-	State = InPlay;
-	Enemies->StartNewWave();
+	Player->Enabled = true;
+
+	size_t waveColorSetNumber = (Wave / 2);
+
+	if (waveColorSetNumber > 9) waveColorSetNumber = 0;
+
+	const Color icbmColor = WaveColors[waveColorSetNumber].ICBM;
+	const Color cityMainABMColor = WaveColors[waveColorSetNumber].CityMainABM;
+	const Color groundColor = WaveColors[waveColorSetNumber].Ground;
+
+	if (EM.TimerElapsed(WaveStartDelayTimerID))
+	{
+		//Delay before showing ammo.
+		ABMBaseManager->Reset(WaveColors[waveColorSetNumber].CityMainABM);
+		//Delay before enemies start to drop.
+		Enemies->NextWave(Wave, icbmColor, cityMainABMColor, groundColor);
+		BonusText->ClearPoints();
+		Enemies->StartNewWave();
+		State = InPlay;
+	}
 }
 
 void GameLogic::IsOver()
@@ -620,7 +705,6 @@ void GameLogic::IsOver()
 	ABMBaseManager->Clear();
 	CityManager->Clear();
 	GameOverText->Enabled = true;
-
 	State = TheMainMenu;
 }
 

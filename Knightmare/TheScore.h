@@ -8,6 +8,8 @@ public:
 	TheScore();
 	virtual ~TheScore();
 
+	bool Enabled = true;
+
 	bool Initialize();
 	bool BeginRun();
 

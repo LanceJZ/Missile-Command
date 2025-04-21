@@ -28,11 +28,14 @@ void TheScore::Update()
 
 void TheScore::Draw2D()
 {
-	std::string scoreString = std::to_string(Score);
+	if (Enabled)
+	{
+		std::string scoreString = std::to_string(Score);
 
-	DrawText(scoreString.c_str(),
-		X - (int)(scoreString.length() * (int)(FontSize * 0.5f)), Y,
-		FontSize, CurrentColor);
+		DrawText(scoreString.c_str(),
+			X - (int)(scoreString.length() * (int)(FontSize * 0.5f)), Y,
+			FontSize, CurrentColor);
+	}
 }
 
 void TheScore::AddToScore(int amount)

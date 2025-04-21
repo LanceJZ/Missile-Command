@@ -74,15 +74,17 @@ private:
 	bool CountingAmmo = false;
 	bool CountingCities = false;
 	bool CityAnimationDone = false;
+	bool DisplayBonusCityText = false;
 
 	size_t AmmoCounted = 0;
 	size_t TotalAmnoAtEnd = 0;
 	size_t CityAnimationOnCity = 0;
-	size_t CityActiveAtEndOfWave = 0;
+	size_t CitiesActive = 0;
 	size_t BonusAmmoCountDelayTimerID = 0;
 	size_t BonusCityCountDelayTimerID = 0;
 	size_t BonusDoneCountingTimerID = 0;
-	size_t BonusCityAwardedTimerID = 0;
+	size_t BonusCityTextDisplayTimerID = 0;
+	size_t BonusCityTextDoneTimerID = 0;
 	size_t BonusCityAnimationDelayTimerID = 0;
 	size_t BonusPointsBlankDelayTimerID = 0;
 	size_t ScoreMultiplierDelayTimerID = 0;
@@ -98,7 +100,9 @@ private:
 
 	WaveColorData WaveColors[10] = {};
 
-	Colors GameColors;
+	unsigned WaveMultiplier[8] = {};
+
+	Colors GameColors = {};
 
 	TheBackground* Background = {};
 	ThePlayer* Player = {};
@@ -120,6 +124,7 @@ private:
 	void WaveEnded();
 	void DisplayBonusPoints();
 	void BonusCityAwarded();
+	void ClearScreen();
 	void GoBlank();
 	void NextWave();
 	void DisplayScoreMultiplier();
