@@ -9,11 +9,7 @@ public:
 	TheCityManager();
 	virtual ~TheCityManager();
 
-	unsigned BonusCities = 0;
-	unsigned NextBonusCityAmount = 8000;
-
 	TheCity* Cities[6];
-	TheCity* CityCount[6];
 
 	bool Initialize();
 	bool BeginRun();
@@ -22,18 +18,24 @@ public:
 
 	void Update();
 
-	void SetColors(Color mainColor, Color innerColor);
+	void SetColors(Color mainColor, Color innerColor, Color bonusColor);
 	void NewGame();
 	void Clear();
-
-	void ShowNextCountedCity(size_t cityCount, Color innerColor);
+	void BonusCitiesUsed();
+	void ReturnActiveCities();
+	void CalculateActiveCityCount();
+	bool BonusCityAwarded();
+	void ShowNextCountedCity(size_t cityCount);
 
 	bool CityCounted();
 
 	size_t GetCityCount();
 
 private:
+	size_t ActiveCityCount = 0;
+	unsigned BonusCities = 0;
+	unsigned NextBonusCityAmount = 8000;
 
-
+	TheCity* CityCount[6];
 };
 

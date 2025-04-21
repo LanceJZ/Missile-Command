@@ -183,12 +183,9 @@ void GameLogic::Input()
 	{
 		if (IsKeyPressed(KEY_W))
 		{
-			Reset();
-			NextWave();
-
-			const std::string wave = "Advanced to Wave " + std::to_string(Wave + 1);
-
-			TraceLog(LOG_INFO, wave.c_str());
+			GetToEndofWaveFast = true;
+			JustEndIt = true;
+			Player->Enabled = false;
 		}
 
 		if (IsKeyPressed(KEY_O))
@@ -218,6 +215,11 @@ void GameLogic::NewGame()
 	}
 
 	Wave = 0;
+	CountingAmmo = false;
+	CountingCities = false;
+	OutofAmmo = false;
+	ReadyForNextWave = false;
+	DisplayBonusCityText = false;
 	GameOverText->Enabled = false;
 	Score.ClearScore();
 	Score.SetColor(Red);
@@ -432,21 +434,28 @@ void GameLogic::WaveEnded()
 {
 	State = TheBonusPoints;
 
-	BonusText->Enabled = true;
-	BonusText->ShowBonusPoints();
-
+	GetToEndofWaveFast = false;
+	JustEndIt = false;
 	CountingAmmo = true;
 	CountingCities = false;
 	AmmoCounted = 0;
-
 	Player->Enabled = false;
-
+	CityAnimationDone = true;
+	AllCitiesCounted = false;
 	TotalAmnoAtEnd = 0;
-	CityAnimationOnCity = -1;
+	CityAnimationOnCity = 0;
+	CityManager->CalculateActiveCityCount();
+	Enemies->Reset();
 
 	for (const auto &abmBase : ABMBaseManager->ABMBases)
 	{
 		TotalAmnoAtEnd += abmBase->GetMissileCount();
+	}
+
+	if (TotalAmnoAtEnd < 1)
+	{
+		CountingAmmo = false;
+		CountingCities = true;
 	}
 }
 
@@ -454,6 +463,8 @@ void GameLogic::DisplayBonusPoints()
 {
 	if (CountingAmmo)
 	{
+		BonusText->ShowBonusPoints();
+
 		for (const auto &abmBase : ABMBaseManager->ABMBases)
 		{
 			size_t ammoCount = abmBase->GetMissileCount();
@@ -467,7 +478,7 @@ void GameLogic::DisplayBonusPoints()
 					if (abmBase->MissileCounted(ammoCount - 1, AmmoCounted))
 					{
 						AmmoCounted++;
-						BonusText->SetBonusAmmo(AmmoCounted * 5 * ScoreMultiplier);
+						BonusText->SetBonusAmmo((AmmoCounted * 5) * ScoreMultiplier);
 					}
 
 					if (AmmoCounted == TotalAmnoAtEnd)
@@ -475,8 +486,6 @@ void GameLogic::DisplayBonusPoints()
 						Score.AddToScore((TotalAmnoAtEnd * 5) * ScoreMultiplier);
 						CountingAmmo = false;
 						CountingCities = true;
-						CityAnimationDone = true;
-						CitiesActive = CityManager->GetCityCount();
 					}
 				}
 				else return;
@@ -492,57 +501,59 @@ void GameLogic::DisplayBonusPoints()
 		{
 			EM.ResetTimer(BonusCityCountDelayTimerID);
 
+			CityAnimationDone = false;
+
 			for (const auto &city : CityManager->Cities)
 			{
 				if (city->Enabled)
 				{
 					city->Destroy();
-					CityAnimationOnCity++;
-					CityAnimationDone = false;
+					AllCitiesCounted = false;
 					return;
 				}
 			}
-		}
 
-		if (EM.TimerElapsed(BonusCityCountDelayTimerID) && !CityAnimationDone)
+			AllCitiesCounted = true;
+		}
+		else if (EM.TimerElapsed(BonusCityCountDelayTimerID) && !CityAnimationDone)
 		{
+			BonusText->ShowBonusPoints();
+
 			EM.ResetTimer(BonusCityAnimationDelayTimerID);
 
-			CityManager->CityCount[CityAnimationOnCity]->Return();
-			CityManager->CityCount[CityAnimationOnCity]->
-				SetCountColor(BonusText->GetTextColor());
-			BonusText->SetBonusCities((CityAnimationOnCity + 1)
-				* 100 * ScoreMultiplier);
+			if (!AllCitiesCounted)
+			{
+				CityManager->ShowNextCountedCity(CityAnimationOnCity);
+				CityAnimationOnCity++;
 
-			if (CityAnimationOnCity + 1 == CitiesActive)
+				BonusText->SetBonusCities(((CityAnimationOnCity)
+					* 100) * ScoreMultiplier);
+
+				CityAnimationDone = true;
+				return;
+			}
+			else
 			{
 				CountingCities = false;
-				Score.AddToScore((CitiesActive * 100) * ScoreMultiplier);
+				Score.AddToScore((CityManager->GetCityCount() * 100)
+					* ScoreMultiplier);
 
-				for (int i = 0; i < 3; i++)
-				{
-					if (Score.GetScore() > CityManager->NextBonusCityAmount)
-					{
-						CityManager->BonusCities++;
-						CityManager->NextBonusCityAmount += 8000;
-					}
-				}
-
-				if (CitiesActive + CityManager->BonusCities < 1)
-				{
-					State = Ended;
-					return;
-				}
-
-				if (CitiesActive < 6 && CityManager->BonusCities > 0)
+				if (CityManager->GetCityCount() < 6
+					&& CityManager->BonusCityAwarded())
 				{
 					State = TheBonusCityAwarded;
 					EM.ResetTimer(BonusCityTextDisplayTimerID);
 					DisplayBonusCityText = false;
 					return;
 				}
+
+				if (CityManager->GetCityCount() < 1)
+				{
+					State = Ended;
+					BonusText->ClearPoints();
+					return;
+				}
 			}
-			else CityAnimationDone = true;
 		}
 	}
 	else
@@ -563,17 +574,7 @@ void GameLogic::BonusCityAwarded()
 		EM.ResetTimer(BonusCityTextDoneTimerID);
 		DisplayBonusCityText = true;
 		BonusText->ShowBonusCityText();
-
-		if (CitiesActive < 6 && CityManager->BonusCities > 0)
-		{
-			CitiesActive += CityManager->BonusCities;
-
-			if (CitiesActive > 6)
-			{
-				CityManager->BonusCities = CitiesActive - 6;
-				CitiesActive = 6;
-			}
-		}
+		CityManager->BonusCitiesUsed();
 	}
 
 	if (DisplayBonusCityText)
@@ -628,12 +629,8 @@ void GameLogic::NextWave()
 	const Color cityInnerColor = WaveColors[waveColorSetNumber].CityInner;
 	const Color icbmColor = WaveColors[waveColorSetNumber].ICBM;
 
-	for (int i = 0; i < CitiesActive; i++)
-	{
-		CityManager->Cities[i]->Return();
-	}
-
-	CityManager->SetColors(cityMainABMColor, cityInnerColor);
+	CityManager->ReturnActiveCities();
+	CityManager->SetColors(cityMainABMColor, cityInnerColor, icbmColor);
 
 	for (int i = 0; i < 6; i++)
 	{
@@ -654,14 +651,16 @@ void GameLogic::DisplayScoreMultiplier()
 {
 	unsigned multiplier = 1;
 
-	if (Wave > 2 && Wave < 11)
+	if (Wave > 1 && Wave < 10)
 	{
-		multiplier = WaveMultiplier[Wave - 1];
+		multiplier = WaveMultiplier[Wave - 2];
 	}
 	else if (Wave > 10)
 	{
 		multiplier = 6;
 	}
+
+	ScoreMultiplier = multiplier;
 
 	BonusText->ShowScoreMultiplier(multiplier);
 

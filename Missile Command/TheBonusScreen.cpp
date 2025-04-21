@@ -28,6 +28,7 @@ void TheBonusScreen::SetBonusAmmo(unsigned ammoBonus)
 void TheBonusScreen::ShowBonusPoints()
 {
 	BonusPoints = true;
+	Enabled = true;
 }
 
 void TheBonusScreen::HideBonusPoints()

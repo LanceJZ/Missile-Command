@@ -74,12 +74,12 @@ private:
 	bool CountingAmmo = false;
 	bool CountingCities = false;
 	bool CityAnimationDone = false;
+	bool AllCitiesCounted = false;
 	bool DisplayBonusCityText = false;
 
 	size_t AmmoCounted = 0;
 	size_t TotalAmnoAtEnd = 0;
 	size_t CityAnimationOnCity = 0;
-	size_t CitiesActive = 0;
 	size_t BonusAmmoCountDelayTimerID = 0;
 	size_t BonusCityCountDelayTimerID = 0;
 	size_t BonusDoneCountingTimerID = 0;

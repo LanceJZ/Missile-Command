@@ -68,7 +68,7 @@ void TheCityManager::Update()
 
 }
 
-void TheCityManager::SetColors(Color mainColor, Color innerColor)
+void TheCityManager::SetColors(Color mainColor, Color innerColor, Color bonusColor)
 {
 	for (const auto &city : Cities)
 	{
@@ -77,7 +77,7 @@ void TheCityManager::SetColors(Color mainColor, Color innerColor)
 
 	for (const auto &city : CityCount)
 	{
-		city->SetColor(mainColor, innerColor);
+		city->SetColor(mainColor, bonusColor);
 	}
 }
 
@@ -91,7 +91,7 @@ void TheCityManager::NewGame()
 		city->Return();
 	}
 
-	SetColors(Blue, Aqua);
+	SetColors(Blue, Aqua, Red);
 }
 
 void TheCityManager::Clear()
@@ -107,10 +107,55 @@ void TheCityManager::Clear()
 	}
 }
 
-void TheCityManager::ShowNextCountedCity(size_t cityCount, Color innerColor)
+void TheCityManager::BonusCitiesUsed()
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (ActiveCityCount < 6 && BonusCities > 0)
+		{
+			ActiveCityCount++;
+			BonusCities--;
+		}
+	}
+}
+
+void TheCityManager::ReturnActiveCities()
+{
+	for (int i = 0; i < ActiveCityCount; i++) Cities[i]->Return();
+}
+
+void TheCityManager::CalculateActiveCityCount()
+{
+	size_t count = 0;
+
+	for (const auto &city : Cities)
+	{
+		if (city->Enabled) count++;
+	}
+
+	ActiveCityCount = count;
+}
+
+bool TheCityManager::BonusCityAwarded()
+{
+	bool awarded = false;
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (Score.GetScore() > NextBonusCityAmount)
+		{
+			BonusCities++;
+			NextBonusCityAmount += 8000;
+			awarded = true;
+		}
+	}
+
+	return awarded;
+}
+
+void TheCityManager::ShowNextCountedCity(size_t cityCount)
 {
 	CityCount[cityCount]->Return();
-	CityCount[cityCount]->SetCountColor(innerColor);
 }
 
 bool TheCityManager::CityCounted()
@@ -131,12 +176,6 @@ bool TheCityManager::CityCounted()
 
 size_t TheCityManager::GetCityCount()
 {
-	size_t count = 0;
 
-	for (const auto &city : Cities)
-	{
-		if (city->Enabled) count++;
-	}
-
-	return count;
+	return ActiveCityCount;
 }

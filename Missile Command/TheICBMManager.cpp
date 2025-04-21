@@ -358,11 +358,12 @@ void TheICBMManager::FireSalvo()
 	// TODO: Change X so it adds a random value to the next one, starting
 	// TODO: from -WindowWidth +45, make sure they all don't add up to more than
 	// TODO: WindowWidth - 45.
+	// TODO: Even out the spread, use four zones instead.
 
 	ICBMSalvosFired ++;
 
-	float missileXPosition = (float)-WindowHalfWidth +
-		M.GetRandomFloat(105.0f, 400.0f);
+	float missileXRow = -617.5f;
+
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -370,13 +371,15 @@ void TheICBMManager::FireSalvo()
 		{
 			if (!missile->Enabled)
 			{
+				float missileXPosition =
+					M.GetRandomFloat(105.0f, 400.0f) + missileXRow;
+
+				missileXRow += 308.75f;
+
+				if (missileXPosition > 617.5f) missileXPosition = 617.5f;
+
 				Vector3 position = {missileXPosition,
 					(float)-WindowHalfHeight + 45.0f, 0.0f};
-
-				missileXPosition += M.GetRandomFloat(75.0f, 320.0f);
-
-				if (missileXPosition > (float)WindowHalfWidth - 145.0f)
-					missileXPosition = (float)WindowHalfWidth - 145.0f;
 
 				FireICBM(missile, position);
 
