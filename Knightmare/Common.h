@@ -7,6 +7,8 @@
 class Common //Version 3.0.0 of Knightmare Arcade Engine.
 {
 public:
+	bool Enabled = true;
+
 	const float TwoPi = 6.283185307179586476925286766559f;
 	const float HalfPi = 1.5707963267948966192313216916398f;
 

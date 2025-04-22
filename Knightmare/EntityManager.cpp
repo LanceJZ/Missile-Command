@@ -143,7 +143,7 @@ void EntityManager::FixedUpdate(float deltaTime)
 
 	for (const auto& common : Commons)
 	{
-		common->FixedUpdate();
+		if (common->Enabled) common->FixedUpdate();
 	}
 }
 

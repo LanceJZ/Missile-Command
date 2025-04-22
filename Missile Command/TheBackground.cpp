@@ -46,7 +46,7 @@ void TheBackground::Update()
 
 void TheBackground::Clear()
 {
-	ClearBackground(BLACK);
+	BackGroundColor = BLACK;
 	Ground->Enabled = false;
 }
 
