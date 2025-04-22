@@ -117,8 +117,8 @@ void TheBonusScreen::Draw2D()
 
 		if (AmmoBonus > 0)
 		{
-			DrawText(ammoPoints.c_str(), WindowHalfWidth - 150,
-				WindowHalfHeight, 45, SecondaryColor);
+			DrawText(ammoPoints.c_str(), WindowHalfWidth - 140,
+				WindowHalfHeight - 20, 45, SecondaryColor);
 		}
 
 		if (CityBonus > 0)
@@ -147,9 +147,10 @@ void TheBonusScreen::Draw2D()
 				WindowFullHeight, 45, MainColor);
 		}
 	}
-	else if (BonusCityText)
+	
+	if (BonusCityText)
 	{
-		DrawText("BONUS CITY", WindowHalfWidth / 2,
-			WindowFullHeight - 200, 45, MainColor);
+		DrawText("BONUS CITY", WindowHalfWidth - 150,
+			WindowFullHeight - 250, 45, MainColor);
 	}
 }

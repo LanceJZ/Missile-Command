@@ -146,6 +146,15 @@ bool TheCityManager::BonusCityAwarded()
 		{
 			BonusCities++;
 			NextBonusCityAmount += 8000;
+		}
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (ActiveCityCount < 6 && BonusCities > 0)
+		{
+			ActiveCityCount++;
+			BonusCities--;
 			awarded = true;
 		}
 	}
