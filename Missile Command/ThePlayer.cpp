@@ -19,6 +19,11 @@ void ThePlayer::SetABMLaunchSound(Sound sound)
 	ABMLaunchSound = sound;
 }
 
+void ThePlayer::SetLowOnAmmoSound(Sound sound)
+{
+	LowOnAmmoSound = sound;
+}
+
 bool ThePlayer::Initialize()
 {
 	Model3D::Initialize();
@@ -106,9 +111,10 @@ void ThePlayer::FireABM()
 	float distanceOmega =
 		Vector3Distance(Position, ABMBaseManager->ABMBases[2]->Position);
 
+	bool lowAmmo = false;
+	size_t closest = 0;
 	Entity target = {};
 
-	size_t closest = 0;
 
 	if (distanceDelta < distanceAlpha && distanceDelta < distanceOmega)
 	{
@@ -184,11 +190,17 @@ void ThePlayer::FireABM()
 		}
 	}
 
+	lowAmmo = ABMBaseManager->ABMBases[closest]->LowAmmo;
 	Vector3 abmBasePosition = ABMBaseManager->ABMBases[closest]->Position;
 	Vector3 abmVelocity =
 		M.GetVelocityFromVectorsZ(abmBasePosition, Position, ShotSpeed);
 
 	PlaySound(ABMLaunchSound);
+
+	if (lowAmmo)
+	{
+		PlaySound(LowOnAmmoSound);
+	}
 
 	bool spawnShot = true;
 	size_t shotNumber = ABMs.size();

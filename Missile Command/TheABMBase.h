@@ -10,6 +10,7 @@ public:
 	virtual ~TheABMBase();
 
 	bool OutOfAmmo = false;
+	bool LowAmmo = false;
 	float Radius = 10.0f;
 	Vector3 Position = { 0, 0, 0 };
 

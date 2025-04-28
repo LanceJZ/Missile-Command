@@ -102,6 +102,7 @@ void TheABMBase::Reset(Color &color)
 	}
 
 	OutOfAmmo = false;
+	LowAmmo = false;
 }
 
 void TheABMBase::Clear()
@@ -141,6 +142,9 @@ bool TheABMBase::MissileFired()
 	if (lastInStack < 0) return false;
 
 	ABMAmmo[lastInStack]->Enabled = false;
+
+	if (lastInStack == 3) LowAmmo = true;
+	else LowAmmo = false;
 
 	return true;
 }

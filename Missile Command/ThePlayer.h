@@ -17,6 +17,7 @@ public:
 	void SetTheABMBaseManager(TheABMBaseManager* baseManager);
 
 	void SetABMLaunchSound(Sound sound);
+	void SetLowOnAmmoSound(Sound sound);
 
 	bool Initialize();
 	bool BeginRun();
@@ -45,6 +46,7 @@ private:
 	Colors GameColors;
 
 	Sound ABMLaunchSound = { 0 };
+	Sound LowOnAmmoSound = { 0 };
 
 	TheABMBaseManager* ABMBaseManager = nullptr;
 

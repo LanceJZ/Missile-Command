@@ -15,6 +15,7 @@ GameLogic::GameLogic()
 	WaveCrosshairDelayTimerID = EM.AddTimer(2.0f);
 	ScoreMultiplierDelayTimerID = EM.AddTimer(2.25f);
 	WaveStartDelayTimerID =	EM.AddTimer(3.0f);
+	FlierSoundDelayTimerID = EM.AddTimer(0.363f);
 }
 
 GameLogic::~GameLogic()
@@ -60,6 +61,17 @@ void GameLogic::SetWaveStartSound(Sound sound)
 void GameLogic::SetExplosionSound(Sound sound)
 {
 	ExplosionSound = sound;
+}
+
+void GameLogic::SetFlierSound(Sound sound)
+{
+	FlierSound = sound;
+}
+
+void GameLogic::SetAmmoCityCountSound(Sound ammo, Sound city)
+{
+	AmmoCountedSound = ammo;
+	CityCountedSound = city;
 }
 
 bool GameLogic::Initialize()
@@ -144,6 +156,9 @@ bool GameLogic::BeginRun()
 {
 	Common::BeginRun();
 
+	SetSoundVolume(FlierSound, 0.5f);
+	SetSoundVolume(CityCountedSound, 0.5f);
+
 	NewGame();
 	IsOver();
 
@@ -166,6 +181,14 @@ void GameLogic::Update()
 {
 	Common::Update();
 
+	if (Enemies->Flier->Enabled && !JustEndIt && !GetToEndofWaveFast)
+	{
+		if (EM.TimerElapsed(FlierSoundDelayTimerID))
+		{
+			EM.ResetTimer(FlierSoundDelayTimerID);
+			PlaySound(FlierSound);
+		}
+	}
 }
 
 void GameLogic::Input()
@@ -499,6 +522,7 @@ void GameLogic::DisplayBonusPoints()
 
 					if (abmBase->MissileCounted(ammoCount - 1, AmmoCounted))
 					{
+						PlaySound(AmmoCountedSound);
 						AmmoCounted++;
 						BonusText->SetBonusAmmo((AmmoCounted * 5) * ScoreMultiplier);
 					}
@@ -545,6 +569,7 @@ void GameLogic::DisplayBonusPoints()
 
 			if (!AllCitiesCounted)
 			{
+				PlaySound(CityCountedSound);
 				CityManager->ShowNextCountedCity(CityAnimationOnCity);
 				CityAnimationOnCity++;
 

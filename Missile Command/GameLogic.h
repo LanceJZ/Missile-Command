@@ -61,6 +61,8 @@ public:
 
 	void SetWaveStartSound(Sound sound);
 	void SetExplosionSound(Sound sound);
+	void SetFlierSound(Sound sound);
+	void SetAmmoCityCountSound(Sound ammo, Sound city);
 
 	bool Initialize();
 	bool BeginRun();
@@ -94,6 +96,7 @@ private:
 	size_t ScoreMultiplierDelayTimerID = 0;
 	size_t WaveCrosshairDelayTimerID = 0;
 	size_t WaveStartDelayTimerID = 0;
+	size_t FlierSoundDelayTimerID = 0;
 
 	unsigned Wave = 0;
 	int ScoreMultiplier = 1;
@@ -110,8 +113,10 @@ private:
 
 	Sound ExplosionSound = { 0 };
 	Sound CityAwardedSound = { 0 };
-	Sound CountingBonusScoreSound = { 0 };
+	Sound AmmoCountedSound = { 0 };
+	Sound CityCountedSound = { 0 };
 	Sound WaveStartSound = { 0 };
+	Sound FlierSound = { 0 };
 
 	TheBackground* Background = {};
 	ThePlayer* Player = {};
