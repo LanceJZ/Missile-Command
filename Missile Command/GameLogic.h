@@ -13,6 +13,7 @@
 enum GameState
 {
 	Ended,
+	NewGameStart,
 	InPlay,
 	Pause,
 	TheHighScores,
@@ -57,6 +58,9 @@ public:
 	void SetTheCityManager(TheCityManager* cityManager);
 	void SetMissileBases(TheABMBaseManager* missileBases);
 	void SetExplosionModel(Model& model);
+
+	void SetWaveStartSound(Sound sound);
+	void SetExplosionSound(Sound sound);
 
 	bool Initialize();
 	bool BeginRun();
@@ -104,6 +108,11 @@ private:
 
 	Colors GameColors = {};
 
+	Sound ExplosionSound = { 0 };
+	Sound CityAwardedSound = { 0 };
+	Sound CountingBonusScoreSound = { 0 };
+	Sound WaveStartSound = { 0 };
+
 	TheBackground* Background = {};
 	ThePlayer* Player = {};
 	EnemyControl* Enemies = {};
@@ -115,6 +124,7 @@ private:
 	std::vector<TheExplosion*> Explosions = {};
 
 	void MakeExplosion(Vector3 position, bool playerMade = false);
+	void StartNewGame();
 	void InGame();
 	void InMainMenu();
 	void InGameOver();

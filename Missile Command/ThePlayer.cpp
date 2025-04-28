@@ -14,6 +14,11 @@ void ThePlayer::SetTheABMBaseManager(TheABMBaseManager* baseManager)
 	ABMBaseManager = baseManager;
 }
 
+void ThePlayer::SetABMLaunchSound(Sound sound)
+{
+	ABMLaunchSound = sound;
+}
+
 bool ThePlayer::Initialize()
 {
 	Model3D::Initialize();
@@ -182,6 +187,8 @@ void ThePlayer::FireABM()
 	Vector3 abmBasePosition = ABMBaseManager->ABMBases[closest]->Position;
 	Vector3 abmVelocity =
 		M.GetVelocityFromVectorsZ(abmBasePosition, Position, ShotSpeed);
+
+	PlaySound(ABMLaunchSound);
 
 	bool spawnShot = true;
 	size_t shotNumber = ABMs.size();

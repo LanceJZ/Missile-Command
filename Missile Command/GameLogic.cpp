@@ -52,6 +52,16 @@ void GameLogic::SetExplosionModel(Model& model)
 	ExplosionModel = model;
 }
 
+void GameLogic::SetWaveStartSound(Sound sound)
+{
+	WaveStartSound = sound;
+}
+
+void GameLogic::SetExplosionSound(Sound sound)
+{
+	ExplosionSound = sound;
+}
+
 bool GameLogic::Initialize()
 {
 	Common::Initialize();
@@ -166,11 +176,13 @@ void GameLogic::Input()
 		{
 			if (IsGamepadButtonPressed(0, 15))//Start button
 			{
+				PlaySound(WaveStartSound);
 				NewGame();
 			}
 		}
 		else if (IsKeyPressed(KEY_N))
 		{
+			PlaySound(WaveStartSound);
 			NewGame();
 		}
 	}
@@ -226,10 +238,10 @@ void GameLogic::NewGame()
 	HighScore.SetColor(Red);
 	Background->WaveColor(Yellow, BLACK);
 	Player->NewGame();
-	Enemies->NewGame();
 	CityManager->NewGame();
 	ABMBaseManager->Reset(Blue);
-	State = InPlay;
+	EM.ResetTimer(WaveStartDelayTimerID);
+	State = NewGameStart;
 }
 
 void GameLogic::MakeExplosion(Vector3 position, bool playerMade)
@@ -255,11 +267,21 @@ void GameLogic::MakeExplosion(Vector3 position, bool playerMade)
 	}
 	else Explosions.at(explosionNumber)->Spawn(position);
 
+	PlaySound(ExplosionSound);
 	Explosions.at(explosionNumber)->PlayerMade = playerMade;
 
 	for (const auto& sBomb : Enemies->ICBMControl->SmartBombs)
 	{
 		sBomb->SetExplosionRefs(Explosions);
+	}
+}
+
+void GameLogic::StartNewGame()
+{
+	if (EM.TimerElapsed(WaveStartDelayTimerID))
+	{
+		Enemies->NewGame();
+		State = InPlay;
 	}
 }
 
@@ -645,6 +667,7 @@ void GameLogic::NextWave()
 	GameOverText->BottomTextColor = backgroundColor;
 	GameOverText->TopTextColor = icbmColor;
 	BonusText->SetColors(cityMainABMColor, icbmColor);
+	PlaySound(WaveStartSound);
 }
 
 void GameLogic::DisplayScoreMultiplier()
@@ -714,6 +737,8 @@ void GameLogic::GameStateSwitch()
 	case TheMainMenu:
 		InMainMenu();
 		break;
+	case NewGameStart:
+		StartNewGame();
 	case InPlay:
 		InGame();
 		break;

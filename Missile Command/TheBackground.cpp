@@ -55,5 +55,4 @@ void TheBackground::WaveColor(Color groundColor, Color backgroundColor)
 	Ground->ModelColor = groundColor;
 	BackGroundColor = backgroundColor;
 	Ground->Enabled = true;
-
 }

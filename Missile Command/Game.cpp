@@ -21,7 +21,7 @@ bool Game::Initialize()
 {
 	Common::Initialize();
 
-	SetWindowTitle("Missile Command Alpha 0.80");
+	SetWindowTitle("Missile Command Alpha 0.90");
 
 	float multiW = 1.0f, multiH = 1.0f;
 	FieldSize = { GetScreenWidth() * multiW, (float)GetScreenHeight() * multiH };
@@ -51,6 +51,13 @@ bool Game::Initialize()
 // Player = PlayerCursor, Player target for player missile = PlayerTarget,
 // Missile Ammo = MissileAmmo, Explosion = Explosion
 //..
+//..
+// Sound Names:
+// Explosion = Explosion, Player Fire ABM = ABMLaunch, Out of Ammo = Empty Silo,
+// Low On Ammo = Low On Ammo, Bonus City Awarded = NewCityTune,
+// Incoming ICBMs = Radar, Counting bonus score = Score Count,
+// Smart Bomb = SmartBomb, Wave Start = Wave Start
+
 bool Game::Load()
 {
 	Model cube = CM.LoadAndGetModel("Cube");
@@ -73,6 +80,12 @@ bool Game::Load()
 
 	Cities->SetCityModels(CM.LoadAndGetModel("InnerCity"),
 		CM.LoadAndGetModel("OuterCity"));
+
+	// -------------- Sounds ---------------
+	Logic->SetWaveStartSound(CM.LoadAndGetSound("Wave Start"));
+	Logic->SetExplosionSound(CM.LoadAndGetSound("Explosion"));
+
+	Player->SetABMLaunchSound(CM.LoadAndGetSound("ABMLaunch"));
 
 	return true;
 }

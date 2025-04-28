@@ -16,6 +16,8 @@ public:
 
 	void SetTheABMBaseManager(TheABMBaseManager* baseManager);
 
+	void SetABMLaunchSound(Sound sound);
+
 	bool Initialize();
 	bool BeginRun();
 
@@ -41,6 +43,8 @@ private:
 	Model TargetModel = { 0 };
 
 	Colors GameColors;
+
+	Sound ABMLaunchSound = { 0 };
 
 	TheABMBaseManager* ABMBaseManager = nullptr;
 
