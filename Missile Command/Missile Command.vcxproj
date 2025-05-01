@@ -153,6 +153,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="TheAmmoScreen.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="TheBonusScreen.cpp">
       <SubType>
       </SubType>
@@ -209,6 +213,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameOverScreen.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="TheAmmoScreen.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -26,7 +26,9 @@ public:
 	void HideAtariLogo();
 	void ShowBonusCityText();
 	void HideBonusCityText();
-	void ClearPoints();
+	void Clear();
+	void NewGame();
+
 	Color GetTextColor();
 
 private:
@@ -34,6 +36,7 @@ private:
 	bool ScoreMultiplier = false;
 	bool AtariLogo = false;
 	bool BonusCityText = false;
+	bool DefendCitiesText = false;
 
 	unsigned CityBonus = 0;
 	unsigned AmmoBonus = 0;

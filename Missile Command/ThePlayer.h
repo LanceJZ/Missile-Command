@@ -4,6 +4,7 @@
 #include "Model3D.h"
 #include "Shot.h"
 #include "TheABMBaseManager.h"
+#include "TheAmmoScreen.h"
 
 class ThePlayer : public Model3D
 {
@@ -18,6 +19,7 @@ public:
 
 	void SetABMLaunchSound(Sound sound);
 	void SetLowOnAmmoSound(Sound sound);
+	void SetAmmoOutSound(Sound sound);
 
 	bool Initialize();
 	bool BeginRun();
@@ -47,8 +49,10 @@ private:
 
 	Sound ABMLaunchSound = { 0 };
 	Sound LowOnAmmoSound = { 0 };
+	Sound AmmoOutSound = { 0 };
 
 	TheABMBaseManager* ABMBaseManager = nullptr;
+	TheAmmoScreen* AmmoText = nullptr;
 
 	void FireABM();
 	void CrosshairUpdate();

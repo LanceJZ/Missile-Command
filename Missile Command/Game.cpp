@@ -21,7 +21,7 @@ bool Game::Initialize()
 {
 	Common::Initialize();
 
-	SetWindowTitle("Missile Command Alpha 1.00");
+	SetWindowTitle("Missile Command Beta 1.00");
 
 	float multiW = 1.0f, multiH = 1.0f;
 	FieldSize = { GetScreenWidth() * multiW, (float)GetScreenHeight() * multiH };
@@ -53,11 +53,11 @@ bool Game::Initialize()
 //..
 //..
 // Sound Names:
-// Explosion = Explosion, Player Fire ABM = ABMLaunch, Out of Ammo = Empty Silo,
-// Low On Ammo = AmmoLow, Bonus City Awarded = NewCityTune,
+// Explosion = Explosion, Player Fire ABM = ABMLaunch, Out of Ammo = AmmoOut,
+// Low On Ammo = AmmoLow, Bonus City Awarded = BonusCityTune,
 // Incoming ICBMs = Radar, Counting bonus city = CityCount,
 // Counting bonus ammo = AmmoCount,
-// Smart Bomb = SmartBomb, Wave Start = Wave Start, Flier = Flier
+// Smart Bomb = SmartBomb (0.2948), Wave Start = Wave Start, Flier = Flier
 
 bool Game::Load()
 {
@@ -84,13 +84,16 @@ bool Game::Load()
 
 	// -------------- Sounds ---------------
 	Logic->SetWaveStartSound(CM.LoadAndGetSound("Wave Start"));
+	Logic->SetBonusCitySound(CM.LoadAndGetSound("BonusCityTune"));
 	Logic->SetExplosionSound(CM.LoadAndGetSound("Explosion"));
 	Logic->SetFlierSound(CM.LoadAndGetSound("Flier"));
+	Logic->SetSmartBombSound(CM.LoadAndGetSound("SmartBomb"));
 	Logic->SetAmmoCityCountSound(CM.LoadAndGetSound("AmmoCount"),
 		CM.LoadAndGetSound("CityCount"));
 
 	Player->SetABMLaunchSound(CM.LoadAndGetSound("ABMLaunch"));
 	Player->SetLowOnAmmoSound(CM.LoadAndGetSound("AmmoLow"));
+	Player->SetAmmoOutSound(CM.LoadAndGetSound("AmmoOut"));
 
 	return true;
 }

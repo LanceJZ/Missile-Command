@@ -67,7 +67,7 @@ void TheBonusScreen::HideBonusCityText()
 	BonusCityText = false;
 }
 
-void TheBonusScreen::ClearPoints()
+void TheBonusScreen::Clear()
 {
 	CityBonus = 0;
 	AmmoBonus = 0;
@@ -75,6 +75,12 @@ void TheBonusScreen::ClearPoints()
 	ScoreMultiplier = false;
 	AtariLogo = false;
 	BonusCityText = false;
+	DefendCitiesText = false;
+}
+
+void TheBonusScreen::NewGame()
+{
+	DefendCitiesText = true;
 }
 
 Color TheBonusScreen::GetTextColor()
@@ -109,7 +115,7 @@ void TheBonusScreen::Draw2D()
 
 	if (BonusPoints)
 	{
-		DrawText("BONUS POINTS", WindowHalfWidth - 200,
+		DrawText("BONUS POINTS", WindowHalfWidth - 170,
 			WindowHalfHeight - 200, 45, MainColor);
 
 		std::string ammoPoints = std::to_string(AmmoBonus);
@@ -147,10 +153,16 @@ void TheBonusScreen::Draw2D()
 				WindowFullHeight, 45, MainColor);
 		}
 	}
-	
+
 	if (BonusCityText)
 	{
 		DrawText("BONUS CITY", WindowHalfWidth - 150,
 			WindowFullHeight - 250, 45, MainColor);
+	}
+
+	if (DefendCitiesText)
+	{
+		DrawText("DEFEND                     CITIES", WindowHalfWidth - 380,
+			WindowHalfHeight + 250, 45, MainColor);
 	}
 }

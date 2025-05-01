@@ -62,7 +62,9 @@ public:
 	void SetWaveStartSound(Sound sound);
 	void SetExplosionSound(Sound sound);
 	void SetFlierSound(Sound sound);
+	void SetSmartBombSound(Sound sound);
 	void SetAmmoCityCountSound(Sound ammo, Sound city);
+	void SetBonusCitySound(Sound sound);
 
 	bool Initialize();
 	bool BeginRun();
@@ -97,6 +99,7 @@ private:
 	size_t WaveCrosshairDelayTimerID = 0;
 	size_t WaveStartDelayTimerID = 0;
 	size_t FlierSoundDelayTimerID = 0;
+	size_t SmartBombSoundDelayTimerID = 0;
 
 	unsigned Wave = 0;
 	int ScoreMultiplier = 1;
@@ -117,14 +120,16 @@ private:
 	Sound CityCountedSound = { 0 };
 	Sound WaveStartSound = { 0 };
 	Sound FlierSound = { 0 };
+	Sound SmartBombSound = { 0 };
+	Sound BonusCitySound = { 0 };
 
-	TheBackground* Background = {};
-	ThePlayer* Player = {};
-	EnemyControl* Enemies = {};
-	TheCityManager* CityManager = {};
-	TheABMBaseManager* ABMBaseManager = {};
-	GameOverScreen* GameOverText = {};
-	TheBonusScreen* BonusText = {};
+	TheBackground* Background = nullptr;
+	ThePlayer* Player = nullptr;
+	EnemyControl* Enemies = nullptr;
+	TheCityManager* CityManager = nullptr;
+	TheABMBaseManager* ABMBaseManager = nullptr;
+	GameOverScreen* GameOverText = nullptr;
+	TheBonusScreen* BonusText = nullptr;
 
 	std::vector<TheExplosion*> Explosions = {};
 

@@ -2,6 +2,8 @@
 
 ThePlayer::ThePlayer()
 {
+	EM.AddOnScreenText(AmmoText = DBG_NEW TheAmmoScreen());
+
 	TargetColorTimerID = EM.AddTimer();
 }
 
@@ -22,6 +24,11 @@ void ThePlayer::SetABMLaunchSound(Sound sound)
 void ThePlayer::SetLowOnAmmoSound(Sound sound)
 {
 	LowOnAmmoSound = sound;
+}
+
+void ThePlayer::SetAmmoOutSound(Sound sound)
+{
+	AmmoOutSound = sound;
 }
 
 bool ThePlayer::Initialize()
@@ -65,6 +72,10 @@ void ThePlayer::Update(float deltaTime)
 {
 	Model3D::Update(deltaTime);
 
+	for (size_t i = 0; i < 3; i++)
+	{
+		if (ABMBaseManager->ABMBases[i]->OutOfAmmo) AmmoText->AmmoIsOut(i);
+	}
 }
 
 void ThePlayer::FixedUpdate(float deltaTime)
@@ -84,12 +95,15 @@ void ThePlayer::Reset()
 	for (const auto &abms: ABMs) abms->Destroy();
 
 	for (const auto &targets: Targets) targets->Destroy();
+
+	AmmoText->Reset();
 }
 
 void ThePlayer::NextWave(Color color)
 {
 	Enabled = true;
 	ModelColor = color;
+	AmmoText->SetColor(color);
 }
 
 void ThePlayer::Spawn(Vector3 position)
@@ -111,7 +125,6 @@ void ThePlayer::FireABM()
 	float distanceOmega =
 		Vector3Distance(Position, ABMBaseManager->ABMBases[2]->Position);
 
-	bool lowAmmo = false;
 	size_t closest = 0;
 	Entity target = {};
 
@@ -127,6 +140,8 @@ void ThePlayer::FireABM()
 
 	if (!ABMBaseManager->MissileFired(closest))
 	{
+		PlaySound(AmmoOutSound);
+
 		if (closest == 0)
 		{
 			closest = 1;
@@ -154,6 +169,8 @@ void ThePlayer::FireABM()
 
 			if (!ABMBaseManager->MissileFired(closest))
 			{
+				PlaySound(AmmoOutSound);
+
 				if (closest == 2)
 				{
 					closest = 0;
@@ -180,6 +197,7 @@ void ThePlayer::FireABM()
 
 			if (!ABMBaseManager->MissileFired(closest))
 			{
+				PlaySound(AmmoOutSound);
 				closest = 0;
 
 				if (!ABMBaseManager->MissileFired(closest))
@@ -190,15 +208,15 @@ void ThePlayer::FireABM()
 		}
 	}
 
-	lowAmmo = ABMBaseManager->ABMBases[closest]->LowAmmo;
 	Vector3 abmBasePosition = ABMBaseManager->ABMBases[closest]->Position;
 	Vector3 abmVelocity =
 		M.GetVelocityFromVectorsZ(abmBasePosition, Position, ShotSpeed);
 
 	PlaySound(ABMLaunchSound);
 
-	if (lowAmmo)
+	if (ABMBaseManager->ABMBases[closest]->LowAmmo)
 	{
+		AmmoText->AmmoIsLow(closest);
 		PlaySound(LowOnAmmoSound);
 	}
 
