@@ -485,6 +485,11 @@ void TheICBMManager::CitiesToTarget()
 			Cities[cityIndex].Targeted = true;
 			citiesTargeted++;
 		}
+
+		if (activeCities < 5 && !Cities[cityIndex].Active)
+		{
+			Cities[cityIndex].Targeted = true;
+		}
 	}
 }
 
