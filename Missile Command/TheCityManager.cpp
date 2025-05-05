@@ -121,7 +121,10 @@ void TheCityManager::BonusCitiesUsed()
 
 void TheCityManager::ReturnActiveCities()
 {
-	for (int i = 0; i < ActiveCityCount; i++) Cities[i]->Return();
+	for (const auto &city : Cities)
+	{
+		if (city->State == Active) city->Return();
+	}
 }
 
 void TheCityManager::CalculateActiveCityCount()
@@ -130,7 +133,15 @@ void TheCityManager::CalculateActiveCityCount()
 
 	for (const auto &city : Cities)
 	{
-		if (city->Enabled) count++;
+		if (city->Enabled)
+		{
+			count++;
+			city->State = Active;
+		}
+		else
+		{
+			city->State = Destroyed;
+		}
 	}
 
 	ActiveCityCount = count;
@@ -156,6 +167,15 @@ bool TheCityManager::BonusCityAwarded()
 			ActiveCityCount++;
 			BonusCities--;
 			awarded = true;
+
+			for (const auto &city : Cities)
+			{
+				if (city->State == Destroyed)
+				{
+					city->State = Active;
+					break;
+				}
+			}
 		}
 	}
 

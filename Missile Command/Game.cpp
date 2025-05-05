@@ -21,7 +21,7 @@ bool Game::Initialize()
 {
 	Common::Initialize();
 
-	SetWindowTitle("Missile Command Beta 1.00");
+	SetWindowTitle("Missile Command Beta 1.10");
 
 	float multiW = 1.0f, multiH = 1.0f;
 	FieldSize = { GetScreenWidth() * multiW, (float)GetScreenHeight() * multiH };
